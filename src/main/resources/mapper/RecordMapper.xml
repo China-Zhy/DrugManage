@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nxu.mapper.RecordMapper">
+
+    <insert id="insertRecord">
+        insert into `record` values(null, NOW(), #{what}, #{type}, #{count}, #{price}, #{birthday}, #{who}, #{other})
+    </insert>
+
+    <select id="selectAllRecord" resultType="java.lang.Record">
+        select * from `record`
+        <where>
+            <if test="what != null">
+                what = #{what}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="who != null">
+                AND who = #{who}
+            </if>
+            <if test="when != null and when != ''">
+                AND when = #{when}
+            </if>
+        </where>
+    </select>
+
+</mapper>

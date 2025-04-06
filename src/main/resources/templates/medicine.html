@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>药品信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+
+<!--查询参数的表单-->
+<form class="layui-form layui-form-pane layui-margin-3" action="/toMedicine">
+
+    <div class="layui-form-item">
+
+        <div class="layui-inline">
+            <label class="layui-form-label">药品名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" id="name" autocomplete="off" class="layui-input" th:value="${name}">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">国药准字</label>
+            <div class="layui-input-inline">
+                <input type="text" name="code" id="code" autocomplete="off" class="layui-input" th:value="${code}">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <button class="layui-btn" lay-submit>搜索药品</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="window.location.href='/toMedicine'">重置</button>
+        </div>
+    </div>
+</form>
+
+<!--数据表格-->
+<div style="padding: 16px;">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
+
+<!--表格头部左端工具按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getData">获取当前页数据</button>
+        <button class="layui-btn layui-btn-sm" id="dropdownButton">
+            更多功能
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+        </button>
+        <button class="layui-btn layui-btn-sm layui-bg-blue" id="reloadTest">
+            重载测试
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-primary" id="rowMode">
+            <span>{{= d.lineStyle ? '多行' : '单行' }}模式</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+        </button>
+    </div>
+</script>
+
+<!--表格内容右端操作按钮-->
+<script type="text/html" id="toolDemo">
+    <div class="layui-clear-space">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs" lay-event="more">
+            更多
+            <i class="layui-icon layui-icon-down"></i>
+        </a>
+    </div>
+</script>
+<script src="/layui/layui.js"></script>
+<script>
+
+    layui.use(['table', 'dropdown'], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let layer = layui.layer;
+        let dropdown = layui.dropdown;
+        let $ = layui.$;
+
+        // 创建渲染实例
+        table.render({
+            elem: '#test',
+            url: '/getAllMedicineData?name=' + $('#name').val() + '&code=' + $('#code').val(), // 此处为静态模拟数据，实际使用时需换成真实接口
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', { // 表格右上角工具图标
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips',
+                onClick: function (obj) {
+                    layer.alert('业哥：这里自定义工具栏图标按钮');
+                }
+            }],
+            css: [ // 重设当前表格样式
+                '.layui-table-tool-temp{padding-right: 145px;}'
+            ].join(''),
+            cellMinWidth: 80,
+            page: true,
+            cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'},
+                    {field: 'id', title: 'ID', fixed: 'left', width: 60},
+                    {field: 'name', title: '药品名称', width: 150},
+                    {field: 'code', title: '国药准字', width: 120},
+                    {
+                        field: 'compose',
+                        title: '药品成分 <i class="layui-icon layui-icon-tips layui-font-14" lay-event="email-tips" title="该字段开启了编辑功能" style="margin-left: 5px;"></i>',
+                        fieldTitle: '药品成分',
+                        hide: 0,
+                        width: 280,
+                        expandedMode: 'tips',
+                        edit: 'text'
+                    },
+                    {field: 'specs', width: 150, title: '药品规格'},
+                    {
+                        field: 'usage',
+                        title: '用法用量',
+                        edit: 'textarea',
+                        minWidth: 180,
+                        expandedWidth: 200
+                    },
+                    {field: 'count', title: '库存数量', width: 120, sort: true, align: 'center', templet: '<div><span class="layui-badge">{{= d.count }}</span></div>'},
+                    {field: 'image', title: '药品照片', width: 150, hide: true},
+                    {field: 'origin', title: '生产厂家', width: 160},
+                    {fixed: 'right', title: '操作', width: 120, templet: '#toolDemo', align: 'center'}
+                ]
+            ],
+            done: function () {
+                let id = this.id;
+                // 下拉按钮测试
+                dropdown.render({
+                    elem: '#dropdownButton', // 可绑定在任意元素中，此处以上述按钮为例
+                    data: [{
+                        id: 'add',
+                        title: '添加'
+                    }, {
+                        id: 'update',
+                        title: '编辑'
+                    }, {
+                        id: 'delete',
+                        title: '删除'
+                    }],
+                    // 菜单被点击的事件
+                    click: function (obj) {
+                        let checkStatus = table.checkStatus(id)
+                        let data = checkStatus.data; // 获取选中的数据
+                        switch (obj.id) {
+                            case 'add':
+                                layer.open({
+                                    type: 2,
+                                    title: '添加药品信息',
+                                    area: ['665px', '450px'],
+                                    scrollbar: false,
+                                    content: ['/toMedicineAdd', 'no'],
+                                    end: function () {
+                                        table.reload(obj.config.id);
+                                    }
+                                });
+                                break;
+                            case 'update':
+                                if (data.length !== 1) return layer.msg('请至少选择一行！');
+                                layer.open({
+                                    title: '编辑',
+                                    type: 1,
+                                    area: ['80%', '80%'],
+                                    scrollbar: false,
+                                    content: '<div style="padding: 16px;">自定义表单元素</div>'
+                                });
+                                break;
+                            case 'delete':
+                                if (data.length === 0) {
+                                    return layer.msg('请至少选择一行！');
+                                }
+                                layer.msg('执行删除操作？！');
+                                break;
+                        }
+                    }
+                });
+
+                // 重载测试
+                dropdown.render({
+                    elem: '#reloadTest', // 可绑定在任意元素中，此处以上述按钮为例
+                    data: [{
+                        id: 'reload',
+                        title: '重载'
+                    }, {
+                        id: 'reload-deep',
+                        title: '重载 - 参数叠加'
+                    }, {
+                        id: 'reloadData',
+                        title: '仅重载数据'
+                    }, {
+                        id: 'reloadData-deep',
+                        title: '仅重载数据 - 参数叠加'
+                    }],
+                    // 菜单被点击的事件
+                    click: function (obj) {
+                        switch (obj.id) {
+                            case 'reload':
+                                // 重载 - 默认（参数重置）
+                                table.reload('test', {
+                                    where: {
+                                        abc: '123456',
+                                        //test: '新的 test2',
+                                        //token: '新的 token2'
+                                    }
+                                });
+                                break;
+                            case 'reload-deep':
+                                // 重载 - 深度（参数叠加）
+                                table.reload('test', {
+                                    where: {
+                                        abc: 123,
+                                        test: '新的 test1'
+                                    },
+                                    //defaultToolbar: ['print'], // 重载头部工具栏右侧图标
+                                    //cols: ins1.config.cols
+                                }, true);
+                                break;
+                            case 'reloadData':
+                                // 数据重载 - 参数重置
+                                table.reloadData('test', {
+                                    where: {
+                                        abc: '123456',
+                                        //test: '新的 test2',
+                                        //token: '新的 token2'
+                                    },
+                                    scrollPos: 'fixed',  // 保持滚动条位置不变 - v2.7.3 新增
+                                    height: 2000, // 测试无效参数（即与数据无关的参数设置无效，此处以 height 设置无效为例）
+                                    //url: '404',
+                                    //page: {curr: 1, limit: 30} // 重新指向分页
+                                });
+                                break;
+                            case 'reloadData-deep':
+                                // 数据重载 - 参数叠加
+                                table.reloadData('test', {
+                                    where: {
+                                        abc: 123,
+                                        test: '新的 test1'
+                                    }
+                                }, true);
+                                break;
+                        }
+                        layer.msg('可观察 Network 请求参数的变化');
+                    }
+                });
+
+                // 行模式
+                dropdown.render({
+                    elem: '#rowMode',
+                    data: [{
+                        id: 'default-row',
+                        title: '单行模式(默认)'
+                    }, {
+                        id: 'multi-row',
+                        title: '多行模式(可选)'
+                    }],
+                    // 菜单被点击的事件
+                    click: function (obj) {
+                        let checkStatus = table.checkStatus(id)
+                        let data = checkStatus.data; // 获取选中的数据
+                        switch (obj.id) {
+                            case 'default-row':
+                                table.reload('test', {
+                                    lineStyle: null // 恢复单行
+                                });
+                                layer.msg('已设为单行');
+                                break;
+                            case 'multi-row':
+                                table.reload('test', {
+                                    // 设置行样式，此处以设置多行高度为例。若为单行，则没必要设置改参数 - 注：v2.7.0 新增
+                                    lineStyle: 'height: 95px;'
+                                });
+                                layer.msg('即通过设置 lineStyle 参数可开启多行');
+                                break;
+                        }
+                    }
+                });
+            },
+            error: function (res, msg) {
+                console.log(res, msg)
+            }
+        });
+
+        // 工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            let id = obj.config.id;
+            let checkStatus = table.checkStatus(id);
+            let othis = lay(this);
+            switch (obj.event) {
+                case 'getCheckData':
+                    let data = checkStatus.data;
+                    layer.alert(layui.util.escape(JSON.stringify(data)));
+                    break;
+                case 'getData':
+                    let getData = table.getData(id);
+                    console.log(getData);
+                    layer.alert(layui.util.escape(JSON.stringify(getData)));
+                    break;
+            }
+        });
+        // 表头自定义元素工具事件 --- 2.8.8+
+        table.on('colTool(test)', function (obj) {
+            let event = obj.event;
+            console.log(obj);
+            if (event === 'email-tips') {
+                layer.alert(layui.util.escape(JSON.stringify(obj.col)), {
+                    title: '当前列属性选项'
+                });
+            }
+        });
+
+        // 触发单元格工具事件
+        table.on('tool(test)', function (obj) { // 双击 toolDouble
+            let data = obj.data; // 获得当前行数据
+
+            if (obj.event === 'edit') {
+                layer.open({
+                    type: 1,
+                    title: '编辑药品信息',
+                    area: ['665px', '450px'],
+                    content: '<form class="layui-form layui-form-pane layui-margin-3">\n' +
+                        '    <div class="layui-form-item">\n' +
+                        '        <div class="layui-inline">\n' +
+                        '            <label class="layui-form-label">药品名称</label>\n' +
+                        '            <div class="layui-input-inline">\n' +
+                        '                <input type="text" name="name" autocomplete="off" class="layui-input" lay-verify="required" value="' + data.name + '">\n' +
+                        '            </div>\n' +
+                        '        </div>\n' +
+                        '        <div class="layui-inline">\n' +
+                        '            <label class="layui-form-label">国药准字</label>\n' +
+                        '            <div class="layui-input-block">\n' +
+                        '                <input type="text" name="code" autocomplete="off" class="layui-input" lay-verify="required" value="' + data.code + '">\n' +
+                        '            </div>\n' +
+                        '        </div>\n' +
+                        '    </div>\n' +
+                        '\n' +
+                        '    <div class="layui-form-item">\n' +
+                        '        <div class="layui-inline">\n' +
+                        '            <label class="layui-form-label">药品规格</label>\n' +
+                        '            <div class="layui-input-inline">\n' +
+                        '                <input type="text" name="specs" autocomplete="off" class="layui-input" lay-verify="required" value="' + data.specs + '">\n' +
+                        '            </div>\n' +
+                        '        </div>\n' +
+                        '        <div class="layui-inline">\n' +
+                        '            <label class="layui-form-label">用法用量</label>\n' +
+                        '            <div class="layui-input-block">\n' +
+                        '                <input type="text" name="usage" autocomplete="off" class="layui-input" lay-verify="required" value="' + data.usage + '">\n' +
+                        '            </div>\n' +
+                        '        </div>\n' +
+                        '    </div>\n' +
+                        '\n' +
+                        '    <div class="layui-form-item">\n' +
+                        '        <div class="layui-inline">\n' +
+                        '            <label class="layui-form-label">包装照片</label>\n' +
+                        '            <div class="layui-input-inline">\n' +
+                        '                <input type="text" name="image" autocomplete="off" class="layui-input" lay-verify="required" value="' + data.image + '">\n' +
+                        '            </div>\n' +
+                        '        </div>\n' +
+                        '        <div class="layui-inline">\n' +
+                        '            <label class="layui-form-label">生产厂家</label>\n' +
+                        '            <div class="layui-input-block">\n' +
+                        '                <input type="text" name="origin" autocomplete="off" class="layui-input" lay-verify="required" value="' + data.origin + '">\n' +
+                        '            </div>\n' +
+                        '        </div>\n' +
+                        '    </div>\n' +
+                        '\n' +
+                        '    <div class="layui-form-item layui-form-text" style="width: 622px;">\n' +
+                        '        <label class="layui-form-label">药品成分</label>\n' +
+                        '        <div class="layui-input-block">\n' +
+                        '            <textarea name="compose" class="layui-textarea" lay-verify="required">' + data.compose + '</textarea>\n' +
+                        '        </div>\n' +
+                        '    </div>\n' +
+                        '    <div class="layui-form-item" style="text-align: center;">\n' +
+                        '        <button class="layui-btn" lay-submit lay-filter="toDo">更新</button>\n' +
+                        '        <button type="reset" class="layui-btn layui-btn-primary">恢复</button>\n' +
+                        '    </div>\n' +
+                        '    <input hidden="hidden" name="id" value="' + data.id + '">\n' +
+                        '</form>',
+                    success: function (layero, index) {
+                        // 表单提交事件
+                        form.on('submit(toDo)', function (data) {
+                            let field = data.field; // 获取表单字段值
+                            $.ajax({
+                                url: '/doSetMedicine',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify(field),
+                                success: function (res) {
+                                    if (res.code) {
+                                        layer.msg('更新成功！', {icon: 1});
+                                        table.updateRow(obj.config.id, {    // 更新某行数据
+                                            index: obj.index,
+                                            data: field
+                                        });
+                                        layer.close(index); // 关闭当前弹出层
+                                    } else {
+                                        layer.msg('更新失败！', {icon: 2});
+                                    }
+                                },
+                                error: function (err) {
+                                    layer.msg('Ajax请求异常！', {icon: 0});
+                                }
+                            });
+                            return false; // 阻止默认 form 提交
+                        });
+                    }
+                });
+            } else if (obj.event === 'more') {
+                // 更多 - 下拉菜单
+                dropdown.render({
+                    elem: this, // 触发事件的 DOM 对象
+                    show: true, // 外部事件触发即显示
+                    data: [{
+                        title: '查看',
+                        id: 'detail'
+                    }, {
+                        title: '删除',
+                        id: 'del'
+                    }, {
+                        title: '入库',
+                        id: 'input'
+                    }, {
+                        title: '出库',
+                        id: 'output'
+                    }],
+                    click: function (menudata) {
+                        if (menudata.id === 'detail') {
+                            layer.msg('查看操作，当前行 ID:' + data.id);
+                        } else if (menudata.id === 'del') {
+                            layer.confirm('真的要删除 【药品' + data.id + '】 吗？', function (index) {
+
+                                if (data.count > 0) {
+                                    layer.msg('当前药品尚有库存，无法删除！', {icon: 0});
+                                    return false;
+                                }
+
+                                // 向服务端发送删除指令
+                                $.ajax({
+                                    url: '/doDelMedicine/' + data.id,
+                                    type: 'GET',
+                                    success: function (res) {
+                                        if (res.code) {
+                                            layer.msg('删除成功！', {icon: 1});
+                                            obj.del(); // 删除对应行（tr）的DOM结构
+                                        } else {
+                                            layer.msg('删除失败！', {icon: 2});
+                                        }
+                                    },
+                                    error: function (err) {
+                                        layer.msg('Ajax请求异常！', {icon: 0});
+                                    }
+                                });
+                                layer.close(index); // 关闭询问框
+                            });
+                        } else if (menudata.id === 'input') {
+                            layer.open({
+                                type: 2,
+                                title: '药品入库',
+                                area: ['310px', '450px'],
+                                scrollbar: false,
+                                content: ['/toStockInput/' + data.id + '/1', 'no'],
+                                end: function () {
+
+                                }
+                            });
+                        } else if (menudata.id === 'output') {
+                            // layer.msg('出库:' + data.id);
+                        }
+                    },
+                    id: 'dropdown-table-tool',
+                    align: 'right', // 右对齐弹出
+                    style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' // 设置额外样式
+                });
+            }
+        });
+        // table 滚动时移除内部弹出的元素
+        let tableInst = table.getOptions('test');
+        tableInst.elem.next().find('.layui-table-main').on('scroll', function () {
+            dropdown.close('dropdown-table-tool');
+        });
+
+        // 触发表格复选框选择
+        table.on('checkbox(test)', function (obj) {
+            console.log(obj)
+        });
+
+        // 触发表格单选框选择
+        table.on('radio(test)', function (obj) {
+            console.log(obj)
+        });
+
+        // 行单击事件
+        table.on('row(test)', function (obj) {
+            //console.log(obj);
+            //layer.closeAll('tips');
+        });
+        // 行双击事件
+        table.on('rowDouble(test)', function (obj) {
+            console.log(obj);
+        });
+
+        // 单元格编辑事件
+        table.on('edit(test)', function (obj) {
+            let field = obj.field; // 得到字段
+            let value = obj.value; // 得到修改后的值
+            let data = obj.data; // 得到所在行所有键值
+            // 值的校验
+            if (field === 'email') {
+                if (!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(obj.value)) {
+                    layer.tips('输入的邮箱格式不正确，请重新编辑', this, {tips: 1});
+                    return obj.reedit(); // 重新编辑 -- v2.8.0 新增
+                }
+            }
+            // 编辑后续操作，如提交更新请求，以完成真实的数据更新
+            // …
+            layer.msg('编辑成功', {icon: 1});
+
+            // 其他更新操作
+            let update = {};
+            update[field] = value;
+            obj.update(update);
+        });
+    });
+</script>
+</body>
+</html>

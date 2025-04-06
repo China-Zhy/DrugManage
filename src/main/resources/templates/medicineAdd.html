@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>添加药品</title>
+    <link href="/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+<form class="layui-form layui-form-pane layui-margin-3">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">药品名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">国药准字</label>
+            <div class="layui-input-block">
+                <input type="text" name="code" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">药品规格</label>
+            <div class="layui-input-inline">
+                <input type="text" name="specs" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">用法用量</label>
+            <div class="layui-input-block">
+                <input type="text" name="usage" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">包装照片</label>
+            <div class="layui-input-inline">
+                <input type="text" name="image" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">生产厂家</label>
+            <div class="layui-input-block">
+                <input type="text" name="origin" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text" style="width: 622px;">
+        <label class="layui-form-label">药品成分</label>
+        <div class="layui-input-block">
+            <textarea name="compose" class="layui-textarea" lay-verify="required"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item" style="text-align: center;">
+        <button class="layui-btn" lay-submit lay-filter="toDo">添加</button>
+        <button type="reset" class="layui-btn layui-btn-primary">清空</button>
+    </div>
+</form>
+
+<script src="/layui/layui.js"></script>
+<script>
+    layui.use(['form'], function () {
+        let form = layui.form;
+        let layer = layui.layer;
+        let $ = layui.$;
+
+        // 提交事件
+        form.on('submit(toDo)', function (data) {
+            let field = data.field; // 获取表单字段值
+
+            $.ajax({
+                url: '/doAddMedicine',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(field),
+                success: function (res) {
+                    if (res.code) {
+                        layer.msg('添加成功！', {icon: 1});
+                        setTimeout(function () {
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));    // 关闭弹出层
+                        }, 2000);
+                    } else {
+                        layer.msg('添加失败！', {icon: 2});
+                    }
+                },
+                error: function (err) {
+                    layer.msg('Ajax请求异常！', {icon: 0});
+                }
+            });
+            return false; // 阻止默认 form 跳转
+        });
+    });
+</script>
+
+</body>
+</html>

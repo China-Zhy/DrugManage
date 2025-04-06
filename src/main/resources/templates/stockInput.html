@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>出入库操作</title>
+    <link href="/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+<form class="layui-form layui-form-pane layui-margin-3">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">药品数量</label>
+            <div class="layui-input-block">
+                <input type="number" name="count" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">药品单价</label>
+            <div class="layui-input-block">
+                <input type="number" name="price" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">生产日期</label>
+            <div class="layui-input-block">
+                <input type="text" name="birthday" id="layDate" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text" style="width: 298px;">
+        <label class="layui-form-label">备注信息</label>
+        <div class="layui-input-block">
+            <textarea name="other" class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <!-- what:药品编号  type:1-出库 2-入库 -->
+    <input hidden="hidden" name="what" th:value="${what}">
+    <input hidden="hidden" name="type" th:value="${type}">
+
+    <div class="layui-form-item" style="text-align: center;">
+        <button class="layui-btn" lay-submit lay-filter="toDo">确认</button>
+        <button type="reset" class="layui-btn layui-btn-primary">清空</button>
+    </div>
+</form>
+
+<script src="/layui/layui.js"></script>
+<script>
+    layui.use(['form'], function () {
+        let form = layui.form;
+        let layer = layui.layer;
+        let laydate = layui.laydate;
+        // 渲染日期组件
+        laydate.render({
+            elem: '#layDate'
+        });
+
+        // 提交事件
+        form.on('submit(toDo)', function (data) {
+            let field = data.field; // 获取表单字段值
+            // 显示填写结果，仅作演示用
+            layer.alert(JSON.stringify(field), {
+                title: '当前填写的字段值'
+            });
+            // 此处可执行 Ajax 等操作
+            // …
+            return false; // 阻止默认 form 跳转
+        });
+    });
+</script>
+
+</body>
+</html>

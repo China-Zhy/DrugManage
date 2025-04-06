@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nxu.mapper.StockMapper">
+
+    <insert id="insertStock">
+        insert into `stock` values(null, #{medicineId}, #{birthday}, #{price}, #{count})
+    </insert>
+
+    <update id="updateStock">
+        update `stock`
+        <set>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="count != null">
+                count = #{count}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectStock" resultType="com.nxu.entity.Stock">
+        select * from `medicine` where medicineId = #{medicineId}
+    </select>
+
+</mapper>

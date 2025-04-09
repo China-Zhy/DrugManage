@@ -11,7 +11,9 @@ public interface StockMapper {
 
     int insertStock(Stock stock);
 
-    int updateStock(Stock stock);
+    int updateStock(@Param("id") int id, @Param("count") int count);
 
-    List<Stock> selectStock(@Param("medicineId") int medicineId);
+    Stock getStockById(int id);
+
+    List<Stock> selectStock(@Param("medicineId") Integer medicineId);
 }

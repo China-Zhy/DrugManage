@@ -1,7 +1,8 @@
-package com.nxu.service;
+package com.nxu.service.impl;
 
 import com.nxu.entity.Identity;
 import com.nxu.mapper.IdentityMapper;
+import com.nxu.service.IdentityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

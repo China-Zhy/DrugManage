@@ -11,6 +11,7 @@
             <if test="code != null and code != ''">
                 AND code = #{code}
             </if>
+            AND `status` != 0
         </where>
     </select>
 
@@ -19,7 +20,7 @@
     </select>
 
     <insert id="insertMedicine">
-        insert into `medicine` values(null, #{name}, #{code}, #{compose}, #{specs}, #{usage}, #{image}, #{origin}, #{count})
+        insert into `medicine` values(null, #{name}, #{code}, #{compose}, #{specs}, #{usage}, #{image}, #{origin}, #{status})
     </insert>
 
     <update id="updateMedicine">
@@ -46,8 +47,8 @@
             <if test="origin != null and origin != ''">
                 origin = #{origin},
             </if>
-            <if test="count != null">
-                count = #{count},
+            <if test="status != null">
+                status = #{status}
             </if>
         </set>
         where id = #{id}

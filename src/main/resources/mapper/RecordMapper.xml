@@ -6,22 +6,20 @@
         insert into `record` values(null, NOW(), #{what}, #{type}, #{count}, #{price}, #{birthday}, #{who}, #{other})
     </insert>
 
-    <select id="selectAllRecord" resultType="java.lang.Record">
+    <select id="selectAllRecord" resultType="com.nxu.entity.Record">
         select * from `record`
         <where>
-            <if test="what != null">
+            <if test="what != null and what != 0">
                 what = #{what}
             </if>
-            <if test="type != null">
+            <if test="type != null and type != 0">
                 AND type = #{type}
             </if>
-            <if test="who != null">
+            <if test="who != null and who != 0">
                 AND who = #{who}
             </if>
-            <if test="when != null and when != ''">
-                AND when = #{when}
-            </if>
         </where>
+        order by id desc
     </select>
 
 </mapper>

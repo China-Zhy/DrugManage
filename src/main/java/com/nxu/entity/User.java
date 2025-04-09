@@ -19,4 +19,5 @@ public class User {
     private String card;        // 身份证号
     private String other;       // 其他信息
     private int type;           // 身份类型
+    private int status;         // 状态信息 (1-可用 0-禁用)
 }

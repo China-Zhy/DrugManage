@@ -1,54 +1,49 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>出入库操作</title>
+    <title>药品入库</title>
     <link href="/layui/css/layui.css" rel="stylesheet">
 </head>
 <body>
+
 <form class="layui-form layui-form-pane layui-margin-3">
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">药品数量</label>
-            <div class="layui-input-block">
-                <input type="number" name="count" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">药品单价</label>
-            <div class="layui-input-block">
-                <input type="number" name="price" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-    </div>
-
     <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label">生产日期</label>
             <div class="layui-input-block">
-                <input type="text" name="birthday" id="layDate" autocomplete="off" class="layui-input">
+                <input type="text" name="birthday" id="layDate" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
-    </div>
 
-    <div class="layui-form-item layui-form-text" style="width: 298px;">
-        <label class="layui-form-label">备注信息</label>
-        <div class="layui-input-block">
-            <textarea name="other" class="layui-textarea"></textarea>
+        <div class="layui-inline">
+            <label class="layui-form-label">药品数量</label>
+            <div class="layui-input-block">
+                <input type="number" name="count" autocomplete="off" class="layui-input" lay-verify="required|number">
+            </div>
         </div>
-    </div>
 
-    <!-- what:药品编号  type:1-出库 2-入库 -->
-    <input hidden="hidden" name="what" th:value="${what}">
-    <input hidden="hidden" name="type" th:value="${type}">
+        <div class="layui-inline">
+            <label class="layui-form-label">药品单价</label>
+            <div class="layui-input-block">
+                <input type="number" name="price" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
 
-    <div class="layui-form-item" style="text-align: center;">
-        <button class="layui-btn" lay-submit lay-filter="toDo">确认</button>
-        <button type="reset" class="layui-btn layui-btn-primary">清空</button>
+        <div class="layui-form-item layui-form-text" style="width: 298px;">
+            <label class="layui-form-label">备注信息</label>
+            <div class="layui-input-block">
+                <textarea name="other" class="layui-textarea" lay-verify="required"></textarea>
+            </div>
+        </div>
+
+        <input hidden="hidden" type="number" name="id" id="id" th:value="${id}">
+
+        <div style="text-align: center;">
+            <button class="layui-btn" lay-submit lay-filter="toDo">添加</button>
+            <button type="reset" class="layui-btn layui-btn-primary">清空</button>
+        </div>
     </div>
 </form>
 
@@ -57,21 +52,49 @@
     layui.use(['form'], function () {
         let form = layui.form;
         let layer = layui.layer;
+        let $ = layui.$;
+
         let laydate = layui.laydate;
         // 渲染日期组件
         laydate.render({
             elem: '#layDate'
         });
 
+        // 自定义验证规则
+        form.verify({   // 验证出库数量是否小于等于原有库存数量
+            number: function (value) {
+                if (value > Math.floor(value)) {
+                    return '药品数量应为正整数';
+                }
+                if (value < 1) {
+                    return '请输入一个正整数';
+                }
+            }
+        });
+
         // 提交事件
         form.on('submit(toDo)', function (data) {
             let field = data.field; // 获取表单字段值
-            // 显示填写结果，仅作演示用
-            layer.alert(JSON.stringify(field), {
-                title: '当前填写的字段值'
+
+            $.ajax({
+                url: '/doInputStock',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(field),
+                success: function (res) {
+                    if (res.code) {
+                        layer.msg('入库成功！', {icon: 1});
+                        setTimeout(function () {
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));    // 关闭弹出层
+                        }, 2000);
+                    } else {
+                        layer.msg('入库失败！', {icon: 2});
+                    }
+                },
+                error: function (err) {
+                    layer.msg('Ajax请求异常！', {icon: 0});
+                }
             });
-            // 此处可执行 Ajax 等操作
-            // …
             return false; // 阻止默认 form 跳转
         });
     });

@@ -7,20 +7,20 @@
     </insert>
 
     <update id="updateStock">
-        update `stock`
-        <set>
-            <if test="price != null">
-                price = #{price},
-            </if>
-            <if test="count != null">
-                count = #{count}
-            </if>
-        </set>
-        where id = #{id}
+        update `stock` set count = #{count} where id = #{id}
     </update>
 
+    <select id="getStockById" resultType="com.nxu.entity.Stock">
+        select * from `stock` where id = #{id}
+    </select>
+
     <select id="selectStock" resultType="com.nxu.entity.Stock">
-        select * from `medicine` where medicineId = #{medicineId}
+        select * from `stock`
+        <where>
+            <if test="medicineId != null">
+                medicine_id = #{medicineId}
+            </if>
+        </where>
     </select>
 
 </mapper>

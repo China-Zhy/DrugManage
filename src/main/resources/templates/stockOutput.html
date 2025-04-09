@@ -1,10 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>药品出库</title>
+    <link href="/layui/css/layui.css" rel="stylesheet">
 </head>
 <body>
+
+<form class="layui-form layui-form-pane layui-margin-3">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">药品数量</label>
+            <div class="layui-input-inline">
+                <input type="text" name="count" autocomplete="off" class="layui-input" lay-verify="required|number">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">药品单价</label>
+            <div class="layui-input-block">
+                <input type="text" name="price" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text" style="width: 622px;">
+        <label class="layui-form-label">备注信息</label>
+        <div class="layui-input-block">
+            <textarea name="other" class="layui-textarea" lay-verify="required"></textarea>
+        </div>
+    </div>
+
+    <input hidden="hidden" type="number" name="id" id="id" th:value="${id}">
+
+    <!-- 原有库存数量，这里是用来进行合法性验证的，不能写name属性，否则会覆盖前面的count-->
+    <input hidden="hidden" type="number" id="count" th:value="${count}">
+
+    <div class="layui-form-item" style="text-align: center;">
+        <button class="layui-btn" lay-submit lay-filter="toDo">确认</button>
+        <button type="reset" class="layui-btn layui-btn-primary">清空</button>
+    </div>
+</form>
+
+<script src="/layui/layui.js"></script>
+<script>
+    layui.use(['form'], function () {
+        let form = layui.form;
+        let layer = layui.layer;
+        let $ = layui.$;
+
+        let myInput = $('#count').val();    // 获取用户输入的药品数量
+
+        // 自定义验证规则
+        form.verify({   // 验证出库数量是否小于等于原有库存数量
+            number: function (value) {
+                if (value > parseFloat(myInput)) {
+                    return '不能超过原有库存数量';
+                }
+                if (value > Math.floor(value)) {
+                    return '药品数量应为整数';
+                }
+                if (value < 1) {
+                    return '请输入 1 - ' + myInput + '的正整数';
+                }
+            }
+        });
+
+        // 提交事件
+        form.on('submit(toDo)', function (data) {
+            let field = data.field; // 获取表单字段值
+
+            $.ajax({
+                url: '/doOutputStock',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(field),
+                success: function (res) {
+                    if (res.code) {
+                        layer.msg('出库成功！', {icon: 1});
+                        setTimeout(function () {
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));    // 关闭弹出层
+                        }, 2000);
+                    } else {
+                        layer.msg('出库失败！', {icon: 2});
+                    }
+                },
+                error: function (err) {
+                    layer.msg('Ajax请求异常！', {icon: 0});
+                }
+            });
+            return false; // 阻止默认 form 跳转
+        });
+    });
+</script>
 
 </body>
 </html>

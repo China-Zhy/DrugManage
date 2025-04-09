@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>库存管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+
+<!--查询参数的表单-->
+<form class="layui-form layui-form-pane layui-margin-3" action="/toStock">
+
+    <div class="layui-form-item">
+
+        <div class="layui-inline">
+            <label class="layui-form-label">药品名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" id="name" autocomplete="off" class="layui-input" th:value="${name}">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">国药准字</label>
+            <div class="layui-input-inline">
+                <input type="text" name="code" id="code" autocomplete="off" class="layui-input" th:value="${code}">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <button class="layui-btn" lay-submit>搜索药品</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="window.location.href='/toMedicine'">重置</button>
+        </div>
+    </div>
+</form>
+
+<!--数据表格-->
+<div style="padding: 16px;">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
+
+<!--表格内容右端操作按钮-->
+<script type="text/html" id="toolDemo">
+    <div class="layui-clear-space">
+        <a class="layui-btn layui-btn-xs" lay-event="input">入库</a>
+        <a class="layui-btn layui-btn-xs" lay-event="output">出库</a>
+    </div>
+</script>
+
+<script src="/layui/layui.js"></script>
+<script>
+
+    layui.use(['table', 'dropdown'], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let layer = layui.layer;
+        let $ = layui.$;
+
+        // 创建渲染实例
+        table.render({
+            elem: '#test',
+            url: '/getAllMedicineData?name=' + $('#name').val() + '&code=' + $('#code').val(),
+            css: [ // 重设当前表格样式
+                '.layui-table-tool-temp{padding-right: 145px;}'
+            ].join(''),
+            cellMinWidth: 80,
+            page: true,
+            cols: [
+                [
+                    {field: 'id', title: '药品编号'},
+                    {field: 'name', title: '药品名称'},
+                    {field: 'code', title: '国药准字', templet: '<div><span class="layui-badge layui-bg-gray">{{= d.code }}</span></div>'},
+                    {field: 'compose', title: '药品成分', hide: true},
+                    {field: 'specs', title: '药品规格'},
+                    {field: 'usage', title: '用法用量', hide: true},
+                    {field: 'image', title: '药品照片', hide: true},
+                    {field: 'origin', title: '生产厂家', minWidth: 400},
+                    {fixed: 'right', title: '相关操作', templet: '#toolDemo', align: 'center'}
+                ]
+            ],
+            error: function (res, msg) {
+                console.log(res, msg)
+            }
+        });
+
+        // 触发单元格工具事件
+        table.on('tool(test)', function (obj) {
+            let data = obj.data; // 获得当前行数据
+
+            if (obj.event === 'input') {
+                layer.open({
+                    type: 2,
+                    title: '填写药品入库信息',
+                    area: ['330px', '450px'],
+                    scrollbar: false,
+                    content: ['/toStockInput/' + data.id, 'no']
+                });
+            } else if (obj.event === 'output') {
+                layer.open({
+                    type: 2,
+                    title: '【' + data.name + ' ' + data.code + '】 的库存信息',
+                    area: ['800px', '590px'],
+                    scrollbar: false,
+                    content: ['/toStockData/' + data.id, 'no']
+                });
+            }
+        });
+
+        // 行单击事件
+        table.on('row(test)', function (obj) {
+            layer.msg('点击：' + obj.data.id);
+            //layer.closeAll('tips');
+        });
+    });
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>药品信息</title>
+    <title>药品管理</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -44,13 +44,10 @@
 <!--表格头部左端工具按钮-->
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getData">获取当前页数据</button>
-        <button class="layui-btn layui-btn-sm" id="dropdownButton">
-            更多功能
-            <i class="layui-icon layui-icon-down layui-font-12"></i>
-        </button>
-        <button class="layui-btn layui-btn-sm layui-bg-blue" id="reloadTest">
+        <button class="layui-btn layui-btn-sm" lay-event="toAddData">添加药品</button>
+        <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="getCheckData">获取选中行数据</button>
+        <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="getData">获取当前页数据</button>
+        <button class="layui-btn layui-btn-sm layui-btn-primary" id="reloadTest">
             重载测试
             <i class="layui-icon layui-icon-down layui-font-12"></i>
         </button>
@@ -71,6 +68,7 @@
         </a>
     </div>
 </script>
+
 <script src="/layui/layui.js"></script>
 <script>
 
@@ -84,7 +82,7 @@
         // 创建渲染实例
         table.render({
             elem: '#test',
-            url: '/getAllMedicineData?name=' + $('#name').val() + '&code=' + $('#code').val(), // 此处为静态模拟数据，实际使用时需换成真实接口
+            url: '/getAllMedicineData?name=' + $('#name').val() + '&code=' + $('#code').val(),
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', { // 表格右上角工具图标
                 title: '提示',
@@ -101,10 +99,10 @@
             page: true,
             cols: [
                 [
-                    {type: 'checkbox', fixed: 'left'},
-                    {field: 'id', title: 'ID', fixed: 'left', width: 60},
+                    {type: 'checkbox'},
+                    {field: 'id', title: 'ID', width: 60},
                     {field: 'name', title: '药品名称', width: 150},
-                    {field: 'code', title: '国药准字', width: 120},
+                    {field: 'code', title: '国药准字', width: 120, templet: '<div><span class="layui-badge layui-bg-gray">{{= d.code }}</span></div>'},
                     {
                         field: 'compose',
                         title: '药品成分 <i class="layui-icon layui-icon-tips layui-font-14" lay-event="email-tips" title="该字段开启了编辑功能" style="margin-left: 5px;"></i>',
@@ -122,65 +120,15 @@
                         minWidth: 180,
                         expandedWidth: 200
                     },
-                    {field: 'count', title: '库存数量', width: 120, sort: true, align: 'center', templet: '<div><span class="layui-badge">{{= d.count }}</span></div>'},
                     {field: 'image', title: '药品照片', width: 150, hide: true},
-                    {field: 'origin', title: '生产厂家', width: 160},
-                    {fixed: 'right', title: '操作', width: 120, templet: '#toolDemo', align: 'center'}
+                    {field: 'origin', title: '生产厂家', width: 180},
+                    {fixed: 'right', title: '相关操作', width: 120, templet: '#toolDemo', align: 'center'}
                 ]
             ],
             done: function () {
                 let id = this.id;
-                // 下拉按钮测试
-                dropdown.render({
-                    elem: '#dropdownButton', // 可绑定在任意元素中，此处以上述按钮为例
-                    data: [{
-                        id: 'add',
-                        title: '添加'
-                    }, {
-                        id: 'update',
-                        title: '编辑'
-                    }, {
-                        id: 'delete',
-                        title: '删除'
-                    }],
-                    // 菜单被点击的事件
-                    click: function (obj) {
-                        let checkStatus = table.checkStatus(id)
-                        let data = checkStatus.data; // 获取选中的数据
-                        switch (obj.id) {
-                            case 'add':
-                                layer.open({
-                                    type: 2,
-                                    title: '添加药品信息',
-                                    area: ['665px', '450px'],
-                                    scrollbar: false,
-                                    content: ['/toMedicineAdd', 'no'],
-                                    end: function () {
-                                        table.reload(obj.config.id);
-                                    }
-                                });
-                                break;
-                            case 'update':
-                                if (data.length !== 1) return layer.msg('请至少选择一行！');
-                                layer.open({
-                                    title: '编辑',
-                                    type: 1,
-                                    area: ['80%', '80%'],
-                                    scrollbar: false,
-                                    content: '<div style="padding: 16px;">自定义表单元素</div>'
-                                });
-                                break;
-                            case 'delete':
-                                if (data.length === 0) {
-                                    return layer.msg('请至少选择一行！');
-                                }
-                                layer.msg('执行删除操作？！');
-                                break;
-                        }
-                    }
-                });
 
-                // 重载测试
+                // 重载测试 (表格头部的下拉菜单)
                 dropdown.render({
                     elem: '#reloadTest', // 可绑定在任意元素中，此处以上述按钮为例
                     data: [{
@@ -300,6 +248,18 @@
                     console.log(getData);
                     layer.alert(layui.util.escape(JSON.stringify(getData)));
                     break;
+                case 'toAddData':
+                    layer.open({
+                        type: 2,
+                        title: '添加药品信息',
+                        area: ['665px', '450px'],
+                        scrollbar: false,
+                        content: ['/toMedicineAdd', 'no'],
+                        end: function () {
+                            table.reload(obj.config.id);
+                        }
+                    });
+                    break;
             }
         });
         // 表头自定义元素工具事件 --- 2.8.8+
@@ -415,28 +375,17 @@
                     elem: this, // 触发事件的 DOM 对象
                     show: true, // 外部事件触发即显示
                     data: [{
-                        title: '查看',
+                        title: '详情',
                         id: 'detail'
                     }, {
                         title: '删除',
                         id: 'del'
-                    }, {
-                        title: '入库',
-                        id: 'input'
-                    }, {
-                        title: '出库',
-                        id: 'output'
                     }],
                     click: function (menudata) {
                         if (menudata.id === 'detail') {
                             layer.msg('查看操作，当前行 ID:' + data.id);
                         } else if (menudata.id === 'del') {
                             layer.confirm('真的要删除 【药品' + data.id + '】 吗？', function (index) {
-
-                                if (data.count > 0) {
-                                    layer.msg('当前药品尚有库存，无法删除！', {icon: 0});
-                                    return false;
-                                }
 
                                 // 向服务端发送删除指令
                                 $.ajax({
@@ -446,6 +395,7 @@
                                         if (res.code) {
                                             layer.msg('删除成功！', {icon: 1});
                                             obj.del(); // 删除对应行（tr）的DOM结构
+                                            // table.reload(obj.config.id);
                                         } else {
                                             layer.msg('删除失败！', {icon: 2});
                                         }
@@ -456,19 +406,6 @@
                                 });
                                 layer.close(index); // 关闭询问框
                             });
-                        } else if (menudata.id === 'input') {
-                            layer.open({
-                                type: 2,
-                                title: '药品入库',
-                                area: ['310px', '450px'],
-                                scrollbar: false,
-                                content: ['/toStockInput/' + data.id + '/1', 'no'],
-                                end: function () {
-
-                                }
-                            });
-                        } else if (menudata.id === 'output') {
-                            // layer.msg('出库:' + data.id);
                         }
                     },
                     id: 'dropdown-table-tool',
@@ -495,7 +432,7 @@
 
         // 行单击事件
         table.on('row(test)', function (obj) {
-            //console.log(obj);
+            console.log(obj);
             //layer.closeAll('tips');
         });
         // 行双击事件

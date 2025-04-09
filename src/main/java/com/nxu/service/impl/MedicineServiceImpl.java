@@ -1,9 +1,10 @@
-package com.nxu.service;
+package com.nxu.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.nxu.entity.Medicine;
 import com.nxu.mapper.MedicineMapper;
+import com.nxu.service.MedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

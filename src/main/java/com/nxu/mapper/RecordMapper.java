@@ -7,7 +7,7 @@ import java.util.List;
 @Mapper
 public interface RecordMapper {
 
-    int insertRecord(Record record);
+    int insertRecord(com.nxu.entity.Record record);
 
-    List<Record> selectAllRecord(Record record);
+    List<Record> selectAllRecord(com.nxu.entity.Record record);
 }

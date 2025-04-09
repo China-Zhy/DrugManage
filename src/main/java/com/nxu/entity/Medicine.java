@@ -18,5 +18,5 @@ public class Medicine {
     private String usage;       // 用法用量
     private String image;       // 药品照片
     private String origin;      // 生产厂家
-    private int count;          // 库存数量
+    private int status;         // 状态信息 (1-可用 0-禁用)
 }

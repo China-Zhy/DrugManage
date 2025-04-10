@@ -30,10 +30,10 @@
             <if test="other != null and other != ''">
                 other = #{other},
             </if>
-            <if test="type != null">
+            <if test="type != null and type != 0">
                 type = #{type},
             </if>
-            <if test="status != null">
+            <if test="status != null and status != 0">
                 status = #{status}
             </if>
         </set>
@@ -54,10 +54,10 @@
             <if test="name != null and name != ''">
                 name LIKE CONCAT('%', #{name}, '%')
             </if>
-            <if test="type != null">
+            <if test="type != null and type != 0">
                 AND type = #{type}
             </if>
-            AND `status` != 0
+            AND `status` != 2
         </where>
     </select>
 

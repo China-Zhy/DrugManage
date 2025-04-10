@@ -11,7 +11,7 @@
             <if test="code != null and code != ''">
                 AND code = #{code}
             </if>
-            AND `status` != 0
+            AND `status` != 2
         </where>
     </select>
 
@@ -47,7 +47,7 @@
             <if test="origin != null and origin != ''">
                 origin = #{origin},
             </if>
-            <if test="status != null">
+            <if test="status != null and status != 0">
                 status = #{status}
             </if>
         </set>

@@ -3,13 +3,11 @@ package com.nxu.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class Medicine {
+public class Medicine {         // 药品信息
     private int id;             // 药品编号
     private String name;        // 药品名称
     private String code;        // 国药准字
@@ -18,5 +16,5 @@ public class Medicine {
     private String usage;       // 用法用量
     private String image;       // 药品照片
     private String origin;      // 生产厂家
-    private int status;         // 状态信息 (1-可用 0-禁用)
+    private int status;         // 状态信息 (1-可用 2-禁用)
 }

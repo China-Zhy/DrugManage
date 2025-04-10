@@ -60,7 +60,7 @@ public class MedicineController {
         HashMap<String, Object> map = new HashMap<>();
         Medicine medicine = new Medicine();
         medicine.setId(id);
-        medicine.setStatus(0);
+        medicine.setStatus(2);
         map.put("code", medicineService.setMedicine(medicine));     // 加删除，将药品状态设置为'禁用'
         return map;
     }

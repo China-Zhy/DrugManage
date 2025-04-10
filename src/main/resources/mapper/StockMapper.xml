@@ -17,7 +17,7 @@
     <select id="selectStock" resultType="com.nxu.entity.Stock">
         select * from `stock`
         <where>
-            <if test="medicineId != null">
+            <if test="medicineId != null and medicineId != 0">
                 medicine_id = #{medicineId}
             </if>
         </where>

@@ -45,12 +45,6 @@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="toAddData">添加药品</button>
-        <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="getCheckData">获取选中行数据</button>
-        <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="getData">获取当前页数据</button>
-        <button class="layui-btn layui-btn-sm layui-btn-primary" id="reloadTest">
-            重载测试
-            <i class="layui-icon layui-icon-down layui-font-12"></i>
-        </button>
         <button class="layui-btn layui-btn-sm layui-btn-primary" id="rowMode">
             <span>{{= d.lineStyle ? '多行' : '单行' }}模式</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
@@ -97,15 +91,17 @@
             ].join(''),
             cellMinWidth: 80,
             page: true,
+            limit: 15,
+            limits: [15, 30, 50],
             cols: [
                 [
                     {type: 'checkbox'},
-                    {field: 'id', title: 'ID', width: 60},
+                    {field: 'id', title: 'ID', width: 60, hide: true},
                     {field: 'name', title: '药品名称', width: 150},
                     {field: 'code', title: '国药准字', width: 120, templet: '<div><span class="layui-badge layui-bg-gray">{{= d.code }}</span></div>'},
                     {
                         field: 'compose',
-                        title: '药品成分 <i class="layui-icon layui-icon-tips layui-font-14" lay-event="email-tips" title="该字段开启了编辑功能" style="margin-left: 5px;"></i>',
+                        title: '药品成分',
                         fieldTitle: '药品成分',
                         hide: 0,
                         width: 280,
@@ -120,91 +116,23 @@
                         minWidth: 180,
                         expandedWidth: 200
                     },
-                    {field: 'image', title: '药品照片', width: 150, hide: true},
-                    {field: 'origin', title: '生产厂家', width: 180},
+                    {field: 'image', title: '药品照片', width: 100, hide: true},
+                    {field: 'origin', title: '生产厂家', width: 200},
                     {fixed: 'right', title: '相关操作', width: 120, templet: '#toolDemo', align: 'center'}
                 ]
             ],
             done: function () {
                 let id = this.id;
 
-                // 重载测试 (表格头部的下拉菜单)
-                dropdown.render({
-                    elem: '#reloadTest', // 可绑定在任意元素中，此处以上述按钮为例
-                    data: [{
-                        id: 'reload',
-                        title: '重载'
-                    }, {
-                        id: 'reload-deep',
-                        title: '重载 - 参数叠加'
-                    }, {
-                        id: 'reloadData',
-                        title: '仅重载数据'
-                    }, {
-                        id: 'reloadData-deep',
-                        title: '仅重载数据 - 参数叠加'
-                    }],
-                    // 菜单被点击的事件
-                    click: function (obj) {
-                        switch (obj.id) {
-                            case 'reload':
-                                // 重载 - 默认（参数重置）
-                                table.reload('test', {
-                                    where: {
-                                        abc: '123456',
-                                        //test: '新的 test2',
-                                        //token: '新的 token2'
-                                    }
-                                });
-                                break;
-                            case 'reload-deep':
-                                // 重载 - 深度（参数叠加）
-                                table.reload('test', {
-                                    where: {
-                                        abc: 123,
-                                        test: '新的 test1'
-                                    },
-                                    //defaultToolbar: ['print'], // 重载头部工具栏右侧图标
-                                    //cols: ins1.config.cols
-                                }, true);
-                                break;
-                            case 'reloadData':
-                                // 数据重载 - 参数重置
-                                table.reloadData('test', {
-                                    where: {
-                                        abc: '123456',
-                                        //test: '新的 test2',
-                                        //token: '新的 token2'
-                                    },
-                                    scrollPos: 'fixed',  // 保持滚动条位置不变 - v2.7.3 新增
-                                    height: 2000, // 测试无效参数（即与数据无关的参数设置无效，此处以 height 设置无效为例）
-                                    //url: '404',
-                                    //page: {curr: 1, limit: 30} // 重新指向分页
-                                });
-                                break;
-                            case 'reloadData-deep':
-                                // 数据重载 - 参数叠加
-                                table.reloadData('test', {
-                                    where: {
-                                        abc: 123,
-                                        test: '新的 test1'
-                                    }
-                                }, true);
-                                break;
-                        }
-                        layer.msg('可观察 Network 请求参数的变化');
-                    }
-                });
-
                 // 行模式
                 dropdown.render({
                     elem: '#rowMode',
                     data: [{
                         id: 'default-row',
-                        title: '单行模式(默认)'
+                        title: '单行模式'
                     }, {
                         id: 'multi-row',
-                        title: '多行模式(可选)'
+                        title: '多行模式'
                     }],
                     // 菜单被点击的事件
                     click: function (obj) {
@@ -239,15 +167,6 @@
             let checkStatus = table.checkStatus(id);
             let othis = lay(this);
             switch (obj.event) {
-                case 'getCheckData':
-                    let data = checkStatus.data;
-                    layer.alert(layui.util.escape(JSON.stringify(data)));
-                    break;
-                case 'getData':
-                    let getData = table.getData(id);
-                    console.log(getData);
-                    layer.alert(layui.util.escape(JSON.stringify(getData)));
-                    break;
                 case 'toAddData':
                     layer.open({
                         type: 2,
@@ -260,16 +179,6 @@
                         }
                     });
                     break;
-            }
-        });
-        // 表头自定义元素工具事件 --- 2.8.8+
-        table.on('colTool(test)', function (obj) {
-            let event = obj.event;
-            console.log(obj);
-            if (event === 'email-tips') {
-                layer.alert(layui.util.escape(JSON.stringify(obj.col)), {
-                    title: '当前列属性选项'
-                });
             }
         });
 

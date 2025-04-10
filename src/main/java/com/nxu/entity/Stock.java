@@ -3,15 +3,13 @@ package com.nxu.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class Stock {
+public class Stock {                // 库存信息
     private int id;                 // 库存编号
     private int medicineId;         // 药品编号
     private Date birthday;          // 生产日期

@@ -3,12 +3,20 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>药品入库(某个)</title>
+    <title>药品入库(任意)</title>
     <link href="/layui/css/layui.css" rel="stylesheet">
 </head>
 <body>
 
 <form class="layui-form layui-form-pane layui-margin-3">
+    <div class="layui-form-item">
+        <div class="layui-col-md3">
+            <select lay-search="" name="id" lay-verify="required">
+                <option value="">请选择或搜索药品信息</option>
+                <option th:each="m : ${medicineList}" th:value="${m.id}" th:text="${m.name}"></option>
+            </select>
+        </div>
+    </div>
 
     <div class="layui-form-item">
         <div class="layui-col-md3">
@@ -45,8 +53,6 @@
             </div>
         </div>
     </div>
-
-    <input hidden="hidden" type="number" name="id" id="id" th:value="${id}">
 
     <div class="layui-form-item layui-col-md3">
         <div style="text-align: center;">

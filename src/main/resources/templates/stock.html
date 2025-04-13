@@ -11,27 +11,38 @@
 <body>
 
 <!--查询参数的表单-->
-<form class="layui-form layui-form-pane layui-margin-3" action="/toStock">
+<form class="layui-form layui-form-pane layui-margin-3">
 
     <div class="layui-form-item">
 
         <div class="layui-inline">
+            <button type="button" class="layui-btn layui-btn-primary" lay-on="myEnter">新增药品入库</button>
+        </div>
+
+        <div class="layui-inline">
             <label class="layui-form-label">药品名称</label>
             <div class="layui-input-inline">
-                <input type="text" name="name" id="name" autocomplete="off" class="layui-input" th:value="${name}">
+                <select name="name" id="name" lay-search>
+                    <option value="">搜索或选择</option>
+                    <option th:each="n : ${nameList}" th:value="${n}" th:text="${n}"></option>
+                </select>
             </div>
         </div>
 
         <div class="layui-inline">
             <label class="layui-form-label">国药准字</label>
             <div class="layui-input-inline">
-                <input type="text" name="code" id="code" autocomplete="off" class="layui-input" th:value="${code}">
+                <select name="code" id="code" lay-search>
+                    <option value="">搜索或选择</option>
+                    <option th:each="c : ${codeList}" th:value="${c}" th:text="${c}"></option>
+                </select>
             </div>
         </div>
 
         <div class="layui-inline">
-            <button class="layui-btn" lay-submit>搜索药品</button>
-            <button type="reset" class="layui-btn layui-btn-primary" onclick="window.location.href='/toMedicine'">重置</button>
+            <button class="layui-btn" lay-submit lay-filter="toDo">搜索药品</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+
         </div>
     </div>
 </form>
@@ -49,6 +60,13 @@
     </div>
 </script>
 
+<!--表格右下角分页栏按钮-->
+<script type="text/html" id="my-page-bar">
+    <div class="layui-btn-container" style="margin-right: 42px;">
+        <button class="layui-btn layui-btn-xs layui-btn-primary" lay-event="作者：张宏业">😀</button>
+    </div>
+</script>
+
 <script src="/layui/layui.js"></script>
 <script>
 
@@ -57,11 +75,37 @@
         let form = layui.form;
         let layer = layui.layer;
         let $ = layui.$;
+        let util = layui.util;
+
+        util.on('lay-on', {
+            myEnter: function () {
+                layer.open({
+                    type: 2,
+                    title: '填写药品入库信息',
+                    area: ['450px', '500px'],
+                    scrollbar: false,
+                    content: ['/toStockEnter', 'no']
+                });
+            }
+        });
+
+        // 搜索按钮事件
+        form.on('submit(toDo)', function (data) {
+            let field = data.field; // 获取表单字段值
+
+            table.reload('test', {  // 表格数据重载
+                where: {
+                    'name': field.name,
+                    'code': field.code
+                }
+            });
+            return false; // 阻止默认 form 跳转
+        });
 
         // 创建渲染实例
         table.render({
             elem: '#test',
-            url: '/getAllMedicineData?name=' + $('#name').val() + '&code=' + $('#code').val(),
+            url: '/getAllMedicineData',
             css: [ // 重设当前表格样式
                 '.layui-table-tool-temp{padding-right: 145px;}'
             ].join(''),
@@ -69,6 +113,7 @@
             page: true,
             limit: 15,
             limits: [15, 30, 50],
+            pagebar: '#my-page-bar', // 分页栏模板
             cols: [
                 [
                     {field: 'id', title: '药品编号'},
@@ -87,6 +132,12 @@
             }
         });
 
+        // 底部分页栏事件
+        table.on('pagebar(test)', function (obj) {
+            var eventValue = obj.event; // 获得按钮 lay-event 值
+            layer.msg(eventValue);
+        });
+
         // 触发单元格工具事件
         table.on('tool(test)', function (obj) {
             let data = obj.data; // 获得当前行数据
@@ -95,7 +146,7 @@
                 layer.open({
                     type: 2,
                     title: '填写药品入库信息',
-                    area: ['330px', '450px'],
+                    area: ['450px', '440px'],
                     scrollbar: false,
                     content: ['/toStockInput/' + data.id, 'no']
                 });

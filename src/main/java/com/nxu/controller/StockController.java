@@ -1,9 +1,9 @@
 package com.nxu.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.nxu.entity.*;
 import com.nxu.entity.Record;
-import com.nxu.entity.Stock;
-import com.nxu.entity.User;
+import com.nxu.service.MedicineService;
 import com.nxu.service.RecordService;
 import com.nxu.service.StockService;
 import jakarta.servlet.http.HttpSession;
@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Controller
@@ -24,11 +25,13 @@ public class StockController {
     @Autowired
     private RecordService recordService;
 
+    @Autowired
+    private MedicineService medicineService;
+
     // 前往库存管理页面
     @GetMapping("/toStock")
-    public String toStock(Model model, String name, String code) {
-        model.addAttribute("name", name);
-        model.addAttribute("code", code);
+    public String toStock(Model model) {
+        SystemController.getMedicineDictionary(model, medicineService);
         return "stock";
     }
 
@@ -86,11 +89,27 @@ public class StockController {
         return map;
     }
 
-    // 前往入库页面
+    // 前往入库页面(某个药品)
     @GetMapping("/toStockInput/{id}")
     public String toStockInput(Model model, @PathVariable("id") Integer id) {
         model.addAttribute("id", id);
         return "stockInput";
+    }
+
+    // 前往入库页面(任意药品)
+    @GetMapping("/toStockEnter")
+    public String toStockEnter(Model model) {
+        PageInfo<Medicine> pageInfo = medicineService.getSomeMedicine(null, null, null, null);
+
+        ArrayList<Identity> list = new ArrayList<>();
+        for (Medicine medicine : pageInfo.getList()) {
+            Identity identity = new Identity();
+            identity.setId(medicine.getId());
+            identity.setName(medicine.getCode() + " | " + medicine.getName() + " | " + medicine.getSpecs());
+            list.add(identity);
+        }
+        model.addAttribute("medicineList", list);
+        return "stockEnter";
     }
 
     // 进行入库操作

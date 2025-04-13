@@ -18,9 +18,8 @@ public class MedicineController {
 
     // 前往药品管理页面
     @GetMapping("/toMedicine")
-    public String medicineHtml(Model model, String name, String code) {
-        model.addAttribute("name", name);
-        model.addAttribute("code", code);
+    public String medicineHtml(Model model) {
+        SystemController.getMedicineDictionary(model, medicineService);
         return "medicine";
     }
 

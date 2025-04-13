@@ -11,7 +11,7 @@
 <body>
 
 <!--查询参数的表单-->
-<form class="layui-form layui-form-pane layui-margin-3" action="/toRecord">
+<form class="layui-form layui-form-pane layui-margin-3">
 
     <div class="layui-form-item">
 
@@ -20,8 +20,8 @@
             <div class="layui-input-block">
                 <select name="type" id="type">
                     <option value=""></option>
-                    <option value="1" th:selected="${type==1}">药品入库</option>
-                    <option value="2" th:selected="${type==2}">药品出库</option>
+                    <option value="1">药品入库</option>
+                    <option value="2">药品出库</option>
                 </select>
             </div>
         </div>
@@ -29,27 +29,27 @@
         <!--        <div class="layui-inline">-->
         <!--            <label class="layui-form-label">操作日期</label>-->
         <!--            <div class="layui-input-block">-->
-        <!--                <input type="text" name="when" id="layDate" autocomplete="off" class="layui-input" th:value="${when}">-->
+        <!--                <input type="text" name="when" id="layDate" autocomplete="off" class="layui-input">-->
         <!--            </div>-->
         <!--        </div>-->
 
         <div class="layui-inline">
             <label class="layui-form-label">药品编号</label>
             <div class="layui-input-block">
-                <input type="text" name="what" id="what" autocomplete="off" class="layui-input" th:value="${what}">
+                <input type="text" name="what" id="what" autocomplete="off" class="layui-input">
             </div>
         </div>
 
         <div class="layui-inline">
             <label class="layui-form-label">操作用户</label>
             <div class="layui-input-block">
-                <input type="text" name="who" id="who" autocomplete="off" class="layui-input" th:value="${who}">
+                <input type="text" name="who" id="who" autocomplete="off" class="layui-input">
             </div>
         </div>
 
         <div class="layui-inline">
-            <button class="layui-btn" lay-submit>搜索记录</button>
-            <button type="reset" class="layui-btn layui-btn-primary" onclick="window.location.href='/toRecord'">重置</button>
+            <button class="layui-btn" lay-submit lay-filter="toDo">搜索记录</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </div>
 </form>
@@ -86,10 +86,30 @@
         let layer = layui.layer;
         let $ = layui.$;
 
+        // let laydate = layui.laydate;
+        // // 渲染日期组件
+        // laydate.render({
+        //     elem: '#layDate'
+        // });
+
+        // 搜索按钮事件
+        form.on('submit(toDo)', function (data) {
+            let field = data.field; // 获取表单字段值
+
+            table.reload('test', {  // 表格数据重载
+                where: {
+                    'type': field.type,
+                    'what': field.what,
+                    'who': field.who
+                }
+            });
+            return false; // 阻止默认 form 跳转
+        });
+
         // 创建渲染实例
         table.render({
             elem: '#test',
-            url: '/getRecordData?what=' + $('#what').val() + '&who=' + $('#who').val() + '&type=' + $('#type').val(),
+            url: '/getRecordData',
             css: [ // 重设当前表格样式
                 '.layui-table-tool-temp{padding-right: 145px;}'
             ].join(''),

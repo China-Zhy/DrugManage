@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nxu.mapper.BrowseMapper">
+
+    <insert id="insertBrowse">
+        insert into `browse` values (null, #{who}, #{what}, NOW())
+    </insert>
+
+    <!-- 定义结果映射，使用分步查询来映射 Browse 类及其关联的 User 和 Notice 类的属性 -->
+    <resultMap id="BrowseInfoMap" type="com.nxu.entity.Browse">
+        <id property="id" column="id"/>
+        <association property="user" select="com.nxu.mapper.UserMapper.selectUserById" column="who"/>
+        <association property="notice" select="com.nxu.mapper.NoticeMapper.selectNoticeById" column="what"/>
+    </resultMap>
+
+    <select id="selectBrowse" resultMap="BrowseInfoMap">
+        select * from `browse`
+        <where>
+            <if test="who != null and who != 0">
+                who = #{who}
+            </if>
+            <if test="what != null and what != 0">
+                AND what = #{what}
+            </if>
+        </where>
+    </select>
+
+</mapper>

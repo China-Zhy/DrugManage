@@ -18,9 +18,13 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Override
     public PageInfo<Medicine> getSomeMedicine(String name, String code, Integer page, Integer limit) {
-        PageHelper.startPage(page, limit);
-        List<Medicine> medicines = medicineMapper.selectSomeMedicine(name, code);
-        return new PageInfo<>(medicines);
+        if (page == null || limit == null) {
+            return new PageInfo<>(medicineMapper.selectSomeMedicine(name, code));
+        } else {
+            PageHelper.startPage(page, limit);
+            List<Medicine> medicines = medicineMapper.selectSomeMedicine(name, code);
+            return new PageInfo<>(medicines);
+        }
     }
 
     @Override

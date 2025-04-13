@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nxu.mapper.NoticeMapper">
+
+    <insert id="insertNotice">
+        insert into `notice` values (null, #{title}, #{content}, #{sender}, NOW(), #{receiver}, #{status})
+    </insert>
+
+    <update id="updateNotice">
+        update `notice`
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="receiver != null and receiver != ''">
+                receiver = #{receiver},
+            </if>
+            <if test="status != null and status != 0">
+                status = #{status}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectNoticeById" resultType="com.nxu.entity.Notice">
+        select * from `notice` where id = #{id}
+    </select>
+
+    <select id="selectNotices" resultType="com.nxu.entity.Notice">
+        select * from `notice`
+        <where>
+            <if test="sender != null and sender != 0">
+                sender = #{sender}
+            </if>
+            <if test="status != null and status != 0">
+                AND status = #{status}
+            </if>
+            <if test="status == null or status == 0">
+                AND `status` != 3
+            </if>
+        </where>
+    </select>
+
+    <!--查询某个用户的未读通知-->
+    <select id="selectNoticeByUser" resultType="com.nxu.entity.Notice">
+        SELECT n.* FROM `notice` n
+        LEFT JOIN `browse` b ON n.id = b.what AND b.who = #{userId}
+        WHERE n.receiver = #{userType}
+        AND n.status = 2
+        AND b.id IS NULL
+    </select>
+
+</mapper>

@@ -5,7 +5,6 @@ import com.nxu.entity.Record;
 import com.nxu.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,17 +19,14 @@ public class RecordController {
 
     // 前往库存记录页面
     @GetMapping("/toRecord")
-    public String toRecord(Model model, Integer what, Integer who, Integer type) {
-        model.addAttribute("what", what);
-        model.addAttribute("who", who);
-        model.addAttribute("type", type);
+    public String toRecord() {
         return "record";
     }
 
     // 根据条件查询库存记录数据
     @GetMapping("/getRecordData")
     @ResponseBody
-    public Map<String, Object> getRecordData(Integer what, Integer who, Integer type, Integer page, Integer limit) {
+    public Map<String, Object> getRecordData(Integer page, Integer limit, Integer what, Integer who, Integer type) {
 
         Record record = new Record();
         if (what != null) {

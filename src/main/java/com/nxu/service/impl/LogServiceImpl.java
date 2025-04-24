@@ -8,9 +8,6 @@ import com.nxu.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Service
 public class LogServiceImpl implements LogService {
 
@@ -18,19 +15,20 @@ public class LogServiceImpl implements LogService {
     private LogMapper logMapper;
 
     @Override
-    public int insertLog(Log log) {
+    public int addLog(Log log) {
         return logMapper.insertLog(log);
     }
 
     @Override
-    public int updateLog(int id, LocalDateTime logout, int type) {
-        return logMapper.updateLog(id, logout, type);
+    public int setLog(int id, int type) {
+        return logMapper.updateLog(id, type);
     }
 
     @Override
-    public PageInfo<Log> selectAllLog(Integer page, Integer limit) {
-        PageHelper.startPage(page, limit);
-        List<Log> logs = logMapper.selectAllLog();
-        return new PageInfo<>(logs);
+    public PageInfo<Log> getAllLog(Integer page, Integer limit) {
+        if (page != null && limit != null) {
+            PageHelper.startPage(page, limit);
+        }
+        return new PageInfo<>(logMapper.selectAllLog());
     }
 }

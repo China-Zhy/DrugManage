@@ -3,13 +3,11 @@ package com.nxu.service;
 import com.github.pagehelper.PageInfo;
 import com.nxu.entity.Log;
 
-import java.time.LocalDateTime;
-
 public interface LogService {
 
-    int insertLog(Log log);
+    int addLog(Log log);
 
-    int updateLog(int id, LocalDateTime logout, int type);
+    int setLog(int id, int type);
 
-    PageInfo<Log> selectAllLog(Integer page, Integer limit);
+    PageInfo<Log> getAllLog(Integer page, Integer limit);
 }

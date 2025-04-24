@@ -56,7 +56,7 @@
     <div class="layui-form-item layui-form-text" style="width: 622px;">
         <label class="layui-form-label">药品成分</label>
         <div class="layui-input-block">
-            <textarea name="compose" class="layui-textarea" lay-verify="required"></textarea>
+            <textarea name="compose" class="layui-textarea" lay-verify="required" maxlength="1000"></textarea>
         </div>
     </div>
 
@@ -68,10 +68,10 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['form'], function () {
+    layui.use(['form', 'layer', 'jquery'], function () {
         let form = layui.form;
         let layer = layui.layer;
-        let $ = layui.$;
+        let $ = layui.jquery;
 
         // 提交事件
         form.on('submit(toDo)', function (data) {

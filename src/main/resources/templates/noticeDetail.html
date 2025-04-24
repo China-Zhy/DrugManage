@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>通知详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+<div class="layui-padding-3">
+    <fieldset class="layui-elem-field">
+        <legend th:text="${notice.title}"></legend>
+        <div class="layui-field-box" th:text="${notice.content}"></div>
+    </fieldset>
+
+    <table class="layui-table" lay-skin="nob">
+        <thead>
+        <tr>
+            <th th:text="|发布用户:${sender.name}|"></th>
+            <th th:text="|发布时间:${notice.when}|"></th>
+            <th th:text="|联系电话:${sender.phone}|"></th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<script src="/layui/layui.js"></script>
+<script>
+    layui.use(['layer', 'util'], function () {
+        let layer = layui.layer;
+        let util = layui.util;
+
+        util.on('lay-on', {
+            addBrowse: function (data) {
+                layer.msg(data[0].id);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

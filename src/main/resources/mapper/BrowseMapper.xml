@@ -3,7 +3,7 @@
 <mapper namespace="com.nxu.mapper.BrowseMapper">
 
     <insert id="insertBrowse">
-        insert into `browse` values (null, #{who}, #{what}, NOW())
+        insert into `browse` values (null, #{user.id}, #{notice.id}, NOW())
     </insert>
 
     <!-- 定义结果映射，使用分步查询来映射 Browse 类及其关联的 User 和 Notice 类的属性 -->

@@ -2,7 +2,6 @@ package com.nxu.mapper;
 
 import com.nxu.entity.User;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +13,11 @@ public interface UserMapper {
 
     int updateUser(User user);
 
-    int deleteUser(@Param("id") int id);
+    int deleteUser(int id);
 
-    User selectUserById(@Param("id") int id);
+    User selectUserById(int id);
 
-    User selectUserByPhone(@Param("phone") String phone);
+    User selectUserByPhone(String phone);
 
     List<User> selectSomeUser(HashMap<String, Object> map);
 }

@@ -15,7 +15,7 @@ public interface UserService {
 
     User getUserById(int id);
 
-    User getUserByPhone(String phone);
+    User login(String phone);
 
     PageInfo<User> getSomeUser(HashMap<String, Object> map);
 }

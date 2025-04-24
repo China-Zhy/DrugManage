@@ -71,13 +71,12 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-
-    layui.use(['table', 'dropdown'], function () {
+    layui.use(['table', 'form', 'layer', 'dropdown', 'jquery'], function () {
         let table = layui.table;
         let form = layui.form;
         let layer = layui.layer;
         let dropdown = layui.dropdown;
-        let $ = layui.$;
+        let $ = layui.jquery;
 
         // 搜索按钮事件
         form.on('submit(toDo)', function (data) {
@@ -148,10 +147,10 @@
                     elem: '#rowMode',
                     data: [{
                         id: 'default-row',
-                        title: '单行模式'
+                        title: '单行显示模式'
                     }, {
                         id: 'multi-row',
-                        title: '多行模式'
+                        title: '多行显示模式'
                     }],
                     // 菜单被点击的事件
                     click: function (obj) {
@@ -162,14 +161,14 @@
                                 table.reload('test', {
                                     lineStyle: null // 恢复单行
                                 });
-                                layer.msg('已设为单行');
+                                layer.msg('已设为单行显示模式');
                                 break;
                             case 'multi-row':
                                 table.reload('test', {
                                     // 设置行样式，此处以设置多行高度为例。若为单行，则没必要设置改参数 - 注：v2.7.0 新增
-                                    lineStyle: 'height: 95px;'
+                                    lineStyle: 'height: 95px;'  // 即通过设置 lineStyle 参数可开启多行
                                 });
-                                layer.msg('即通过设置 lineStyle 参数可开启多行');
+                                layer.msg('已设为多行显示模式');
                                 break;
                         }
                     }
@@ -182,9 +181,6 @@
 
         // 工具栏事件
         table.on('toolbar(test)', function (obj) {
-            let id = obj.config.id;
-            // let checkStatus = table.checkStatus(id);
-            // let othis = lay(this);
             switch (obj.event) {
                 case 'toAddData':
                     layer.open({
@@ -311,9 +307,9 @@
                     }],
                     click: function (menudata) {
                         if (menudata.id === 'detail') {
-                            layer.msg('查看操作，当前行 ID:' + data.id);
+                            layer.msg('当前药品ID:' + data.id);
                         } else if (menudata.id === 'del') {
-                            layer.confirm('真的要删除 【药品' + data.id + '】 吗？', function (index) {
+                            layer.confirm('真的要删除【药品' + data.id + '】吗？', function (index) {
 
                                 // 向服务端发送删除指令
                                 $.ajax({

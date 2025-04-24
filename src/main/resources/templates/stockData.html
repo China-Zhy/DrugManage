@@ -27,12 +27,10 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-
-    layui.use(['table', 'dropdown'], function () {
+    layui.use(['table', 'layer', 'jquery'], function () {
         let table = layui.table;
-        let form = layui.form;
         let layer = layui.layer;
-        let $ = layui.$;
+        let $ = layui.jquery;
 
         // 创建渲染实例
         table.render({

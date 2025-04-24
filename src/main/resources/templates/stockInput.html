@@ -12,7 +12,7 @@
 
     <div class="layui-form-item">
         <div class="layui-col-md3">
-            <label class="layui-form-label">生产日期</label>
+            <label class="layui-form-label">有效日期</label>
             <div class="layui-input-block">
                 <input type="text" name="birthday" id="layDate" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
@@ -41,7 +41,7 @@
         <div class="layui-form-text layui-col-md3">
             <label class="layui-form-label">备注信息</label>
             <div class="layui-input-block">
-                <textarea name="other" class="layui-textarea" lay-verify="required"></textarea>
+                <textarea name="other" class="layui-textarea" lay-verify="required" maxlength="255"></textarea>
             </div>
         </div>
     </div>
@@ -56,14 +56,40 @@
     </div>
 </form>
 
+
+<form class="layui-form layui-form-pane layui-margin-3">
+    <div class="layui-form-item">
+        <div class="layui-col-md3">
+            <label class="layui-form-label">用户昵称</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md3">
+            <label class="layui-form-label">居住地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="address" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item layui-col-md3">
+        <div style="text-align: center;">
+            <button class="layui-btn" lay-submit lay-filter="toDo">更新</button>
+            <button type="reset" class="layui-btn layui-btn-primary">恢复</button>
+        </div>
+    </div>
+</form>
+
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['form'], function () {
+    layui.use(['form', 'form', 'jquery', 'laydate'], function () {
         let form = layui.form;
         let layer = layui.layer;
-        let $ = layui.$;
-
+        let $ = layui.jquery;
         let laydate = layui.laydate;
+
         // 渲染日期组件
         laydate.render({
             elem: '#layDate'

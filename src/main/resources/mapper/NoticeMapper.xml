@@ -3,7 +3,7 @@
 <mapper namespace="com.nxu.mapper.NoticeMapper">
 
     <insert id="insertNotice">
-        insert into `notice` values (null, #{title}, #{content}, #{sender}, NOW(), #{receiver}, #{status})
+        insert into `notice` values (null, #{title}, #{content}, #{sender}, NOW(), #{receiver}, #{status}, #{type})
     </insert>
 
     <update id="updateNotice">
@@ -20,6 +20,9 @@
             </if>
             <if test="status != null and status != 0">
                 status = #{status}
+            </if>
+            <if test="type != null and type != 0">
+                type = #{type}
             </if>
         </set>
         where id = #{id}
@@ -38,19 +41,25 @@
             <if test="status != null and status != 0">
                 AND status = #{status}
             </if>
-            <if test="status == null or status == 0">
-                AND `status` != 3
+            <if test="type != null and type != 0">
+                AND type = #{type}
             </if>
         </where>
+        Order by id desc
     </select>
 
     <!--查询某个用户的未读通知-->
     <select id="selectNoticeByUser" resultType="com.nxu.entity.Notice">
-        SELECT n.* FROM `notice` n
-        LEFT JOIN `browse` b ON n.id = b.what AND b.who = #{userId}
-        WHERE n.receiver = #{userType}
+        SELECT n.id, n.title, n.content, n.sender, n.when, n.receiver, n.status, n.type
+        FROM notice n
+        WHERE n.id NOT IN (
+        SELECT b.what
+        FROM browse b
+        WHERE b.who = #{userId}
+        )
         AND n.status = 2
-        AND b.id IS NULL
+        AND FIND_IN_SET((SELECT u.type FROM user u WHERE u.id = #{userId}), n.receiver)
+        Order by n.id desc
     </select>
 
 </mapper>

@@ -70,11 +70,10 @@
 <script src="/layui/layui.js"></script>
 <script>
 
-    layui.use(['table', 'dropdown'], function () {
+    layui.use(['table', 'form', 'layer', 'util'], function () {
         let table = layui.table;
         let form = layui.form;
         let layer = layui.layer;
-        let $ = layui.$;
         let util = layui.util;
 
         util.on('lay-on', {

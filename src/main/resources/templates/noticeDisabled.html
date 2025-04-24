@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>系统通知</title>
+    <link href="/layui/css/layui.css" rel="stylesheet">
+</head>
+<body class="layui-bg-gray">
+<div class="layui-bg-gray" style="padding: 32px;">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12 layui-anim" id="noticeBox">
+            <div class="layui-card" th:each="notice : ${noticeList}" th:id="|notice${notice.id}|">
+                <div class="layui-card-header">
+                    <span class="layui-badge">未读</span>&ensp;
+                    <span th:text="${notice.title}"></span>
+                    <div style="float: right;">
+                        <span class="layui-badge-rim">发布时间：<span th:text="${#temporals.format(notice.when, 'yyyy-MM-dd HH:mm:ss')}"></span></span>
+                    </div>
+                </div>
+                <div class="layui-card-body" style="display: flex;flex-direction: column;justify-content: space-between;height: 100%;">
+                    <p th:text="${notice.content}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div style="margin-top: 30px; text-align: center;">
+        <i class="layui-icon" style="display: inline-block; font-size: 300px; color: #393D49;">&#xe664;</i>
+        <div style="font-size: 20px;width: 500px; margin: 30px auto; padding-top: 20px; border-top: 5px solid #009688;">
+            莫慌，系统维护中，请稍后再试
+        </div>
+    </div>
+</div>
+
+<h5 style="text-align: center; margin-top: 50px; color: #1e9fff;"><a href="/toUserLogin">返回登录页面</a></h5>
+</body>
+</html>

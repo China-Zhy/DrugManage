@@ -2,9 +2,9 @@ package com.nxu.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.nxu.entity.Medicine;
-import com.nxu.entity.User;
 import com.nxu.service.MedicineService;
-import jakarta.servlet.http.HttpSession;
+import com.nxu.utils.RedisService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +13,19 @@ import java.util.ArrayList;
 
 @Controller
 public class SystemController {
+
+    @Autowired
+    private RedisService redisService;
+
+    @GetMapping("/")
+    public String indexHtml() {
+        return "index";
+    }
+
+    @GetMapping("/toWelcome")
+    public String toWelcome() {
+        return "welcome";
+    }
 
     /**
      * 药品信息字典
@@ -29,23 +42,7 @@ public class SystemController {
             nameList.add(medicine.getName());
             codeList.add(medicine.getCode());
         }
-
         model.addAttribute("nameList", nameList);
         model.addAttribute("codeList", codeList);
     }
-
-
-    @GetMapping("/")
-    public String indexHtml(HttpSession session) {
-        User user = new User();
-        user.setId(3);
-        session.setAttribute("loginUser", user);
-        return "index";
-    }
-
-    @GetMapping("/toWelcome")
-    public String toWelcome() {
-        return "welcome";
-    }
-
 }

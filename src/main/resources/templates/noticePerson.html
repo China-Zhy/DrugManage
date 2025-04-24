@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>我的通知</title>
+    <link href="/layui/css/layui.css" rel="stylesheet">
+</head>
+<body class="layui-bg-gray">
+<div class="layui-bg-gray" style="padding: 16px;">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12 layui-anim" id="noticeBox">
+            <h3 th:if="${#lists.isEmpty(noticeList)}" style="text-align: center;">😊暂无未读通知😊</h3>
+
+            <div th:unless="${#lists.isEmpty(noticeList)}" class="layui-card" th:each="notice : ${noticeList}" th:id="|notice${notice.id}|">
+                <div class="layui-card-header">
+                    <span class="layui-badge">未读</span>&ensp;
+                    <span th:text="${notice.title}"></span>
+                    <div style="float: right;">
+                        <span class="layui-badge-rim">发布时间：<span th:text="${#temporals.format(notice.when, 'yyyy-MM-dd HH:mm:ss')}"></span></span>
+                    </div>
+                </div>
+                <div class="layui-card-body" style="display: flex;flex-direction: column;justify-content: space-between;height: 100%;">
+                    <p th:text="${#strings.abbreviate(notice.content, 300)}"></p>
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-on="lookDetail" th:id="${notice.id}" style="align-self: flex-end;">查看详情</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="/layui/layui.js"></script>
+<script>
+    layui.use(['layer', 'util', 'jquery'], function () {
+        let layer = layui.layer;
+        let util = layui.util;
+        let $ = layui.jquery;
+
+        util.on('lay-on', {
+            lookDetail: function (data) {
+                let noticeId = data[0].id;
+                const noticeBox = document.getElementById('noticeBox');
+
+                layer.open({
+                    type: 2,
+                    title: false,
+                    area: ['800px', '500px'],
+                    scrollbar: false,
+                    closeBtn: 0,
+                    btn: '我已知晓',
+                    btnAlign: 'c',
+                    skin: 'layui-layer-lan',
+                    content: '/toNoticeDetail/' + noticeId,
+                    yes: function (index, layero, that) {
+                        $.ajax({
+                            url: '/doBrowseAdd/' + noticeId,
+                            type: 'GET',
+                            success: function (res) {
+                                if (res.code) {
+                                    layer.msg('浏览记录添加成功');
+                                } else {
+                                    layer.msg('浏览记录添加失败！');
+                                }
+                            },
+                            error: function (err) {
+                                layer.msg('Ajax请求异常！', {icon: 0});
+                            }
+                        });
+                        layer.close(index); // 关闭弹层
+                    },
+                    end: function () {
+                        const divToRemove = document.getElementById('notice' + noticeId);
+                        if (divToRemove) {
+                            divToRemove.remove();
+                        }
+                        if (noticeBox.childElementCount === 0) {
+                            const emptyMessage = document.createElement('p');
+                            emptyMessage.textContent = '😊暂无未读通知😊';
+                            emptyMessage.style.textAlign = 'center';
+                            emptyMessage.style.color = 'gray';
+                            noticeBox.appendChild(emptyMessage);
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

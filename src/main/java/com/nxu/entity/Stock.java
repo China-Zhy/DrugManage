@@ -12,7 +12,7 @@ import java.util.Date;
 public class Stock {                // 库存信息
     private int id;                 // 库存编号
     private int medicineId;         // 药品编号
-    private Date birthday;          // 生产日期
+    private Date birthday;          // 有效日期
     private double price;           // 药品单价
     private int count;              // 库存数量
 }

@@ -2,12 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nxu.mapper.LogMapper">
 
-    <insert id="insertLog">
-        insert into `log` values (null, #{who}, #{name}, #{ip}, #{login}, #{logout}, #{type})
+    <!--添加日志，同时返回日志ID-->
+    <insert id="insertLog" useGeneratedKeys="true" keyProperty="id">
+        insert into `log` values (null, #{who}, #{name}, #{ip}, NOW(), NOW(), #{type})
     </insert>
 
     <update id="updateLog">
-        update `log` set logout = #{logout}, type = #{type}
+        update `log` set logout = NOW(), type = #{type} where id = #{id}
     </update>
 
     <select id="selectAllLog" resultType="com.nxu.entity.Log">

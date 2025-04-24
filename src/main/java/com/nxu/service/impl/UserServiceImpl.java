@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+
 
     @Autowired
     private UserMapper userMapper;
@@ -38,14 +38,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByPhone(String phone) {
+    public User login(String phone) {
         return userMapper.selectUserByPhone(phone);
     }
 
     @Override
     public PageInfo<User> getSomeUser(HashMap<String, Object> map) {
-        PageHelper.startPage(Integer.parseInt(map.get("page").toString()), Integer.parseInt(map.get("rows").toString()));
-        List<User> users = userMapper.selectSomeUser(map);
-        return new PageInfo<>(users);
+        if (map.containsKey("pageNum") && map.containsKey("pageSize")) {
+            PageHelper.startPage(Integer.parseInt(map.get("page").toString()), Integer.parseInt(map.get("rows").toString()));
+        }
+        return new PageInfo<>(userMapper.selectSomeUser(map));
     }
 }

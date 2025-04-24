@@ -4,7 +4,15 @@ spring:
     url: jdbc:mysql://localhost:3306/drug
     username: root
     password: admin123
+  data:
+    redis:
+      host: localhost
+      port: 6379
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
+server:
+  servlet:
+    session:
+      timeout: 1800s

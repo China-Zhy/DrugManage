@@ -8,8 +8,6 @@ import com.nxu.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class StockServiceImpl implements StockService {
 
@@ -33,8 +31,9 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public PageInfo<Stock> getSomeStock(Integer medicineId, Integer page, Integer limit) {
-        PageHelper.startPage(page, limit);
-        List<Stock> stocks = stockMapper.selectStock(medicineId);
-        return new PageInfo<>(stocks);
+        if (page != null && limit != null) {
+            PageHelper.startPage(page, limit);
+        }
+        return new PageInfo<>(stockMapper.selectStock(medicineId));
     }
 }

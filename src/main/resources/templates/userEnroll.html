@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>注册</title>
     <link href="/layui/css/layui.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('/image/tree.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body>
 <form class="layui-form">
@@ -16,13 +27,12 @@
                         <div class="layui-input-prefix">
                             <i class="layui-icon layui-icon-cellphone"></i>
                         </div>
-                        <input type="text" name="cellphone" value="" lay-verify="required|phone" placeholder="手机号" lay-reqtext="请输入手机号" autocomplete="off" class="layui-input"
-                               id="reg-cellphone">
+                        <input type="text" name="phone" value="" lay-verify="required|phone" placeholder="手机号" lay-reqtext="请输入手机号" autocomplete="off" class="layui-input" id="reg-cellphone">
                     </div>
                 </div>
                 <div class="layui-col-xs5">
                     <div style="margin-left: 11px;">
-                        <button type="button" class="layui-btn layui-btn-fluid layui-btn-primary" lay-on="reg-get-vercode">获取验证码</button>
+                        <button type="button" class="layui-btn layui-btn-fluid layui-bg-gray" lay-on="getCode">获取验证码</button>
                     </div>
                 </div>
             </div>
@@ -60,11 +70,12 @@
 <!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(function () {
-        let $ = layui.$;
+    layui.use(['form', 'layer', 'util', 'jquery'], function () {
+
         let form = layui.form;
         let layer = layui.layer;
         let util = layui.util;
+        let $ = layui.jquery;
 
         // 自定义验证规则
         form.verify({
@@ -80,7 +91,7 @@
         // 普通事件
         util.on('lay-on', {
             // 获取验证码
-            'reg-get-vercode': function (othis) {
+            'getCode': function (othis) {
                 let isvalid = form.validate('#reg-cellphone'); // 主动触发验证，v2.7.0 新增
                 // 验证通过
                 if (isvalid) {

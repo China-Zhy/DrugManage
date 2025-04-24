@@ -23,7 +23,9 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public PageInfo<java.lang.Record> queryRecord(Record record, Integer page, Integer limit) {
-        PageHelper.startPage(page, limit);
+        if (page != null && limit != null) {
+            PageHelper.startPage(page, limit);
+        }
         List<java.lang.Record> records = recordMapper.selectAllRecord(record);
         return new PageInfo<>(records);
     }

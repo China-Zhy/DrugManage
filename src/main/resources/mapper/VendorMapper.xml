@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nxu.mapper.VendorMapper">
+
+    <insert id="insertVendor">
+        insert into `vendor` values(null, #{name}, #{people}, #{address}, #{code}, #{phone}, #{email}, #{status})
+    </insert>
+
+    <update id="updateVendor">
+        update `vendor`
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="people != null and people != ''">
+                people = #{people},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+            <if test="code != null and code != ''">
+                code = #{code},
+            </if>
+            <if test="phone != null and phone != ''">
+                `phone` = #{phone},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="status != null and status != 0">
+                status = #{status}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectVendorById" resultType="com.nxu.entity.Vendor">
+        select * from `vendor` where id = #{id}
+    </select>
+
+    <select id="selectAllVendor" resultType="com.nxu.entity.Vendor">
+        select * from `vendor`
+    </select>
+
+</mapper>

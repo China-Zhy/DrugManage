@@ -20,7 +20,7 @@
 
     <div class="layui-form-item">
         <div class="layui-col-md3">
-            <label class="layui-form-label">生产日期</label>
+            <label class="layui-form-label">有效日期</label>
             <div class="layui-input-block">
                 <input type="text" name="birthday" id="layDate" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
@@ -49,7 +49,7 @@
         <div class="layui-form-text layui-col-md3">
             <label class="layui-form-label">备注信息</label>
             <div class="layui-input-block">
-                <textarea name="other" class="layui-textarea" lay-verify="required"></textarea>
+                <textarea name="other" class="layui-textarea" lay-verify="required" maxlength="255"></textarea>
             </div>
         </div>
     </div>
@@ -64,12 +64,12 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['form'], function () {
+    layui.use(['form', 'layer', 'jquery', 'laydate'], function () {
         let form = layui.form;
         let layer = layui.layer;
-        let $ = layui.$;
-
+        let $ = layui.jquery;
         let laydate = layui.laydate;
+
         // 渲染日期组件
         laydate.render({
             elem: '#layDate'

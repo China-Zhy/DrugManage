@@ -23,7 +23,7 @@ public class MedicineController {
         return "medicine";
     }
 
-    // 获取药品数据
+    // 获取全部药品数据
     @GetMapping("/getAllMedicineData")
     @ResponseBody
     public HashMap<String, Object> getMedicines(String name, String code, Integer page, Integer limit) {
@@ -35,6 +35,13 @@ public class MedicineController {
         map.put("data", pageInfo.getList());
 
         return map;
+    }
+
+    // 获取某个药品数据
+    @GetMapping("/getMedicineData/{id}")
+    @ResponseBody
+    public Medicine getMedicineById(@PathVariable Integer id) {
+        return medicineService.getOneMedicine(id);
     }
 
     // 前往添加药品页面

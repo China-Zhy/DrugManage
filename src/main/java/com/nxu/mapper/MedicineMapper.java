@@ -18,11 +18,11 @@ public interface MedicineMapper {
      */
     List<Medicine> selectSomeMedicine(@Param("name") String name, @Param("code") String code);
 
-    Medicine selectOneMedicine(@Param("id") int id);
+    Medicine selectOneMedicine(int id);
 
     int insertMedicine(Medicine medicine);
 
     int updateMedicine(Medicine medicine);
 
-    int deleteMedicine(@Param("id") int id);
+    int deleteMedicine(int id);
 }

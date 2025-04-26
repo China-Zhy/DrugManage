@@ -139,4 +139,12 @@ public class UserController {
         }
         return map;
     }
+
+    // 验证登录用户的账户密码
+    @PostMapping("/confirmLoginUserPassword")
+    @ResponseBody
+    public boolean getLoginUserPassword(HttpSession session, @RequestParam("password") String password) {
+        User user = (User) session.getAttribute("loginUser");
+        return user.getPassword().equals(password);
+    }
 }

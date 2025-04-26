@@ -3,7 +3,7 @@
 <mapper namespace="com.nxu.mapper.RecordMapper">
 
     <insert id="insertRecord">
-        insert into `record` values(null, NOW(), #{what}, #{type}, #{count}, #{price}, #{birthday}, #{who}, #{other})
+        insert into `record` values(null, NOW(), #{what}, #{type}, #{count}, #{price}, #{birthday}, #{from}, #{who}, #{other})
     </insert>
 
     <select id="selectAllRecord" resultType="com.nxu.entity.Record">
@@ -14,6 +14,9 @@
             </if>
             <if test="type != null and type != 0">
                 AND type = #{type}
+            </if>
+            <if test="from != null and from != 0">
+                AND from = #{from}
             </if>
             <if test="who != null and who != 0">
                 AND who = #{who}

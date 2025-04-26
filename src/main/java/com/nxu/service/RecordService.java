@@ -6,5 +6,5 @@ public interface RecordService {
 
     int addRecord(com.nxu.entity.Record record);
 
-    PageInfo<Record> queryRecord(com.nxu.entity.Record record, Integer page, Integer limit);
+    PageInfo<com.nxu.entity.Record> queryRecord(com.nxu.entity.Record record, Integer page, Integer limit);
 }

@@ -11,7 +11,8 @@ spring:
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:
-    map-underscore-to-camel-case: true
+    map-underscore-to-camel-case: true    #开启驼峰命名映射
+    cache-enabled: true    #开启二级缓存(mapper级别)
 server:
   servlet:
     session:

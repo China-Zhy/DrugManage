@@ -17,6 +17,7 @@ public class Record {           // 库存记录
     private int count;          // 药品数量
     private double price;       // 药品单价
     private Date birthday;      // 生产日期
+    private int from;           // 供应商编号
     private int who;            // 操作用户
     private String other;       // 备注信息
 }

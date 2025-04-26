@@ -3,7 +3,7 @@
 <mapper namespace="com.nxu.mapper.VendorMapper">
 
     <insert id="insertVendor">
-        insert into `vendor` values(null, #{name}, #{people}, #{address}, #{code}, #{phone}, #{email}, #{status})
+        insert into `vendor` values(null, #{name}, #{people}, #{address}, #{code}, #{phone}, #{email}, #{postcode}, #{bank}, #{account}, #{status})
     </insert>
 
     <update id="updateVendor">
@@ -12,7 +12,7 @@
             <if test="name != null and name != ''">
                 name = #{name},
             </if>
-            <if test="people != null and people != ''">
+            <if test="people != null and people != 0">
                 people = #{people},
             </if>
             <if test="address != null and address != ''">
@@ -26,6 +26,15 @@
             </if>
             <if test="email != null and email != ''">
                 email = #{email},
+            </if>
+            <if test="postcode != null and postcode != ''">
+                postcode = #{postcode},
+            </if>
+            <if test="bank != null and bank != ''">
+                bank = #{bank},
+            </if>
+            <if test="account != null and account != ''">
+                account = #{account},
             </if>
             <if test="status != null and status != 0">
                 status = #{status}

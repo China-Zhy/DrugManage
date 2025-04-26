@@ -7,64 +7,72 @@
     <link href="/layui/css/layui.css" rel="stylesheet">
 </head>
 <body>
-<form class="layui-form layui-form-pane layui-margin-3">
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">药品名称</label>
-            <div class="layui-input-inline">
-                <input type="text" name="name" autocomplete="off" class="layui-input" lay-verify="required">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">国药准字</label>
-            <div class="layui-input-block">
-                <input type="text" name="code" autocomplete="off" class="layui-input" lay-verify="required">
-            </div>
-        </div>
-    </div>
+<div class="layui-padding-2" style="margin-top: 5px;">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <form class="layui-form layui-form-pane">
+                <div class="layui-form-item layui-col-space20">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">药品名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" autocomplete="off" class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
 
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">药品规格</label>
-            <div class="layui-input-inline">
-                <input type="text" name="specs" autocomplete="off" class="layui-input" lay-verify="required">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">用法用量</label>
-            <div class="layui-input-block">
-                <input type="text" name="usage" autocomplete="off" class="layui-input" lay-verify="required">
-            </div>
-        </div>
-    </div>
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">国药准字</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="code" autocomplete="off" class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
 
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">包装照片</label>
-            <div class="layui-input-inline">
-                <input type="text" name="image" autocomplete="off" class="layui-input" lay-verify="required">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">生产厂家</label>
-            <div class="layui-input-block">
-                <input type="text" name="origin" autocomplete="off" class="layui-input" lay-verify="required">
-            </div>
-        </div>
-    </div>
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">药品规格</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="specs" autocomplete="off" class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
 
-    <div class="layui-form-item layui-form-text" style="width: 622px;">
-        <label class="layui-form-label">药品成分</label>
-        <div class="layui-input-block">
-            <textarea name="compose" class="layui-textarea" lay-verify="required" maxlength="1000"></textarea>
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">用法用量</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="usage" autocomplete="off" class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">包装照片</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="image" autocomplete="off" class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">生产厂家</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="origin" autocomplete="off" class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md12 layui-form-text">
+                        <label class="layui-form-label">药品成分</label>
+                        <div class="layui-input-block">
+                            <textarea name="compose" class="layui-textarea" lay-verify="required" maxlength="1000" rows="8"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-form-item layui-col-space20">
+                    <div class="layui-col-md12" style="text-align: center;">
+                        <button class="layui-btn" lay-submit lay-filter="toDo">添加</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">清空</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-
-    <div class="layui-form-item" style="text-align: center;">
-        <button class="layui-btn" lay-submit lay-filter="toDo">添加</button>
-        <button type="reset" class="layui-btn layui-btn-primary">清空</button>
-    </div>
-</form>
+</div>
 
 <script src="/layui/layui.js"></script>
 <script>

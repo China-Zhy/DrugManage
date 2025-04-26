@@ -6,15 +6,16 @@ import com.nxu.entity.Record;
 import com.nxu.service.MedicineService;
 import com.nxu.service.RecordService;
 import com.nxu.service.StockService;
+import com.nxu.service.VendorService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Controller
 public class StockController {
@@ -27,6 +28,9 @@ public class StockController {
 
     @Autowired
     private MedicineService medicineService;
+
+    @Autowired
+    private VendorService vendorService;
 
     // 前往库存管理页面
     @GetMapping("/toStock")
@@ -64,100 +68,51 @@ public class StockController {
         return "stockOutput";
     }
 
-    // 进行出库操作
+    // 进行出库操作 (包含事务，代码都在服务层)
     @PostMapping("/doOutputStock")
     @ResponseBody
     public HashMap<String, Object> doOutputStock(@RequestBody Record record, HttpSession session) {
-
-        Stock stock = stockService.getStockById(record.getId());
-
-        record.setWhat(stock.getMedicineId());
-        record.setType(2);                      // 入库-1 出库-2
-        record.setBirthday(stock.getBirthday());
-
         User user = (User) session.getAttribute("loginUser");   // 获取当前登录的用户
-        record.setWho(user.getId());
-
-        int i = recordService.addRecord(record);
-
-        int j = stockService.changeStock(stock.getId(), (stock.getCount() - record.getCount()));   // 出库 减法操作
-
         HashMap<String, Object> map = new HashMap<>();
-
-        map.put("code", i == 1 && j == 1 ? 1 : 0);
-
+        map.put("code", stockService.outputStock(record, user));
         return map;
     }
 
-    // 前往入库页面(某个药品)
-    @GetMapping("/toStockInput/{id}")
-    public String toStockInput(Model model, @PathVariable("id") Integer id) {
-        model.addAttribute("id", id);
-        return "stockInput";
-    }
-
-    // 前往入库页面(任意药品)
-    @GetMapping("/toStockEnter")
+    // 前往入库页面
+    @GetMapping("/toStockInput")
     public String toStockEnter(Model model) {
         PageInfo<Medicine> pageInfo = medicineService.getSomeMedicine(null, null, null, null);
-
-        ArrayList<Identity> list = new ArrayList<>();
+        ArrayList<Identity> medicineList = new ArrayList<>();
         for (Medicine medicine : pageInfo.getList()) {
             Identity identity = new Identity();
             identity.setId(medicine.getId());
             identity.setName(medicine.getCode() + " | " + medicine.getName() + " | " + medicine.getSpecs());
-            list.add(identity);
+            medicineList.add(identity);
         }
-        model.addAttribute("medicineList", list);
-        return "stockEnter";
+        model.addAttribute("medicineList", medicineList);
+
+        PageInfo<Vendor> allVendor = vendorService.getAllVendor(null, null);
+        ArrayList<Identity> vendorList = new ArrayList<>();
+        for (Vendor vendor : allVendor.getList()) {
+            Identity identity = new Identity();
+            identity.setId(vendor.getId());
+            identity.setName(vendor.getName() + " | " + vendor.getCode());
+            vendorList.add(identity);
+        }
+        model.addAttribute("vendorList", vendorList);
+
+        return "stockInput";
     }
 
-    // 进行入库操作
+    // 进行入库操作 (包含事务，代码都在服务层)
     @PostMapping("/doInputStock")
     @ResponseBody
-    public HashMap<String, Object> doInputStock(@RequestBody Record record, HttpSession session) {
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        String recordBirthday = sdf.format(record.getBirthday());   // 格式化页面提交过来的日期
-
-        // 先查询是否存在相同的库存
-        PageInfo<Stock> pageInfo = stockService.getSomeStock(record.getId(), 1, 1000);
-        int isHave = 0;     // 标识是否有同样的库存
-        for (Stock stock : pageInfo.getList()) {
-            if (stock.getPrice() == record.getPrice() && recordBirthday.equals(sdf.format(stock.getBirthday()))) {
-                isHave = stock.getId();
-                break;
-            }
-        }
-
+    public HashMap<String, Object> doInputStock(@RequestBody List<Record> records, HttpSession session) {
         User user = (User) session.getAttribute("loginUser");   // 获取当前登录的用户
-        record.setWho(user.getId());
-        record.setType(1);                      // 入库-1 出库-2
-        record.setWhat(record.getId());     // 此 ID 是药品编号
-
-        int i, j;   // 库存操作结果, 记录操作结果
-
-        if (isHave == 0) {  // 没有相同的库存
-            Stock stock = new Stock();      // 创建新的库存
-            stock.setMedicineId(record.getId());
-            stock.setBirthday(record.getBirthday());
-            stock.setPrice(record.getPrice());
-            stock.setCount(record.getCount());
-
-            i = stockService.addStock(stock);   // 插入新的库存
-
-        } else {    // 存在相同的库存
-
-            Stock stock = stockService.getStockById(isHave);
-            i = stockService.changeStock(stock.getId(), (stock.getCount() + record.getCount()));   // 入库 加法操作
-        }
-
-        j = recordService.addRecord(record);
+        int i = stockService.inputStock(records, user);
 
         HashMap<String, Object> map = new HashMap<>();
-
-        map.put("code", i == 1 && j == 1 ? 1 : 0);
+        map.put("code", i);
         return map;
     }
 

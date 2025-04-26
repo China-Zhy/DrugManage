@@ -50,7 +50,8 @@
                         <div class="layui-input-prefix">
                             <i class="layui-icon layui-icon-vercode"></i>
                         </div>
-                        <input type="text" name="captcha" value="" lay-verify="required" placeholder="验证码" lay-reqtext="请输入验证码" autocomplete="off" class="layui-input" lay-affix="clear">
+                        <input type="text" name="captcha" id="captcha" value="" lay-verify="required" placeholder="验证码" lay-reqtext="请输入验证码" autocomplete="off" class="layui-input"
+                               lay-affix="clear">
                     </div>
                 </div>
                 <div class="layui-col-xs5">
@@ -142,6 +143,9 @@
         $("#canvas").on('click', function () {
             captcha.draw(show_num);
         });
+
+        // 自动填充验证码
+        $('#captcha').val(show_num.join(""));
 
         // 表单提交事件
         form.on('submit(demo-login)', function (data) {

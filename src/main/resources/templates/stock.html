@@ -12,12 +12,7 @@
 
 <!--查询参数的表单-->
 <form class="layui-form layui-form-pane layui-margin-3">
-
     <div class="layui-form-item">
-
-        <div class="layui-inline">
-            <button type="button" class="layui-btn layui-btn-primary" lay-on="myEnter">新增药品入库</button>
-        </div>
 
         <div class="layui-inline">
             <label class="layui-form-label">药品名称</label>
@@ -55,38 +50,24 @@
 <!--表格内容右端操作按钮-->
 <script type="text/html" id="toolDemo">
     <div class="layui-clear-space">
-        <a class="layui-btn layui-btn-xs" lay-event="input">入库</a>
-        <a class="layui-btn layui-btn-xs" lay-event="output">出库</a>
+        <a class="layui-btn layui-btn-xs" lay-event="output">查看库存/出库</a>
     </div>
 </script>
 
 <!--表格右下角分页栏按钮-->
 <script type="text/html" id="my-page-bar">
     <div class="layui-btn-container" style="margin-right: 42px;">
-        <button class="layui-btn layui-btn-xs layui-btn-primary" lay-event="作者：张宏业">😀</button>
+        <button class="layui-btn layui-btn-xs layui-btn-primary" lay-event="作者：张宏业">😀😀😀😀</button>
     </div>
 </script>
 
 <script src="/layui/layui.js"></script>
 <script>
 
-    layui.use(['table', 'form', 'layer', 'util'], function () {
+    layui.use(['table', 'form', 'layer'], function () {
         let table = layui.table;
         let form = layui.form;
         let layer = layui.layer;
-        let util = layui.util;
-
-        util.on('lay-on', {
-            myEnter: function () {
-                layer.open({
-                    type: 2,
-                    title: '填写药品入库信息',
-                    area: ['450px', '500px'],
-                    scrollbar: false,
-                    content: ['/toStockEnter', 'no']
-                });
-            }
-        });
 
         // 搜索按钮事件
         form.on('submit(toDo)', function (data) {
@@ -141,15 +122,7 @@
         table.on('tool(test)', function (obj) {
             let data = obj.data; // 获得当前行数据
 
-            if (obj.event === 'input') {
-                layer.open({
-                    type: 2,
-                    title: '填写药品入库信息',
-                    area: ['450px', '440px'],
-                    scrollbar: false,
-                    content: ['/toStockInput/' + data.id, 'no']
-                });
-            } else if (obj.event === 'output') {
+            if (obj.event === 'output') {
                 layer.open({
                     type: 2,
                     title: '【' + data.name + ' ' + data.code + '】 的库存信息',

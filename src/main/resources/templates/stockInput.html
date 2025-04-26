@@ -2,97 +2,275 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
+    <title>药品入库</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>药品入库(某个)</title>
     <link href="/layui/css/layui.css" rel="stylesheet">
 </head>
-<body>
+<body class="layui-bg-gray">
+<div class="layui-padding-2">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <form class="layui-form layui-form-pane">
 
-<form class="layui-form layui-form-pane layui-margin-3">
+                <!--当前登录的用户信息-->
+                <div class="layui-card" style="margin-bottom: 8px;">
+                    <div class="layui-card-header">🟩 操作人员信息：</div>
+                    <div class="layui-card-body">
 
-    <div class="layui-form-item">
-        <div class="layui-col-md3">
-            <label class="layui-form-label">有效日期</label>
-            <div class="layui-input-block">
-                <input type="text" name="birthday" id="layDate" autocomplete="off" class="layui-input" lay-verify="required">
-            </div>
+                        <div class="layui-form-item layui-col-space10" style="margin-bottom: 0;">
+
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">用户姓名：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" th:value="${session.loginUser.name}" class="layui-input" disabled>
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">身份证号：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" th:value="${session.loginUser.card}" class="layui-input" disabled>
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">联系电话：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" th:value="${session.loginUser.phone}" class="layui-input" disabled>
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">身份说明：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" th:value="${session.loginUser.other}" class="layui-input" disabled>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!--供应商信息-->
+                <div class="layui-card" style="margin-bottom: 8px;">
+                    <div class="layui-card-header">🟧 供应商户信息：</div>
+                    <div class="layui-card-body">
+
+                        <div class="layui-form-item layui-col-space10" style="margin-bottom: 0;">
+                            <div class="layui-col-md3">
+                                <select lay-search="" lay-filter="vendor-select" lay-verify="required" id="vendor">
+                                    <option value="">请选择或搜索供应商</option>
+                                    <option th:each="v : ${vendorList}" th:value="${v.id}" th:text="${v.name}"></option>
+                                </select>
+                            </div>
+
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">电子邮箱：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" disabled>
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">联系电话：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" disabled>
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">详细地址：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" disabled>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!--使用 template 标签存放 模板药品入库信息模板(开始)-->
+                <template id="myTemplate">
+                    <br/>
+                    <div class="layui-form-item layui-col-space10 layui-anim layui-anim-upbit" style="margin-bottom: 0;">
+                        <div class="layui-col-md3">
+                            <select lay-search="" lay-filter="medicine-select" lay-verify="required" name="medicineId[]">
+                                <option value="">请选择或搜索药品信息</option>
+                                <option th:each="m : ${medicineList}" th:value="${m.id}" th:text="${m.name}"></option>
+                            </select>
+                        </div>
+
+                        <!--静态数据-自动填充-->
+                        <div class="layui-col-md3">
+                            <label class="layui-form-label">药品规格：</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" disabled>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3">
+                            <label class="layui-form-label">包装照片：</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" disabled>
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3">
+                            <label class="layui-form-label">生产厂家：</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" disabled>
+                            </div>
+                        </div>
+
+                        <!--动态数据-手动输入-->
+                        <div class="layui-col-md3">
+                            <label class="layui-form-label">有效日期：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="birthday[]" autocomplete="off" lay-verify="required" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3">
+                            <label class="layui-form-label">药品数量：</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="count[]" autocomplete="off" lay-verify="required|number" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3">
+                            <label class="layui-form-label">药品单价：</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="price[]" autocomplete="off" lay-verify="required" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md3">
+                            <label class="layui-form-label">备注信息：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="other[]" autocomplete="off" lay-verify="required" maxlength="255" class="layui-input">
+                            </div>
+                        </div>
+
+                    </div>
+                </template>
+                <!--使用 template 标签存放 模板药品入库信息模板(结束)-->
+
+                <div class="layui-card" style="margin-bottom: 8px;">
+                    <div class="layui-card-header">🟦 药品入库信息：</div>
+                    <div class="layui-card-body" id="stockBox">
+
+                        <div class="layui-form-item layui-col-space10" style="margin-bottom: 0;">
+                            <div class="layui-col-md3">
+                                <select lay-search="" lay-filter="medicine-select" lay-verify="required" name="medicineId[]">
+                                    <option value="">请选择或搜索药品信息</option>
+                                    <option th:each="m : ${medicineList}" th:value="${m.id}" th:text="${m.name}"></option>
+                                </select>
+                            </div>
+
+                            <!--静态数据-自动填充-->
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">药品规格：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" disabled>
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">包装照片：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" disabled>
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">生产厂家：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" disabled>
+                                </div>
+                            </div>
+
+                            <!--动态数据-手动输入-->
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">有效日期：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="birthday[]" autocomplete="off" lay-verify="required" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">药品数量：</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="count[]" autocomplete="off" lay-verify="required|number" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">药品单价：</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="price[]" autocomplete="off" lay-verify="required" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md3">
+                                <label class="layui-form-label">备注信息：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="other[]" autocomplete="off" lay-verify="required" maxlength="255" class="layui-input">
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="layui-panel layui-padding-2 layui-col-md12">
+                    <!--底部操作按钮-->
+                    <div class="layui-col-md4">
+                        <div class="layui-col-md10 layui-col-lg-offset2">
+                            <button type="button" class="layui-btn layui-btn-fluid layui-btn-primary layui-border-green layui-anim layui-anim-scaleSpring" lay-on="addStock">添加更多药品入库信息
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md4">
+                        <div class="layui-col-md10 layui-col-lg-offset1">
+                            <button type="button" class="layui-btn layui-btn-fluid layui-btn-primary layui-border-red layui-anim layui-anim-scaleSpring" lay-on="delStock">删除末尾药品入库信息</button>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md4">
+                        <div class="layui-col-md10">
+                            <button class="layui-btn layui-btn-fluid layui-btn-primary layui-border-blue layui-anim layui-anim-scaleSpring" lay-submit lay-filter="toInputStock">执行本次药品入库操作
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
         </div>
     </div>
+</div>
 
-    <div class="layui-form-item">
-        <div class="layui-col-md3">
-            <label class="layui-form-label">药品数量</label>
-            <div class="layui-input-block">
-                <input type="number" name="count" autocomplete="off" class="layui-input" lay-verify="required|number">
-            </div>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <div class="layui-col-md3">
-            <label class="layui-form-label">药品单价</label>
-            <div class="layui-input-block">
-                <input type="number" name="price" autocomplete="off" class="layui-input" lay-verify="required">
-            </div>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <div class="layui-form-text layui-col-md3">
-            <label class="layui-form-label">备注信息</label>
-            <div class="layui-input-block">
-                <textarea name="other" class="layui-textarea" lay-verify="required" maxlength="255"></textarea>
-            </div>
-        </div>
-    </div>
-
-    <input hidden="hidden" type="number" name="id" id="id" th:value="${id}">
-
-    <div class="layui-form-item layui-col-md3">
-        <div style="text-align: center;">
-            <button class="layui-btn" lay-submit lay-filter="toDo">添加</button>
-            <button type="reset" class="layui-btn layui-btn-primary">清空</button>
-        </div>
-    </div>
-</form>
-
-
-<form class="layui-form layui-form-pane layui-margin-3">
-    <div class="layui-form-item">
-        <div class="layui-col-md3">
-            <label class="layui-form-label">用户昵称</label>
-            <div class="layui-input-block">
-                <input type="text" name="username" autocomplete="off" class="layui-input" lay-verify="required">
-            </div>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-col-md3">
-            <label class="layui-form-label">居住地址</label>
-            <div class="layui-input-block">
-                <input type="text" name="address" autocomplete="off" class="layui-input" lay-verify="required">
-            </div>
-        </div>
-    </div>
-    <div class="layui-form-item layui-col-md3">
-        <div style="text-align: center;">
-            <button class="layui-btn" lay-submit lay-filter="toDo">更新</button>
-            <button type="reset" class="layui-btn layui-btn-primary">恢复</button>
-        </div>
-    </div>
-</form>
+<br>
+<br>
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['form', 'form', 'jquery', 'laydate'], function () {
+    layui.use(['form', 'layer', 'jquery', 'util', 'laydate'], function () {
         let form = layui.form;
         let layer = layui.layer;
         let $ = layui.jquery;
+        let util = layui.util;
         let laydate = layui.laydate;
 
         // 渲染日期组件
         laydate.render({
-            elem: '#layDate'
+            elem: 'input[name="birthday[]"]'
         });
 
         // 自定义验证规则
@@ -107,33 +285,120 @@
             }
         });
 
-        // 提交事件
-        form.on('submit(toDo)', function (data) {
-            let field = data.field; // 获取表单字段值
-
+        // select 选中事件
+        form.on('select(vendor-select)', function (data) {
+            let elem = data.elem; // 获得 select 原始 DOM 对象
+            let value = data.value; // 获得被选中的值
             $.ajax({
-                url: '/doInputStock',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(field),
+                url: '/getVendorData/' + value,
+                type: 'GET',
                 success: function (res) {
-                    if (res.code) {
-                        layer.msg('入库成功！', {icon: 1});
-                        setTimeout(function () {
-                            parent.layer.close(parent.layer.getFrameIndex(window.name));    // 关闭弹出层
-                        }, 2000);
-                    } else {
-                        layer.msg('入库失败！', {icon: 2});
-                    }
+                    const parentDiv = $(elem).closest('.layui-form-item');
+                    parentDiv.find('input:eq(1)').val(res.email);
+                    parentDiv.find('input:eq(2)').val(res.phone);
+                    parentDiv.find('input:eq(3)').val(res.address);
                 },
                 error: function (err) {
                     layer.msg('Ajax请求异常！', {icon: 0});
                 }
             });
+        });
+        // select 选中事件
+        form.on('select(medicine-select)', function (data) {
+            let elem = data.elem; // 获得 select 原始 DOM 对象
+            let value = data.value; // 获得被选中的值
+            $.ajax({
+                url: '/getMedicineData/' + value,
+                type: 'GET',
+                success: function (res) {
+                    const parentDiv = $(elem).closest('.layui-form-item');
+                    parentDiv.find('input:eq(1)').val(res.specs);
+                    parentDiv.find('input:eq(2)').val(res.image);
+                    parentDiv.find('input:eq(3)').val(res.origin);
+                },
+                error: function (err) {
+                    layer.msg('Ajax请求异常！', {icon: 0});
+                }
+            });
+        });
+
+        // 获取模板的盒子容器和模板
+        let stockBox = $('#stockBox');
+
+        // 添加及删除模板操作
+        util.on('lay-on', {
+            addStock: function () {
+                stockBox.append($('#myTemplate').contents().clone());   // 获取药品入库信息模板内容并克隆
+                form.render('select');
+                laydate.render({
+                    elem: 'input[name="birthday[]"]'
+                });
+            },
+            delStock: function () {
+                if (stockBox.children().length <= 1) {
+                    layer.msg('不能删除了，至少包含一组药品入库信息！')
+                } else {
+                    stockBox.children().last().add(stockBox.children().last().prev()).remove();
+                }
+            }
+        });
+
+        // 提交事件
+        form.on('submit(toInputStock)', function () {
+
+            // 验证操作用户密码是否正确
+            layer.prompt({title: '输入当前操作用户的密码进行身份验证！', formType: 1}, function (pass, index) {
+                layer.close(index);
+
+                $.post('/confirmLoginUserPassword', {password: pass}, function (response) {
+                    if (response) {
+                        layer.msg('身份验证通过！', {icon: 6});
+                        setTimeout(() => {
+                            // 汇总输入的药品入库信息集合
+                            const stockData = [];
+
+                            $('select[name="medicineId[]"]').each(function (index) {
+                                const stock = {
+                                    what: $(this).val(),
+                                    birthday: $('input[name="birthday[]"]').eq(index).val(),
+                                    count: $('input[name="count[]"]').eq(index).val(),
+                                    price: $('input[name="price[]"]').eq(index).val(),
+                                    other: $('input[name="other[]"]').eq(index).val(),
+                                    from: $('#vendor').val()
+                                }
+                                stockData.push(stock);
+                            });
+
+                            // 进行提交
+                            $.ajax({
+                                url: '/doInputStock',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify(stockData),
+                                success: function (res) {
+                                    if (res.code) {
+                                        layer.msg('入库成功！', {icon: 1});
+                                        setTimeout(function () {
+                                            location.reload();  // 尝试从缓存中加载页面
+                                        }, 2000);
+                                    } else {
+                                        layer.msg('入库失败！', {icon: 2});
+                                    }
+                                },
+                                error: function (err) {
+                                    layer.msg('Ajax请求异常！', {icon: 0});
+                                }
+                            });
+                        }, 2000);
+                    } else {
+                        layer.msg('身份验证未通过！', {icon: 5});
+                        return false; // 阻止默认 form 跳转
+                    }
+                });
+            });
             return false; // 阻止默认 form 跳转
         });
     });
 </script>
-
 </body>
 </html>

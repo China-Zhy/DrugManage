@@ -15,5 +15,5 @@ public interface StockMapper {
 
     Stock getStockById(int id);
 
-    List<Stock> selectStock(@Param("medicineId") Integer medicineId);
+    List<Stock> selectStock(Integer medicineId);
 }

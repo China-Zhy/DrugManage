@@ -9,5 +9,5 @@ public interface RecordMapper {
 
     int insertRecord(com.nxu.entity.Record record);
 
-    List<Record> selectAllRecord(com.nxu.entity.Record record);
+    List<com.nxu.entity.Record> selectAllRecord(com.nxu.entity.Record record);
 }

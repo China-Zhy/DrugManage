@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>系统通知</title>
+    <title>系统维护通知</title>
     <link href="/layui/css/layui.css" rel="stylesheet">
 </head>
 <body class="layui-bg-gray">
-<div class="layui-bg-gray" style="padding: 32px;">
+<div class="layui-bg-gray layui-anim layui-anim-upbit" style="padding: 32px;">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12 layui-anim" id="noticeBox">
             <div class="layui-card" th:each="notice : ${noticeList}" th:id="|notice${notice.id}|">
@@ -30,7 +30,7 @@
     <div style="margin-top: 30px; text-align: center;">
         <i class="layui-icon" style="display: inline-block; font-size: 300px; color: #393D49;">&#xe664;</i>
         <div style="font-size: 20px;width: 500px; margin: 30px auto; padding-top: 20px; border-top: 5px solid #009688;">
-            莫慌，系统维护中，请稍后再试
+            莫慌，系统维护中，请稍后再试~
         </div>
     </div>
 </div>

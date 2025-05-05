@@ -16,7 +16,7 @@
 
                 <!--当前登录的用户信息-->
                 <div class="layui-card" style="margin-bottom: 8px;">
-                    <div class="layui-card-header">🟩 操作人员信息：</div>
+                    <div class="layui-card-header">⚫ 操作人员信息：</div>
                     <div class="layui-card-body">
 
                         <div class="layui-form-item layui-col-space10" style="margin-bottom: 0;">
@@ -56,7 +56,7 @@
 
                 <!--供应商信息-->
                 <div class="layui-card" style="margin-bottom: 8px;">
-                    <div class="layui-card-header">🟧 供应商户信息：</div>
+                    <div class="layui-card-header">供应商户信息：</div>
                     <div class="layui-card-body">
 
                         <div class="layui-form-item layui-col-space10" style="margin-bottom: 0;">
@@ -137,14 +137,14 @@
                         <div class="layui-col-md3">
                             <label class="layui-form-label">药品数量：</label>
                             <div class="layui-input-block">
-                                <input type="number" name="count[]" autocomplete="off" lay-verify="required|number" class="layui-input">
+                                <input type="number" name="count[]" autocomplete="off" lay-affix="number" lay-verify="required|number" class="layui-input">
                             </div>
                         </div>
 
                         <div class="layui-col-md3">
                             <label class="layui-form-label">药品单价：</label>
                             <div class="layui-input-block">
-                                <input type="number" name="price[]" autocomplete="off" lay-verify="required" class="layui-input">
+                                <input type="number" name="price[]" autocomplete="off" lay-affix="number" lay-verify="required" class="layui-input">
                             </div>
                         </div>
 
@@ -160,7 +160,7 @@
                 <!--使用 template 标签存放 模板药品入库信息模板(结束)-->
 
                 <div class="layui-card" style="margin-bottom: 8px;">
-                    <div class="layui-card-header">🟦 药品入库信息：</div>
+                    <div class="layui-card-header">药品入库信息：</div>
                     <div class="layui-card-body" id="stockBox">
 
                         <div class="layui-form-item layui-col-space10" style="margin-bottom: 0;">
@@ -204,14 +204,14 @@
                             <div class="layui-col-md3">
                                 <label class="layui-form-label">药品数量：</label>
                                 <div class="layui-input-block">
-                                    <input type="number" name="count[]" autocomplete="off" lay-verify="required|number" class="layui-input">
+                                    <input type="number" name="count[]" lay-affix="number" autocomplete="off" lay-verify="required|number" class="layui-input">
                                 </div>
                             </div>
 
                             <div class="layui-col-md3">
                                 <label class="layui-form-label">药品单价：</label>
                                 <div class="layui-input-block">
-                                    <input type="number" name="price[]" autocomplete="off" lay-verify="required" class="layui-input">
+                                    <input type="number" name="price[]" lay-affix="number" autocomplete="off" lay-verify="required" class="layui-input">
                                 </div>
                             </div>
 
@@ -223,7 +223,6 @@
                             </div>
 
                         </div>
-
                     </div>
                 </div>
 
@@ -329,7 +328,7 @@
         util.on('lay-on', {
             addStock: function () {
                 stockBox.append($('#myTemplate').contents().clone());   // 获取药品入库信息模板内容并克隆
-                form.render('select');
+                form.render();
                 laydate.render({
                     elem: 'input[name="birthday[]"]'
                 });
@@ -385,7 +384,7 @@
                                         layer.msg('入库失败！', {icon: 2});
                                     }
                                 },
-                                error: function (err) {
+                                error: function () {
                                     layer.msg('Ajax请求异常！', {icon: 0});
                                 }
                             });

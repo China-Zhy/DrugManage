@@ -41,7 +41,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">发布用户</label>
             <div class="layui-input-block">
-                <input type="text" name="sender" id="sender" autocomplete="off" class="layui-input">
+                <input type="number" name="sender" id="sender" autocomplete="off" class="layui-input">
             </div>
         </div>
 
@@ -79,7 +79,7 @@
     {{# if(d.status === 1) { }}
     <button class="layui-btn layui-btn-xs layui-bg-blue" lay-event="toSend">发布</button>
     {{# } else if(d.status == 2) { }}
-    <button class="layui-btn layui-btn-xs layui-bg-green" lay-event="toLook">查看</button>
+    <button class="layui-btn layui-btn-xs layui-bg-green" lay-event="toStop">撤销</button>
     {{# } else if(d.status == 3) { }}
     <button class="layui-btn layui-btn-xs layui-bg-red" lay-event="toBack">恢复</button>
     {{# } else { }}
@@ -88,7 +88,7 @@
 </script>
 
 <!--数据表格-->
-<div style="padding: 16px;">
+<div class="layui-margin-3 layui-anim layui-anim-upbit">
     <table class="layui-hide" id="test" lay-filter="test"></table>
 </div>
 
@@ -99,13 +99,20 @@
     </div>
 </script>
 
+<!--表格右下角分页栏按钮-->
+<script type="text/html" id="my-page-bar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-primary layui-border-purple layui-btn-xs" lay-event="作者：张宏业">😀 操作提示：点击任意行即可查看当前通知的详细信息！</button>
+    </div>
+</script>
+
 <script src="/layui/layui.js"></script>
 <script>
-
-    layui.use(['table', 'form', 'layer'], function () {
+    layui.use(['table', 'form', 'layer', 'jquery'], function () {
         let table = layui.table;
         let form = layui.form;
         let layer = layui.layer;
+        let $ = layui.jquery;
 
         // 搜索按钮事件
         form.on('submit(toDo)', function (data) {
@@ -125,13 +132,10 @@
         table.render({
             elem: '#test',
             url: '/getAllNoticeData',
-            css: [ // 重设当前表格样式
-                '.layui-table-tool-temp{padding-right: 145px;}'
-            ].join(''),
-            cellMinWidth: 80,
             page: true,
-            limit: 15,
-            limits: [15, 30, 50],
+            limit: 20,
+            limits: [20, 50, 100],
+            pagebar: '#my-page-bar', // 分页栏模板
             cols: [
                 [
                     {field: 'id', title: 'ID', hide: true},
@@ -154,41 +158,93 @@
             let data = obj.data; // 获得当前行数据
 
             if (obj.event === 'toSend') {
-                layer.msg('发布')
-
                 layer.confirm('确定发布这条通知嘛？', {
                     btn: ['确定', '取消']
                 }, function () {
                     $.ajax({
-                        url: '/doNoticeSend/' + data.id,
+                        url: '/setNoticeStatus/' + data.id + '/2',
                         type: 'GET',
                         success: function (res) {
                             if (res.code) {
                                 layer.msg('发布成功！', {icon: 1});
-                                setTimeout(() => {
-                                    window.location = '/toUserLogin';
-                                }, 2000)
+                                table.reload(obj.config.id);
                             } else {
                                 layer.msg('发布失败！', {icon: 2});
                             }
                         },
-                        error: function (err) {
+                        error: function () {
                             layer.msg('Ajax请求异常！', {icon: 0});
                         }
                     });
                 }, function () {
-                    layer.msg('已取消登出！');
+                    layer.msg('已取消发布！');
                 });
-            } else if (obj.event === 'toLook') {
-                layer.msg('查看');
+            } else if (obj.event === 'toStop') {
+                layer.confirm('确定撤销这条通知嘛？', {
+                    btn: ['确定', '取消']
+                }, function () {
+                    $.ajax({
+                        url: '/setNoticeStatus/' + data.id + '/3',
+                        type: 'GET',
+                        success: function (res) {
+                            if (res.code) {
+                                layer.msg('撤销成功！', {icon: 1});
+                                table.reload(obj.config.id);
+                            } else {
+                                layer.msg('撤销失败！', {icon: 2});
+                            }
+                        },
+                        error: function () {
+                            layer.msg('Ajax请求异常！', {icon: 0});
+                        }
+                    });
+                }, function () {
+                    layer.msg('已取消撤销！');
+                });
             } else if (obj.event === 'toBack') {
-                layer.msg('恢复');
+                layer.confirm('确定恢复这条通知嘛？', {
+                    btn: ['确定', '取消']
+                }, function () {
+                    $.ajax({
+                        url: '/setNoticeStatus/' + data.id + '/1',
+                        type: 'GET',
+                        success: function (res) {
+                            if (res.code) {
+                                layer.msg('恢复成功！', {icon: 1});
+                                table.reload(obj.config.id);
+                            } else {
+                                layer.msg('恢复失败！', {icon: 2});
+                            }
+                        },
+                        error: function () {
+                            layer.msg('Ajax请求异常！', {icon: 0});
+                        }
+                    });
+                }, function () {
+                    layer.msg('已取消恢复！');
+                });
             }
-
         });
 
-    })
-    ;
+        // 底部分页栏事件
+        table.on('pagebar(test)', function (obj) {
+            var eventValue = obj.event; // 获得按钮 lay-event 值
+            layer.msg(eventValue);
+        });
+
+        // 行单击事件
+        table.on('row(test)', function (obj) {
+            let data = obj.data; // 获得当前行数据
+            layer.open({
+                type: 2,
+                title: '',
+                area: ['800px', '500px'],
+                scrollbar: false,
+                skin: 'layui-layer-win10',
+                content: '/toNoticeDetail/' + data.id
+            });
+        });
+    });
 </script>
 </body>
 </html>

@@ -7,40 +7,50 @@
     <link href="/layui/css/layui.css" rel="stylesheet">
 </head>
 <body>
+<div class="layui-padding-2" style="margin-top: 5px;">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <form class="layui-form layui-form-pane">
 
-<form class="layui-form layui-form-pane layui-margin-3">
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">药品数量</label>
-            <div class="layui-input-inline">
-                <input type="text" name="count" autocomplete="off" class="layui-input" lay-verify="required|number">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">药品单价</label>
-            <div class="layui-input-block">
-                <input type="text" name="price" autocomplete="off" class="layui-input" lay-verify="required">
-            </div>
+                <div class="layui-form-item layui-col-space20">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">药品数量</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="count" lay-affix="number" autocomplete="off" class="layui-input" lay-verify="required|myVerify">
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">药品单价</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="price" lay-affix="number" autocomplete="off" class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-col-space20">
+                    <div class="layui-col-md12 layui-form-text">
+                        <label class="layui-form-label">备注信息</label>
+                        <div class="layui-input-block">
+                            <textarea name="other" class="layui-textarea" lay-verify="required" maxlength="255"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <input hidden="hidden" type="number" name="id" id="id" th:value="${id}">
+
+                <!-- 原有库存数量，这里是用来进行合法性验证的，不能写name属性，否则会覆盖前面的count-->
+                <input hidden="hidden" type="number" id="count" th:value="${count}">
+
+                <div class="layui-form-item layui-col-space20">
+                    <div class="layui-col-md12" style="text-align: center;">
+                        <button class="layui-btn" lay-submit lay-filter="toDo">确认</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">清空</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-
-    <div class="layui-form-item layui-form-text" style="width: 622px;">
-        <label class="layui-form-label">备注信息</label>
-        <div class="layui-input-block">
-            <textarea name="other" class="layui-textarea" lay-verify="required" maxlength="255"></textarea>
-        </div>
-    </div>
-
-    <input hidden="hidden" type="number" name="id" id="id" th:value="${id}">
-
-    <!-- 原有库存数量，这里是用来进行合法性验证的，不能写name属性，否则会覆盖前面的count-->
-    <input hidden="hidden" type="number" id="count" th:value="${count}">
-
-    <div class="layui-form-item" style="text-align: center;">
-        <button class="layui-btn" lay-submit lay-filter="toDo">确认</button>
-        <button type="reset" class="layui-btn layui-btn-primary">清空</button>
-    </div>
-</form>
+</div>
 
 <script src="/layui/layui.js"></script>
 <script>
@@ -53,7 +63,7 @@
 
         // 自定义验证规则
         form.verify({   // 验证出库数量是否小于等于原有库存数量
-            number: function (value) {
+            myVerify: function (value) {
                 if (value > parseFloat(myInput)) {
                     return '不能超过原有库存数量';
                 }
@@ -93,6 +103,5 @@
         });
     });
 </script>
-
 </body>
 </html>

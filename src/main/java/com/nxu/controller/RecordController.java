@@ -38,6 +38,7 @@ public class RecordController {
         if (type != null) {
             record.setType(type);
         }
+
         PageInfo<com.nxu.entity.Record> pageInfo = recordService.queryRecord(record, page, limit);
 
         HashMap<String, Object> map = new HashMap<>();

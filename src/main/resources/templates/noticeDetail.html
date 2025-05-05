@@ -18,27 +18,14 @@
     <table class="layui-table" lay-skin="nob">
         <thead>
         <tr>
-            <th th:text="|发布用户:${sender.name}|"></th>
-            <th th:text="|发布时间:${notice.when}|"></th>
-            <th th:text="|联系电话:${sender.phone}|"></th>
+            <th th:text="|发布用户 : ${sender.name}|"></th>
+            <th th:text="|发布时间 : ${notice.when}|"></th>
+            <th th:text="|联系电话 : ${sender.phone}|"></th>
         </tr>
         </thead>
     </table>
 </div>
 
 <script src="/layui/layui.js"></script>
-<script>
-    layui.use(['layer', 'util'], function () {
-        let layer = layui.layer;
-        let util = layui.util;
-
-        util.on('lay-on', {
-            addBrowse: function (data) {
-                layer.msg(data[0].id);
-            }
-        });
-    });
-</script>
-
 </body>
 </html>

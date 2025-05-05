@@ -11,21 +11,21 @@
 <body>
 
 <!--查询参数的表单-->
-<form class="layui-form layui-form-pane layui-margin-3">
+<form class="layui-form layui-form-pane layui-margin-3 layui-anim layui-anim-downbit">
 
     <div class="layui-form-item">
 
         <div class="layui-inline">
             <label class="layui-form-label">通知编号</label>
             <div class="layui-input-block">
-                <input type="text" name="what" autocomplete="off" class="layui-input">
+                <input type="number" name="what" autocomplete="off" class="layui-input">
             </div>
         </div>
 
         <div class="layui-inline">
             <label class="layui-form-label">用户编号</label>
             <div class="layui-input-block">
-                <input type="text" name="who" autocomplete="off" class="layui-input">
+                <input type="number" name="who" autocomplete="off" class="layui-input">
             </div>
         </div>
 
@@ -37,7 +37,7 @@
 </form>
 
 <!--数据表格-->
-<div style="padding: 16px;">
+<div class="layui-margin-3 layui-anim layui-anim-upbit">
     <table class="layui-hide" id="test" lay-filter="test"></table>
 </div>
 
@@ -66,15 +66,12 @@
         table.render({
             elem: '#test',
             url: '/getAllBrowseData',
-            css: [ // 重设当前表格样式
-                '.layui-table-tool-temp{padding-right: 145px;}'
-            ].join(''),
-            cellMinWidth: 80,
             page: true,
             limit: 15,
             limits: [15, 30, 50],
             cols: [
                 [
+                    {type: 'checkbox'},
                     {field: 'id', title: 'ID'},
                     {field: 'notice.id', title: '通知编号', templet: '<div><span class="layui-badge layui-bg-gray">{{= d.notice.id }}</span></div>'},
                     {field: 'notice.title', title: '通知标题', templet: '{{= d.notice.title }}'},

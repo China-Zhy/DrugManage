@@ -29,11 +29,11 @@ public class RedisService {
         return redisTemplate.delete(key);
     }
 
-    public void setObjectList(String key, List<Object> objectList) {
+    public void setList(String key, List<Object> objectList) {
         redisTemplate.opsForList().rightPushAll(key, objectList);
     }
 
-    public List<Object> getObjectList(String key) {
+    public List<Object> getList(String key) {
         return redisTemplate.opsForList().range(key, 0, -1);
     }
 }

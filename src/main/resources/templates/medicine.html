@@ -43,16 +43,16 @@
 </form>
 
 <!--数据表格-->
-<div style="padding: 16px;">
+<div class="layui-margin-3 layui-anim layui-anim-upbit">
     <table class="layui-hide" id="test" lay-filter="test"></table>
 </div>
 
 <!--表格头部左端工具按钮-->
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="toAddData">添加药品</button>
+        <button class="layui-btn layui-btn-sm" lay-event="toAddData">添加药品信息</button>
         <button class="layui-btn layui-btn-sm layui-btn-primary" id="rowMode">
-            <span>{{= d.lineStyle ? '多行' : '单行' }}模式</span>
+            <span>{{= d.lineStyle ? '多行显示' : '单行显示' }}模式</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
         </button>
     </div>
@@ -113,29 +113,28 @@
             limits: [15, 30, 50],
             cols: [
                 [
-                    {type: 'checkbox'},
                     {field: 'id', title: 'ID', width: 60, hide: true},
                     {field: 'name', title: '药品名称', width: 150},
                     {field: 'code', title: '国药准字', width: 120, templet: '<div><span class="layui-badge layui-bg-gray">{{= d.code }}</span></div>'},
+                    {field: 'specs', width: 150, title: '药品规格'},
                     {
                         field: 'compose',
                         title: '药品成分',
                         fieldTitle: '药品成分',
                         hide: 0,
-                        width: 280,
+                        minWidth: 300,
                         expandedMode: 'tips',
                         edit: 'text'
                     },
-                    {field: 'specs', width: 150, title: '药品规格'},
                     {
                         field: 'usage',
                         title: '用法用量',
                         edit: 'textarea',
-                        minWidth: 180,
-                        expandedWidth: 200
+                        minWidth: 300,
+                        expandedWidth: 400
                     },
                     {field: 'image', title: '药品照片', width: 100, hide: true},
-                    {field: 'origin', title: '生产厂家', width: 200},
+                    {field: 'origin', title: '生产厂家', width: 250},
                     {fixed: 'right', title: '相关操作', width: 120, templet: '#toolDemo', align: 'center'}
                 ]
             ],
@@ -335,6 +334,7 @@
                                     },
                                     error: function (err) {
                                         layer.msg('Ajax请求异常！', {icon: 0});
+                                        console.log(err);
                                     }
                                 });
                                 layer.close(index); // 关闭询问框
@@ -386,8 +386,7 @@
                 }
             }
             // 编辑后续操作，如提交更新请求，以完成真实的数据更新
-            // …
-            layer.msg('编辑成功', {icon: 1});
+            layer.msg('编辑未保存', {icon: 1});
 
             // 其他更新操作
             let update = {};

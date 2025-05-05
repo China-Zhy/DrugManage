@@ -11,7 +11,7 @@
 <body>
 
 <!--数据表格-->
-<div style="padding: 16px;">
+<div class="layui-margin-3 layui-anim layui-anim-upbit">
     <table class="layui-hide" id="test" lay-filter="test"></table>
 </div>
 
@@ -30,7 +30,6 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-
     layui.use(['table'], function () {
         let table = layui.table;
 
@@ -38,22 +37,18 @@
         table.render({
             elem: '#test',
             url: '/getLogData',
-            css: [ // 重设当前表格样式
-                '.layui-table-tool-temp{padding-right: 145px;}'
-            ].join(''),
-            cellMinWidth: 80,
             page: true,
-            limit: 15,
-            limits: [15, 30, 50],
+            limit: 20,
+            limits: [20, 40, 60],
             cols: [
                 [
-                    {field: 'id', title: '日志编号'},
-                    {field: 'who', title: '用户编号'},
-                    {field: 'name', title: '用户昵称'},
-                    {field: 'ip', title: 'IP地址'},
-                    {field: 'login', title: '退出时间'},
-                    {field: 'logout', title: '通知发布时间'},
-                    {field: 'type', title: '操作类型', templet: '#table-type'}
+                    {field: 'id', title: '日志编号', align: 'center'},
+                    {field: 'who', title: '用户编号', align: 'center', templet: '<div><span class="layui-badge  layui-bg-cyan">{{= d.who }}</span></div>'},
+                    {field: 'name', title: '用户昵称', align: 'center'},
+                    {field: 'ip', title: 'IP地址', align: 'center'},
+                    {field: 'login', title: '登入时间', align: 'center'},
+                    {field: 'logout', title: '登出时间', align: 'center'},
+                    {field: 'type', title: '状态信息', templet: '#table-type', align: 'center'}
                 ]
             ],
             error: function (res, msg) {

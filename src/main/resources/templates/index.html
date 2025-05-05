@@ -2,7 +2,7 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>药品管理系统</title>
+    <title>药品管理系统主页</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,7 +11,7 @@
 <body>
 <div class="layui-layout layui-layout-admin" style="font-weight: bold;">
     <div class="layui-header">
-        <div class="layui-logo layui-hide-xs layui-bg-black">药品管理系统</div>
+        <div class="layui-logo layui-bg-black" style="letter-spacing: 3px;">药品管理系统</div>
         <!-- 头部区域 -->
         <ul class="layui-nav layui-layout-left">
             <!-- 移动端显示 -->
@@ -19,18 +19,23 @@
                 <i class="layui-icon layui-icon-spread-left"></i>
             </li>
             <li class="layui-nav-item layui-hide-xs" lay-unselect lay-header-event="menuChange">
-                <a href="#" title="侧边伸缩"><i class="layui-icon layui-icon-shrink-right"></i></a>
+                <a href="#" title="边栏伸缩"><i id="leftEnumIcon" class="layui-icon layui-icon-shrink-right"></i></a>
             </li>
             <li class="layui-nav-item layui-hide-xs" lay-unselect lay-header-event="menuRefresh">
                 <a href="#" title="刷新页面"><i class="layui-icon layui-icon-refresh-3"></i></a>
             </li>
         </ul>
         <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                <a href="https://github.com/China-Zhy/DrugManage" title="项目代码" target="_blank">
+                    <i class="layui-icon layui-icon-github"></i>
+                </a>
+            </li>
             <li class="layui-nav-item" lay-unselect>
                 <a href="/toNoticePerson" target="ZHY" title="消息中心">
                     <i class="layui-icon layui-icon-notice"></i>
                     <!-- 如果有新消息，则显示小圆点 -->
-                    <span class="layui-badge-dot"></span>
+                    <!--<span class="layui-badge-dot"></span>-->
                 </a>
             </li>
             <li class="layui-nav-item layui-hide-xs" lay-unselect lay-header-event="menuColor">
@@ -41,7 +46,7 @@
             </li>
             <li class="layui-nav-item layui-hide-xs" lay-unselect lay-header-event="menuFull">
                 <a href="#" title="充满屏幕">
-                    <i class="layui-icon layui-icon-screen-full"></i>
+                    <i class="layui-icon layui-icon-screen-full" id="tool-screen-full"></i>
                 </a>
             </li>
             <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
@@ -153,17 +158,16 @@
     <div class="layui-body">
         <!-- 内容主体区域 -->
         <div style="padding: 10px;">
-            <iframe src="/toWelcome" name="ZHY" style="border: none;position: absolute;width: 100%;height: 100%;left: 0;top: 0;right: 0;bottom: 0;"></iframe>
+            <iframe src="/toWelcome" name="ZHY" id="ZHY" style="border: none;position: absolute;width: 100%;height: 100%;left: 0;top: 0;right: 0;bottom: 0;"></iframe>
         </div>
     </div>
-    <div class="layui-footer">
-        <!-- 底部固定区域 -->
-        <p style="text-align: center;">
-            <a href="https://blog.csdn.net/SuperCodeZhy" target="_blank">Copyright © 张宏业 https://blog.csdn.net/SuperCodeZhy</a>
-        </p>
-    </div>
+    <!-- 底部固定区域 -->
+    <!--<div class="layui-footer">-->
+    <!--    <p style="text-align: center;">-->
+    <!--        <a href="https://blog.csdn.net/SuperCodeZhy" target="_blank">Copyright © 张宏业 https://blog.csdn.net/SuperCodeZhy</a>-->
+    <!--    </p>-->
+    <!--</div>-->
 </div>
-
 
 <script src="/layui/layui.js"></script>
 <script>
@@ -172,19 +176,28 @@
         let util = layui.util;
         let $ = layui.jquery;
 
-        //头部事件
+        // 页面头部工具栏点击事件
         util.event('lay-header-event', {
-            menuChange: function () {
-                layer.msg('伸缩边栏');
-            },
-            menuRefresh: function () {
-                layer.msg('刷新页面');
-            },
-            menuLeft: function (othis) { // 左侧菜单事件
-                layer.msg('展开左侧菜单的操作', {icon: 0});
+            menuLeft: function (othis) { // 移动端显示
+                layer.msg('移动端展开左侧菜单的操作');
                 console.log(othis)
             },
-            menuRight: function () {  // 右侧菜单事件
+            menuChange: function () {   // 边栏伸缩
+                let btn = $('#leftEnumIcon');
+                if (btn.hasClass('layui-icon-shrink-right')) {
+                    btn.removeClass('layui-icon-shrink-right').addClass('layui-icon-spread-left');
+                    $(".layui-side").animate({width: 'toggle'});
+                    $(".layui-body").animate({left: '0px'});
+                } else if (btn.has('layui-icon-spread-left')) {
+                    btn.removeClass('layui-icon-spread-left').addClass('layui-icon-shrink-right');
+                    $(".layui-side").animate({width: 'toggle'});
+                    $(".layui-body").animate({left: '200px'});
+                }
+            },
+            menuRefresh: function () {  // 刷新页面
+                $('#ZHY')[0].contentWindow.location.reload();
+            },
+            menuRight: function () {  // 右侧菜单
                 layer.open({
                     type: 1,
                     title: '更多',
@@ -202,10 +215,18 @@
             menuNote: function () {
                 layer.msg('备忘录');
             },
-            menuFull: function () {
-                layer.msg('充满屏幕');
+            menuFull: function () { // 充满屏幕
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                    document.getElementById("tool-screen-full").setAttribute("class", "layui-icon layui-icon-screen-restore");
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                        document.getElementById("tool-screen-full").setAttribute("class", "layui-icon layui-icon-screen-full");
+                    }
+                }
             },
-            logout: function () {
+            logout: function () { // 退出登录
                 layer.confirm('确定退出登录嘛？', {
                     btn: ['确定', '取消']
                 }, function () {
@@ -222,7 +243,7 @@
                                 layer.msg('登出失败！', {icon: 2});
                             }
                         },
-                        error: function (err) {
+                        error: function () {
                             layer.msg('Ajax请求异常！', {icon: 0});
                         }
                     });

@@ -83,30 +83,25 @@ public class NoticeController {
         return map;
     }
 
-    // 发布通知
-    @GetMapping("/doNoticeSend/{id}")
+    // 更改通知状态
+    @GetMapping("/setNoticeStatus/{id}/{status}")
     @ResponseBody
-    public HashMap<String, Object> doNoticeAdd(@PathVariable Integer id) {
-
+    public HashMap<String, Object> doNoticeAdd(@PathVariable Integer id, @PathVariable Integer status) {
         HashMap<String, Object> map = new HashMap<>();
         Notice notice = new Notice();
         notice.setId(id);
-        notice.setStatus(2);
+        notice.setStatus(status);
         map.put("code", noticeService.setNotice(notice));
         return map;
     }
 
-
     // 获取某个通知的详情信息
     @GetMapping("/toNoticeDetail/{id}")
     public String toNoticeDetail(Model model, @PathVariable Integer id) {
-
         Notice notice = noticeService.getNotice(id);
         model.addAttribute("notice", notice);
-
         User sender = userService.getUserById(notice.getSender());
         model.addAttribute("sender", sender);
-
         return "noticeDetail";
     }
 

@@ -11,25 +11,21 @@
 <body>
 
 <!--数据表格-->
-<div style="padding: 16px;">
+<div class="layui-margin-3 layui-anim layui-anim-upbit">
     <table class="layui-hide" id="test" lay-filter="test"></table>
 </div>
 
 <!--表格头部左端工具按钮-->
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="toAddData">添加供应商</button>
+        <button class="layui-btn layui-btn-sm layui-btn-radius layui-bg-blue" lay-event="toAddData">添加供应商</button>
     </div>
 </script>
 
 <!--表格内容右端操作按钮-->
 <script type="text/html" id="toolDemo">
     <div class="layui-clear-space">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-xs" lay-event="more">
-            更多
-            <i class="layui-icon layui-icon-down"></i>
-        </a>
+        <a class="layui-btn layui-btn-primary layui-border-orange layui-btn-xs" lay-event="edit">编辑</a>
     </div>
 </script>
 
@@ -46,12 +42,9 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['table', 'form', 'layer', 'dropdown', 'jquery'], function () {
+    layui.use(['table', 'layer'], function () {
         let table = layui.table;
-        let form = layui.form;
         let layer = layui.layer;
-        let dropdown = layui.dropdown;
-        let $ = layui.jquery;
 
         // 创建渲染实例
         table.render({
@@ -66,10 +59,6 @@
                     layer.alert('业哥：这里自定义工具栏图标按钮');
                 }
             }],
-            css: [ // 重设当前表格样式
-                '.layui-table-tool-temp{padding-right: 145px;}'
-            ].join(''),
-            cellMinWidth: 80,
             page: true,
             limit: 20,
             limits: [20, 40, 60],
@@ -82,11 +71,11 @@
                     {field: 'code', title: '营业执照'},
                     {field: 'phone', title: '联系电话', width: 150},
                     {field: 'email', title: '电子邮箱'},
-                    {field: 'postcode', title: '邮编', width: 100},
+                    {field: 'postcode', title: '邮编', width: 100, align: 'center'},
                     {field: 'bank', title: '开户银行'},
                     {field: 'account', title: '银行账户'},
-                    {field: 'status', title: '状态', templet: '#table-type', width: 100},
-                    {fixed: 'right', title: '相关操作', templet: '#toolDemo', align: 'center'}
+                    {field: 'status', title: '状态', width: 100, align: 'center', templet: '#table-type'},
+                    {fixed: 'right', title: '操作', width: 100, align: 'center', templet: '#toolDemo'}
                 ]
             ],
             error: function (res, msg) {
@@ -96,20 +85,18 @@
 
         // 工具栏事件
         table.on('toolbar(test)', function (obj) {
-            switch (obj.event) {
-                case 'toAddData':
-                    layer.open({
-                        type: 2,
-                        title: '添加供应商信息',
-                        area: ['1000px', '550px'],
-                        scrollbar: false,
-                        skin: 'layui-layer-molv',
-                        content: ['/toMedicineAdd', 'no'],
-                        end: function () {
-                            table.reload(obj.config.id);
-                        }
-                    });
-                    break;
+            if (obj.event === 'toAddData') {
+                layer.open({
+                    type: 2,
+                    title: '🔴🟢🔵添加供应商信息',
+                    area: ['1000px', '410px'],
+                    scrollbar: false,
+                    skin: 'layui-layer-win10',
+                    content: ['/toVendorAdd', 'no'],
+                    end: function () {
+                        table.reload(obj.config.id);
+                    }
+                });
             }
         });
 
@@ -119,96 +106,17 @@
 
             if (obj.event === 'edit') {
                 layer.open({
-                    type: 1,
-                    title: '编辑药品信息',
-                    area: ['1000px', '560px'],
+                    type: 2,
+                    title: '🟥🟩🟦编辑供应商信息',
+                    area: ['1000px', '410px'],
                     scrollbar: false,
-                    skin: 'layui-layer-lan',
-                    content: '123',
-                    success: function (layero, index) {
-                        // 表单提交事件
-                        form.on('submit(toDo)', function (data) {
-                            let field = data.field; // 获取表单字段值
-                            $.ajax({
-                                url: '/doSetMedicine',
-                                type: 'POST',
-                                contentType: 'application/json',
-                                data: JSON.stringify(field),
-                                success: function (res) {
-                                    if (res.code) {
-                                        layer.msg('更新成功！', {icon: 1});
-                                        table.updateRow(obj.config.id, {    // 更新某行数据
-                                            index: obj.index,
-                                            data: field
-                                        });
-                                        layer.close(index); // 关闭当前弹出层
-                                    } else {
-                                        layer.msg('更新失败！', {icon: 2});
-                                    }
-                                },
-                                error: function (err) {
-                                    layer.msg('Ajax请求异常！', {icon: 0});
-                                }
-                            });
-                            return false; // 阻止默认 form 提交
-                        });
+                    skin: 'layui-layer-win10',
+                    content: ['/toSetVendor/' + data.id, 'no'],
+                    end: function () {
+                        table.reload(obj.config.id);
                     }
                 });
-            } else if (obj.event === 'more') {
-                // 更多 - 下拉菜单
-                dropdown.render({
-                    elem: this, // 触发事件的 DOM 对象
-                    show: true, // 外部事件触发即显示
-                    data: [{
-                        title: '详情',
-                        id: 'detail'
-                    }, {
-                        title: '删除',
-                        id: 'del'
-                    }],
-                    click: function (menudata) {
-                        if (menudata.id === 'detail') {
-                            layer.msg('当前药品ID:' + data.id);
-                        } else if (menudata.id === 'del') {
-                            layer.confirm('真的要删除【药品' + data.id + '】吗？', function (index) {
-
-                                // 向服务端发送删除指令
-                                $.ajax({
-                                    url: '/doDelMedicine/' + data.id,
-                                    type: 'GET',
-                                    success: function (res) {
-                                        if (res.code) {
-                                            layer.msg('删除成功！', {icon: 1});
-                                            obj.del(); // 删除对应行（tr）的DOM结构
-                                            // table.reload(obj.config.id);
-                                        } else {
-                                            layer.msg('删除失败！', {icon: 2});
-                                        }
-                                    },
-                                    error: function (err) {
-                                        layer.msg('Ajax请求异常！', {icon: 0});
-                                    }
-                                });
-                                layer.close(index); // 关闭询问框
-                            });
-                        }
-                    },
-                    id: 'dropdown-table-tool',
-                    align: 'right', // 右对齐弹出
-                    style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' // 设置额外样式
-                });
             }
-        });
-        // table 滚动时移除内部弹出的元素
-        let tableInst = table.getOptions('test');
-        tableInst.elem.next().find('.layui-table-main').on('scroll', function () {
-            dropdown.close('dropdown-table-tool');
-        });
-
-        // 行单击事件
-        table.on('row(test)', function (obj) {
-            console.log(obj);
-            //layer.closeAll('tips');
         });
     });
 </script>

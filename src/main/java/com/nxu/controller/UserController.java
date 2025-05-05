@@ -71,11 +71,12 @@ public class UserController {
                     addSessionAndLog(session, request, user);
 
                     map.put("code", 1);
-                    map.put("info", "登录成功！欢迎您：" + user.getName());
+                    map.put("info", STR."登录成功！欢迎您：\{user.getName()}");
                 } else {
                     // 当前存在系统维护通知
 
                     boolean isSender = false;   // 判断当前登录用户是否发布系统维护通知
+
                     for (Notice notice : notices.getList()) {
                         if (notice.getSender() == user.getId()) {
                             isSender = true;
@@ -88,7 +89,7 @@ public class UserController {
                         addSessionAndLog(session, request, user);
 
                         map.put("code", 1);
-                        map.put("info", "系统维护中，欢迎您：" + user.getName());
+                        map.put("info", STR."系统维护中，欢迎您：\{user.getName()}");
                     } else {
                         map.put("code", 3);     // 存在系统维护通知
                         map.put("info", "系统维护中，即将跳转通知页面~");

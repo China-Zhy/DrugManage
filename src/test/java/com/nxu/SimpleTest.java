@@ -7,6 +7,7 @@ import com.nxu.entity.Notice;
 import com.nxu.mapper.BrowseMapper;
 import com.nxu.mapper.NoticeMapper;
 import com.nxu.service.MedicineService;
+import com.nxu.service.UserService;
 import com.nxu.utils.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,9 @@ public class SimpleTest {
     @Autowired
     private RedisService redisService;
 
+    @Autowired
+    private UserService userService;
+
     // 测试-某用户的未浏览通知
     @Test
     void test1() {
@@ -58,10 +62,18 @@ public class SimpleTest {
     @Test
     void test3() {
         PageInfo<Medicine> pageInfo = medicineService.getSomeMedicine(null, null, null, null);
-        redisService.setObjectList("medicines", Arrays.asList(pageInfo.getList().toArray()));
-        List<Object> medicines = redisService.getObjectList("medicines");
+        redisService.setList("medicines", Arrays.asList(pageInfo.getList().toArray()));
+        List<Object> medicines = redisService.getList("medicines");
         for (Object object : medicines) {
             System.out.println(object);
         }
+    }
+
+    // 查询供应商用户
+    @Test
+    void test4() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("type", 6);
+        userService.getSomeUser(map).getList().forEach(System.out::println);
     }
 }

@@ -23,6 +23,7 @@
                 AND what = #{what}
             </if>
         </where>
+        order by id desc
     </select>
 
 </mapper>

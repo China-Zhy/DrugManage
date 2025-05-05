@@ -33,7 +33,7 @@ public class SessionFilter implements Filter {
         // 检查 Session 中是否有用户信息
         if (session == null || session.getAttribute("loginUser") == null) {
             // 若没有用户信息，重定向到登录页面
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/toUserLogin");
+            httpResponse.sendRedirect(STR."\{httpRequest.getContextPath()}/toUserLogin");
         } else {
             // 若有用户信息，继续处理请求
             chain.doFilter(request, response);

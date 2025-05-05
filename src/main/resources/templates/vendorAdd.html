@@ -1,63 +1,87 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>添加药品</title>
+    <title>添加供应商</title>
     <link href="/layui/css/layui.css" rel="stylesheet">
 </head>
 <body>
-<div class="layui-margin-3 layui-anim layui-anim-upbit" style="margin-top: 15px;">
+<div class="layui-padding-2" style="margin-top: 15px;">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <form class="layui-form layui-form-pane">
                 <div class="layui-form-item layui-col-space20">
                     <div class="layui-col-md6">
-                        <label class="layui-form-label">药品名称</label>
+                        <label class="layui-form-label">供应商名称</label>
                         <div class="layui-input-block">
                             <input type="text" name="name" autocomplete="off" class="layui-input" lay-verify="required">
                         </div>
                     </div>
 
                     <div class="layui-col-md6">
-                        <label class="layui-form-label">国药准字</label>
+                        <select lay-search="" lay-filter="medicine-select" lay-verify="required" name="people">
+                            <option value="">请选择或搜索法定代表人</option>
+                            <option th:each="v : ${vendorUserList}" th:value="${v.id}" th:text="|${v.name} - ${v.phone}|"></option>
+                        </select>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">详细地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="address" autocomplete="off" class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">营业执照</label>
                         <div class="layui-input-block">
                             <input type="text" name="code" autocomplete="off" class="layui-input" lay-verify="required">
                         </div>
                     </div>
 
                     <div class="layui-col-md6">
-                        <label class="layui-form-label">药品规格</label>
+                        <label class="layui-form-label">联系电话</label>
                         <div class="layui-input-block">
-                            <input type="text" name="specs" autocomplete="off" class="layui-input" lay-verify="required">
+                            <input type="text" name="phone" autocomplete="off" class="layui-input" lay-verify="required|phone">
                         </div>
                     </div>
 
                     <div class="layui-col-md6">
-                        <label class="layui-form-label">用法用量</label>
+                        <label class="layui-form-label">电子邮箱</label>
                         <div class="layui-input-block">
-                            <input type="text" name="usage" autocomplete="off" class="layui-input" lay-verify="required">
+                            <input type="text" name="email" autocomplete="off" class="layui-input" lay-verify="required|email">
                         </div>
                     </div>
 
                     <div class="layui-col-md6">
-                        <label class="layui-form-label">包装照片</label>
+                        <label class="layui-form-label">邮政编码</label>
                         <div class="layui-input-block">
-                            <input type="text" name="image" autocomplete="off" class="layui-input" lay-verify="required">
+                            <input type="number" name="postcode" autocomplete="off" class="layui-input" lay-verify="required|number" maxlength="6">
                         </div>
                     </div>
 
                     <div class="layui-col-md6">
-                        <label class="layui-form-label">生产厂家</label>
+                        <label class="layui-form-label">开户银行</label>
                         <div class="layui-input-block">
-                            <input type="text" name="origin" autocomplete="off" class="layui-input" lay-verify="required">
+                            <input type="text" name="bank" autocomplete="off" class="layui-input" lay-verify="required">
                         </div>
                     </div>
 
-                    <div class="layui-col-md12 layui-form-text">
-                        <label class="layui-form-label">药品成分</label>
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">银行账户</label>
                         <div class="layui-input-block">
-                            <textarea name="compose" class="layui-textarea" lay-verify="required" maxlength="1000" rows="8"></textarea>
+                            <input type="number" name="account" autocomplete="off" class="layui-input" lay-verify="required|number">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">状态信息</label>
+                        <div class="layui-input-block">
+                            <select name="status" lay-verify="required">
+                                <option value="1" selected>可用</option>
+                                <option value="2">停用</option>
+                            </select>
                         </div>
                     </div>
 
@@ -65,7 +89,7 @@
 
                 <div class="layui-form-item layui-col-space20">
                     <div class="layui-col-md12" style="text-align: center;">
-                        <button class="layui-btn" lay-submit lay-filter="toDo">添加</button>
+                        <button class="layui-btn layui-bg-purple" lay-submit lay-filter="toDo">添加</button>
                         <button type="reset" class="layui-btn layui-btn-primary">清空</button>
                     </div>
                 </div>
@@ -86,7 +110,7 @@
             let field = data.field; // 获取表单字段值
 
             $.ajax({
-                url: '/doAddMedicine',
+                url: '/doAddVendor',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(field),
@@ -100,7 +124,7 @@
                         layer.msg('添加失败！', {icon: 2});
                     }
                 },
-                error: function (err) {
+                error: function () {
                     layer.msg('Ajax请求异常！', {icon: 0});
                 }
             });

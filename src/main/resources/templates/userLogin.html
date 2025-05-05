@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>登录</title>
+    <title>药品管理系统 - 登录</title>
     <link href="/layui/css/layui.css" rel="stylesheet">
     <style>
         #canvas {
@@ -14,7 +14,7 @@
         }
 
         body {
-            background-image: url('/image/tree.jpg');
+            background-image: url('/image/login.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -172,6 +172,14 @@
                             break;
                         case 1:
                             layer.msg(res.info, {icon: 1});
+
+                            // 将药品信息字典存入Redis中
+                            $.get('/doRedisMedicine', function (data) {
+                                // console.log(data);
+                            }).fail(function () {
+                                layer.msg('Redis存储药品字典失败', {icon: 4});
+                            });
+
                             setTimeout(function () {
                                 window.location = '/';
                             }, 2000);
@@ -187,7 +195,7 @@
                             break;
                     }
                 },
-                error: function (err) {
+                error: function () {
                     layer.msg('Ajax请求异常！', {icon: 0});
                 }
             });

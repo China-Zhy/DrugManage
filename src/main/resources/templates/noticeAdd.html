@@ -9,7 +9,8 @@
     <link href="/layui/css/layui.css" rel="stylesheet">
 </head>
 <body>
-<form class="layui-form layui-form-pane layui-margin-3" id="myForm">
+
+<form class="layui-form layui-form-pane layui-margin-3 layui-anim layui-anim-upbit" id="myForm">
     <div class="layui-form-item">
         <label class="layui-form-label">通知类型</label>
         <div class="layui-input-block">
@@ -37,10 +38,10 @@
             <textarea name="content" class="layui-textarea" rows="25" maxlength="1000" lay-verify="required"></textarea>
         </div>
     </div>
-    <div class="layui-form-item">
-        <div class="layui-input-block" style="text-align: center;">
+    <div class="layui-form-item" style="text-align: center;">
+        <div class="layui-input-block">
             <button type="submit" class="layui-btn" lay-submit lay-filter="demo1">立即发布</button>&nbsp;
-            <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="demo2">保存</button>
+            <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="demo2">暂且保存</button>
         </div>
     </div>
 </form>
@@ -53,7 +54,7 @@
         let $ = layui.jquery;
 
         function myRequest(field, status) {
-            // 获取复选框的选中内容，并将其值用-拼接
+            // 获取复选框的选中内容，并将其值用,拼接
             const checkboxes = document.querySelectorAll('input[name="receiver"]:checked');
             const selectedNumbers = [];
             let receiver;
@@ -93,7 +94,7 @@
                         layer.msg('操作失败！', {icon: 2});
                     }
                 },
-                error: function (err) {
+                error: function () {
                     layer.msg('Ajax请求异常！', {icon: 0});
                 }
             });

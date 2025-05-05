@@ -4,7 +4,6 @@ import com.github.pagehelper.PageInfo;
 import com.nxu.entity.*;
 import com.nxu.entity.Record;
 import com.nxu.service.MedicineService;
-import com.nxu.service.RecordService;
 import com.nxu.service.StockService;
 import com.nxu.service.VendorService;
 import jakarta.servlet.http.HttpSession;
@@ -24,9 +23,6 @@ public class StockController {
     private StockService stockService;
 
     @Autowired
-    private RecordService recordService;
-
-    @Autowired
     private MedicineService medicineService;
 
     @Autowired
@@ -35,7 +31,9 @@ public class StockController {
     // 前往库存管理页面
     @GetMapping("/toStock")
     public String toStock(Model model) {
-        SystemController.getMedicineDictionary(model, medicineService);
+        HashMap<String, Object> dictionary = medicineService.getMedicineDictionary();
+        model.addAttribute("nameList", dictionary.get("nameList"));
+        model.addAttribute("codeList", dictionary.get("codeList"));
         return "stock";
     }
 
@@ -81,24 +79,28 @@ public class StockController {
     // 前往入库页面
     @GetMapping("/toStockInput")
     public String toStockEnter(Model model) {
-        PageInfo<Medicine> pageInfo = medicineService.getSomeMedicine(null, null, null, null);
+        PageInfo<Medicine> allMedicine = medicineService.getSomeMedicine(null, null, null, null);
         ArrayList<Identity> medicineList = new ArrayList<>();
-        for (Medicine medicine : pageInfo.getList()) {
+
+        // 对于 CPU 密集型任务，可以使用并行流 parallelStream() 来利用多核 CPU，提高处理速度
+        allMedicine.getList().parallelStream().forEach(medicine -> {
             Identity identity = new Identity();
             identity.setId(medicine.getId());
-            identity.setName(medicine.getCode() + " | " + medicine.getName() + " | " + medicine.getSpecs());
+            identity.setName(STR."\{medicine.getCode()} | \{medicine.getName()} | \{medicine.getSpecs()}");
             medicineList.add(identity);
-        }
+        });
         model.addAttribute("medicineList", medicineList);
 
         PageInfo<Vendor> allVendor = vendorService.getAllVendor(null, null);
         ArrayList<Identity> vendorList = new ArrayList<>();
-        for (Vendor vendor : allVendor.getList()) {
+
+        // 对于 CPU 密集型任务，可以使用并行流 parallelStream() 来利用多核 CPU，提高处理速度
+        allVendor.getList().parallelStream().forEach(vendor -> {
             Identity identity = new Identity();
             identity.setId(vendor.getId());
-            identity.setName(vendor.getName() + " | " + vendor.getCode());
+            identity.setName(STR."\{vendor.getName()} | \{vendor.getCode()}");  // 使用String模板来格式化字符串
             vendorList.add(identity);
-        }
+        });
         model.addAttribute("vendorList", vendorList);
 
         return "stockInput";

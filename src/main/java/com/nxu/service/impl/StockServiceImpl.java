@@ -57,8 +57,8 @@ public class StockServiceImpl implements StockService {
 
         int isSuccess = 1;  // 判断整个循环是否都没有错
 
-        for (Record record : records) {
-
+        // 对于 CPU 密集型任务，可以使用并行流 parallelStream() 来利用多核 CPU，提高处理速度
+        records.parallelStream().forEach(record -> {
             String recordBirthday = sdf.format(record.getBirthday());   // 格式化页面提交过来的日期
 
             // 先查询是否存在相同的库存
@@ -96,7 +96,8 @@ public class StockServiceImpl implements StockService {
             if (i != 1 || j != 1) {
                 throw new RuntimeException("Tips：入库失败！事务回滚！");
             }
-        }
+        });
+
         return isSuccess;
     }
 

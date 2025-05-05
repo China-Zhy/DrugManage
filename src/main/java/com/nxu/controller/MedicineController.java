@@ -16,10 +16,20 @@ public class MedicineController {
     @Autowired
     private MedicineService medicineService;
 
+    // 将药品信息字典存入Redis中
+    @GetMapping("/doRedisMedicine")
+    @ResponseBody
+    public Boolean doRedisMedicine() {
+        medicineService.getMedicineDictionary();    // 在用户登录成功后显示提示的时候请求这个方法
+        return true;
+    }
+
     // 前往药品管理页面
     @GetMapping("/toMedicine")
     public String medicineHtml(Model model) {
-        SystemController.getMedicineDictionary(model, medicineService);
+        HashMap<String, Object> dictionary = medicineService.getMedicineDictionary();
+        model.addAttribute("nameList", dictionary.get("nameList"));
+        model.addAttribute("codeList", dictionary.get("codeList"));
         return "medicine";
     }
 
@@ -67,7 +77,7 @@ public class MedicineController {
         Medicine medicine = new Medicine();
         medicine.setId(id);
         medicine.setStatus(2);
-        map.put("code", medicineService.setMedicine(medicine));     // 加删除，将药品状态设置为'禁用'
+        map.put("code", medicineService.setMedicine(medicine));     // 假删除，将药品状态设置为'禁用'
         return map;
     }
 

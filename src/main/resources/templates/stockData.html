@@ -2,7 +2,7 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>库存管理</title>
+    <title>某药品库存数据</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,7 +14,7 @@
 <input hidden="hidden" type="number" name="id" id="medicineId" th:value="${medicineId}">
 
 <!--数据表格-->
-<div style="padding: 16px;">
+<div class="layui-margin-3 layui-anim layui-anim-upbit">
     <table class="layui-hide" id="test" lay-filter="test"></table>
 </div>
 
@@ -36,10 +36,6 @@
         table.render({
             elem: '#test',
             url: '/getStockData/' + $('#medicineId').val(),
-            css: [ // 重设当前表格样式
-                '.layui-table-tool-temp{padding-right: 145px;}'
-            ].join(''),
-            cellMinWidth: 80,
             totalRow: true, // 开启合计行
             page: true,
             cols: [
@@ -67,12 +63,11 @@
         // 触发单元格工具事件
         table.on('tool(test)', function (obj) {
             let data = obj.data; // 获得当前行数据
-
             if (obj.event === 'output') {
                 layer.open({
                     type: 2,
                     title: '填写药品出库信息',
-                    area: ['665px', '335px'],
+                    area: ['500px', '400px'],
                     scrollbar: false,
                     content: ['/toStockOutput/' + data.id + '/' + data.count, 'no'],
                     end: function () {

@@ -9,6 +9,9 @@ import jakarta.servlet.http.HttpSessionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 监听器
+ */
 @WebListener
 @Component
 public class SessionListener implements HttpSessionListener {

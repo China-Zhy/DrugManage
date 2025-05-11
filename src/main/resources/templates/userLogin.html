@@ -5,34 +5,174 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>药品管理系统 - 登录</title>
     <link href="/layui/css/layui.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#00CFFD',
+                        accent: '#722ED1',
+                        dark: '#1D2129',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
     <style>
-        #canvas {
-            display: inline-block;
-            border-radius: 2px;
-            cursor: pointer;
-            background-color: white;
+        body {
+            overflow-x: hidden;
+            background-color: #3b82f6; /* 更浅的背景颜色 */
         }
 
-        body {
-            background-image: url('/image/login.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            margin: 0;
-            height: 100vh;
-            overflow: hidden;
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
         }
     </style>
 </head>
-<body>
+<body class="font-inter text-white min-h-screen">
+<!--背景特效-开始-->
+<div id="particles-js"></div>
+<script>
+    // 粒子系统实现
+    document.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        document.getElementById('particles-js').appendChild(canvas);
+
+        // 设置Canvas尺寸
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        setCanvasSize();
+        window.addEventListener('resize', setCanvasSize);
+
+        // 粒子类
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 1.2; // 稍快的速度
+                this.vy = (Math.random() - 0.5) * 1.2; // 稍快的速度
+                this.radius = Math.random() * 3 + 1.5; // 更大的粒子
+                this.color = this.getRandomColor();
+            }
+
+            getRandomColor() {
+                const colors = [
+                    'rgba(22, 93, 255, 0.9)', // 更高的不透明度
+                    'rgba(0, 207, 253, 0.9)', // 更高的不透明度
+                    'rgba(114, 46, 209, 0.9)'  // 更高的不透明度
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // 边界检测
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        // 创建粒子数组 (增加粒子数量)
+        const particles = [];
+        const particleCount = Math.min(150, Math.floor(canvas.width * canvas.height / 8000)); // 更多粒子
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        // 鼠标交互
+        const mouse = {x: null, y: null, radius: 120}; // 更大的交互范围
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // 动画循环
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制渐变背景 (更浅的色调)
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#60a5fa'); // 浅蓝色
+            gradient.addColorStop(1, '#93c5fd'); // 更浅的蓝色
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 更新并绘制所有粒子
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                // 计算与鼠标的距离
+                const dx = mouse.x - particles[i].x;
+                const dy = mouse.y - particles[i].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                // 鼠标与粒子的交互 (更强的吸引力)
+                if (distance < mouse.radius) {
+                    particles[i].x += dx * 0.008; // 更强的吸引力
+                    particles[i].y += dy * 0.008; // 更强的吸引力
+                }
+
+                // 粒子之间连线 (增强连线效果)
+                for (let j = i; j < particles.length; j++) {
+                    const dx2 = particles[j].x - particles[i].x;
+                    const dy2 = particles[j].y - particles[i].y;
+                    const distance2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+
+                    if (distance2 < 120) { // 更长的连线距离
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 - distance2 / 1000})`; // 更高的不透明度
+                        ctx.lineWidth = 0.8; // 更粗的连线
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                        ctx.closePath();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    });
+</script>
+<!--背景特效-结束-->
+
 <form class="layui-form">
     <div style="width: 320px; margin: 15% auto 0;">
+        <h1 style="font-size: 50px; margin-bottom: 20px; color: white; text-align: center;">药品管理系统</h1>
         <div class="layui-form-item">
             <div class="layui-input-wrap">
                 <div class="layui-input-prefix">
                     <i class="layui-icon layui-icon-cellphone"></i>
                 </div>
-                <input type="text" name="phone" value="" lay-verify="required|phone" placeholder="手机号" lay-reqtext="请输入手机号" autocomplete="off" class="layui-input" lay-affix="clear">
+                <input type="number" name="phone" lay-verify="required|phone" placeholder="手机号" lay-reqtext="请输入手机号" autocomplete="off" class="layui-input" lay-affix="clear">
             </div>
         </div>
         <div class="layui-form-item">
@@ -40,7 +180,7 @@
                 <div class="layui-input-prefix">
                     <i class="layui-icon layui-icon-password"></i>
                 </div>
-                <input type="password" name="password" value="" lay-verify="required" placeholder="密   码" lay-reqtext="请输入密码" autocomplete="off" class="layui-input" lay-affix="eye">
+                <input type="password" name="password" lay-verify="required" placeholder="密   码" lay-reqtext="请输入密码" autocomplete="off" class="layui-input" lay-affix="eye">
             </div>
         </div>
         <div class="layui-form-item">
@@ -50,13 +190,12 @@
                         <div class="layui-input-prefix">
                             <i class="layui-icon layui-icon-vercode"></i>
                         </div>
-                        <input type="text" name="captcha" id="captcha" value="" lay-verify="required" placeholder="验证码" lay-reqtext="请输入验证码" autocomplete="off" class="layui-input"
-                               lay-affix="clear">
+                        <input type="text" name="captcha" id="captcha" lay-verify="required" placeholder="验证码" lay-reqtext="请输入验证码" autocomplete="off" class="layui-input" lay-affix="clear">
                     </div>
                 </div>
                 <div class="layui-col-xs5">
                     <div style="margin-left: 10px;">
-                        <canvas id="canvas" width="122" height="36"></canvas>
+                        <canvas id="canvas" width="122" height="36" style="display: inline-block;border-radius: 2px;cursor: pointer;background-color: white;border: 1px solid #e2e2e2;"></canvas>
                     </div>
                 </div>
             </div>
@@ -65,15 +204,14 @@
             <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="demo-login">登 录</button>
         </div>
         <div class="layui-form-item">
-            <a href="/toUserEnroll" style="float: left; margin-top: 7px; margin-left: 5px; color: #6e7681;">注册帐号</a>
-            <a href="#" style="float: right; margin-top: 7px; margin-right: 5px; color: #6e7681;">忘记密码</a>
+            <a href="/toUserEnroll" style="float: left; margin-top: 7px; margin-left: 5px; color: white;">注册帐号</a>
+            <a href="#" style="float: right; margin-top: 7px; margin-right: 5px; color: white;">忘记密码</a>
         </div>
     </div>
 </form>
 
 <script src="/layui/layui.js"></script>
 <script>
-
     <!--自定义验证码生成模块-->
     layui.define(function (e) {
         let a = layui.jquery;
@@ -153,7 +291,7 @@
 
             let code = field["captcha"];
             if (show_num.join("") !== code.toLowerCase()) {
-                layer.msg('验证码错误,请重新输入', {icon: 2});
+                layer.msg('验证码错误,请重新输入！', {icon: 2});
                 return false;
             }
 
@@ -169,6 +307,7 @@
                     switch (res.code) {
                         case 0:
                             layer.msg(res.info, {icon: 0});
+                            captcha.draw(show_num); // 生成新的验证码
                             break;
                         case 1:
                             layer.msg(res.info, {icon: 1});
@@ -186,6 +325,7 @@
                             break;
                         case 2:
                             layer.msg(res.info, {icon: 2});
+                            captcha.draw(show_num); // 生成新的验证码
                             break;
                         case 3:
                             layer.msg(res.info, {icon: 5});
@@ -203,6 +343,5 @@
         });
     });
 </script>
-
 </body>
 </html>

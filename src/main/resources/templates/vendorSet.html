@@ -119,6 +119,10 @@
                 success: function (res) {
                     if (res.code) {
                         layer.msg('更新成功！', {icon: 1});
+
+                        // 通过window.parent访问父页面的全局变量并修改
+                        window.parent.parentData = res.info;
+
                         setTimeout(function () {
                             parent.layer.close(parent.layer.getFrameIndex(window.name));    // 关闭弹出层
                         }, 2000);

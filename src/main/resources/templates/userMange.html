@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>用户管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+
+<!--查询参数的表单-->
+<form class="layui-form layui-form-pane layui-margin-3" action="/toMedicine">
+
+    <div class="layui-form-item">
+
+        <div class="layui-inline">
+            <label class="layui-form-label">用户类型</label>
+            <div class="layui-input-inline">
+                <select name="type">
+                    <option value="0"></option>
+                    <option th:each="i : ${identityList}" th:value="${i.id}" th:text="${i.name}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">用户状态</label>
+            <div class="layui-input-inline">
+                <select name="status">
+                    <option value="0"></option>
+                    <option value="1">可用</option>
+                    <option value="2">停用</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">用户姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <input id="data" hidden="hidden">
+
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-primary layui-border-purple" lay-submit lay-filter="toDo">搜索用户</button>
+            <button type="reset" class="layui-btn layui-btn-primary layui-border-orange">重置条件</button>
+        </div>
+    </div>
+</form>
+
+<!--数据表格-->
+<div class="layui-margin-3 layui-anim layui-anim-upbit">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
+
+<!--表格头部左端工具按钮-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-bg-purple" lay-event="toAddData">新增用户</button>
+    </div>
+</script>
+
+<!--表格内容右端操作按钮-->
+<script type="text/html" id="toolDemo">
+    <div class="layui-clear-space">
+        <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">
+            <i class="layui-icon layui-icon-edit"></i>&ensp;编辑
+        </a>
+    </div>
+</script>
+
+<!--解析特殊值的含义-->
+<script type="text/html" id="table-type">
+    {{# if(d.status === 1) { }}
+    <span class="layui-badge layui-bg-green">可用</span>
+    {{# } else if(d.status == 2) { }}
+    <span class="layui-badge layui-bg-red">停用</span>
+    {{# } else { }}
+    <span class="layui-badge layui-bg-cyan">未知</span>
+    {{# } }}
+</script>
+
+<script src="/layui/layui.js"></script>
+<script>
+    layui.use(['table', 'form', 'layer', 'jquery'], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let layer = layui.layer;
+        let $ = layui.jquery;
+
+        // 搜索按钮事件
+        form.on('submit(toDo)', function (data) {
+            let field = data.field; // 获取表单字段值
+
+            table.reload('test', {  // 表格数据重载
+                where: {
+                    'type': field.type,
+                    'status': field.status,
+                    'name': field.name
+                }
+            });
+            return false; // 阻止默认 form 跳转
+        });
+
+        // 创建渲染实例
+        table.render({
+            elem: '#test',
+            url: '/getManyUserData',
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', { // 表格右上角工具图标
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips',
+                onClick: function (obj) {
+                    layer.alert('业哥：这里自定义工具栏图标按钮');
+                }
+            }],
+            page: true,
+            limit: 15,
+            limits: [15, 30, 50],
+            cols: [
+                [
+                    {field: 'id', title: 'ID', width: 80, align: 'center'},
+                    {field: 'name', title: '用户姓名', align: 'center'},
+                    {field: 'phone', title: '手机号码', templet: '<div><span class="layui-badge layui-bg-gray">{{= d.phone }}</span></div>', align: 'center'},
+                    {
+                        field: 'address', title: '居住地址', align: 'center', minWidth: 350, templet: function (d) {
+                            return d.address.substring(21);
+                        }
+                    },
+                    {field: 'card', title: '身份证号', align: 'center', minWidth: 250},
+                    {field: 'type', title: '身份类型', width: 120, templet: '<div><span class="layui-badge layui-bg-gray">{{= d.type }}</span></div>', align: 'center'},
+                    {field: 'base64', title: '用户头像', width: 120, templet: '<img src="{{= d.base64 }}" class="layui-nav-img" alt="">', align: 'center'},
+                    {field: 'status', title: '用户状态', width: 120, align: 'center', templet: '#table-type'},
+                    {fixed: 'right', title: '相关操作', width: 120, templet: '#toolDemo', align: 'center'}
+                ]
+            ],
+            error: function (res, msg) {
+                console.log(res, msg)
+            }
+        });
+
+        // 工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            switch (obj.event) {
+                case 'toAddData':
+                    layer.open({
+                        type: 2,
+                        title: '填写用户信息',
+                        scrollbar: false,
+                        anim: 2,
+                        content: ['/toUserAdd', 'no'],
+                        success: function (layero, index, that) {
+                            layer.full(index); // 最大化
+                        },
+                        end: function () {
+                            table.reload(obj.config.id);
+                        }
+                    });
+                    break;
+            }
+        });
+
+        // 定义全局变量存储父页面数据，用来存储更新后的用户数据
+        window.parentData = {};
+
+        // 触发单元格工具事件
+        table.on('tool(test)', function (obj) {
+            let data = obj.data; // 获得当前行数据
+
+            if (obj.event === 'edit') {
+                layer.open({
+                    type: 2,
+                    title: '编辑用户信息',
+                    scrollbar: false,
+                    anim: 2,
+                    content: ['/toUserEdit/' + data.id + '/1', 'no'],
+                    success: function (layero, index, that) {
+                        layer.full(index); // 最大化
+                    },
+                    end: function () {
+                        table.updateRow(obj.config.id, {    // 更新某行数据
+                            index: obj.index,
+                            data: parentData    // 子弹出层中传递过来的数据
+                        });
+                    }
+                });
+            }
+        });
+
+        // 行单击事件
+        table.on('row(test)', function (obj) {
+            let data = obj.data; // 获得当前行数据
+            layer.open({
+                type: 2,
+                title: '用户信息详情',
+                area: ['95%', '650px'],
+                scrollbar: false,
+                anim: 2,
+                content: ['/toUserEdit/' + data.id + '/2', 'no']
+            });
+        });
+    })
+    ;
+</script>
+</body>
+</html>

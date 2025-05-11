@@ -44,8 +44,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageInfo<User> getSomeUser(HashMap<String, Object> map) {
-        if (map.containsKey("pageNum") && map.containsKey("pageSize")) {
-            PageHelper.startPage(Integer.parseInt(map.get("page").toString()), Integer.parseInt(map.get("rows").toString()));
+        if (map.containsKey("page") && map.containsKey("limit")) {
+            PageHelper.startPage(Integer.parseInt(map.get("page").toString()), Integer.parseInt(map.get("limit").toString()));
         }
         return new PageInfo<>(userMapper.selectSomeUser(map));
     }

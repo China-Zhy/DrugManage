@@ -264,7 +264,7 @@
                         '\n' +
                         '            <div class="layui-form-item layui-col-space20">\n' +
                         '                <div class="layui-col-md12" style="text-align: center;">\n' +
-                        '                    <button class="layui-btn layui-bg-blue" lay-submit lay-filter="toDo">更新</button>\n' +
+                        '                    <button class="layui-btn layui-bg-blue" lay-submit lay-filter="toSet">更新</button>\n' +
                         '                    <button type="reset" class="layui-btn layui-btn-primary">恢复</button>\n' +
                         '                </div>\n' +
                         '            </div>' +
@@ -274,7 +274,7 @@
                         '</div>',
                     success: function (layero, index) {
                         // 表单提交事件
-                        form.on('submit(toDo)', function (data) {
+                        form.on('submit(toSet)', function (data) {
                             let field = data.field; // 获取表单字段值
                             $.ajax({
                                 url: '/doSetMedicine',

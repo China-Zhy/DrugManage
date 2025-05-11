@@ -3,7 +3,7 @@
 <mapper namespace="com.nxu.mapper.UserMapper">
 
     <insert id="insertUser">
-        insert into `user` values (null, #{name}, #{phone}, #{password}, #{address}, #{avatar}, #{card}, #{other}, #{type}, #{status})
+        insert into `user` values (null, #{name}, #{phone}, #{password}, #{address}, #{card}, #{other}, #{type}, #{status}, #{binary}, #{base64})
     </insert>
 
     <update id="updateUser">
@@ -21,9 +21,6 @@
             <if test="address != null and address != ''">
                 address = #{address},
             </if>
-            <if test="avatar != null and avatar != ''">
-                avatar = #{avatar},
-            </if>
             <if test="card != null and card != ''">
                 card = #{card},
             </if>
@@ -34,7 +31,13 @@
                 type = #{type},
             </if>
             <if test="status != null and status != 0">
-                status = #{status}
+                `status` = #{status},
+            </if>
+            <if test="binary != null">
+                `binary` = #{binary},
+            </if>
+            <if test="base64 != null">
+                `base64` = #{base64}
             </if>
         </set>
         where id = #{id}
@@ -57,7 +60,9 @@
             <if test="type != null and type != 0">
                 AND type = #{type}
             </if>
-            AND `status` != 2
+            <if test="status != null and status != 0">
+                AND `status` = #{status}
+            </if>
         </where>
     </select>
 

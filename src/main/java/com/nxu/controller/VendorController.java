@@ -2,6 +2,7 @@ package com.nxu.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.nxu.entity.Vendor;
+import com.nxu.service.AreaService;
 import com.nxu.service.UserService;
 import com.nxu.service.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class VendorController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AreaService areaService;
 
     // 获取某个供应商信息
     @GetMapping("/getVendorData/{id}")
@@ -51,6 +55,7 @@ public class VendorController {
         HashMap<String, Object> map = new HashMap<>();
         map.put("type", 6);
         model.addAttribute("vendorUserList", userService.getSomeUser(map).getList());   // 查找供应商用户
+        model.addAttribute("areaList", areaService.selectArea(1, null)); // 默认显示省
         return "vendorAdd";
     }
 
@@ -91,6 +96,7 @@ public class VendorController {
     public HashMap<String, Object> doSetVendor(@RequestBody Vendor vendor) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", vendorService.setVendor(vendor));
+        map.put("info", vendor);
         return map;
     }
 }

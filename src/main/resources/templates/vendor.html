@@ -65,15 +65,15 @@
             cols: [
                 [
                     {field: 'id', title: 'ID', width: 60, hide: true},
-                    {field: 'name', title: '供应商名称'},
+                    {field: 'name', title: '供应商名称', align: 'center'},
                     {field: 'people', title: '法人编号', hide: true, templet: '<div><span class="layui-badge layui-bg-gray">{{= d.people }}</span></div>'},
-                    {field: 'address', title: '详细地址', hide: true},
-                    {field: 'code', title: '营业执照'},
+                    {field: 'address', title: '详细地址', hide: true, align: 'center'},
+                    {field: 'code', title: '营业执照', align: 'center'},
                     {field: 'phone', title: '联系电话', width: 150},
-                    {field: 'email', title: '电子邮箱'},
+                    {field: 'email', title: '电子邮箱', align: 'center'},
                     {field: 'postcode', title: '邮编', width: 100, align: 'center'},
-                    {field: 'bank', title: '开户银行'},
-                    {field: 'account', title: '银行账户'},
+                    {field: 'bank', title: '开户银行', align: 'center'},
+                    {field: 'account', title: '银行账户', align: 'center'},
                     {field: 'status', title: '状态', width: 100, align: 'center', templet: '#table-type'},
                     {fixed: 'right', title: '操作', width: 100, align: 'center', templet: '#toolDemo'}
                 ]
@@ -89,7 +89,7 @@
                 layer.open({
                     type: 2,
                     title: '🔴🟢🔵添加供应商信息',
-                    area: ['1000px', '410px'],
+                    area: ['1000px', '450px'],
                     scrollbar: false,
                     skin: 'layui-layer-win10',
                     content: ['/toVendorAdd', 'no'],
@@ -99,6 +99,9 @@
                 });
             }
         });
+
+        // 定义全局变量存储父页面数据，用来存储更新后的用户数据
+        window.parentData = {};
 
         // 触发单元格工具事件
         table.on('tool(test)', function (obj) {
@@ -113,7 +116,10 @@
                     skin: 'layui-layer-win10',
                     content: ['/toSetVendor/' + data.id, 'no'],
                     end: function () {
-                        table.reload(obj.config.id);
+                        table.updateRow(obj.config.id, {    // 更新某行数据
+                            index: obj.index,
+                            data: parentData    // 子弹出层中传递过来的数据
+                        });
                     }
                 });
             }

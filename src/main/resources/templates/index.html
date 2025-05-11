@@ -51,7 +51,7 @@
             </li>
             <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
                 <a href="#">
-                    <img src="/image/nxu.png" class="layui-nav-img" alt="">
+                    <img th:src="${session.loginUser.base64}" class="layui-nav-img" alt="">
                     <span th:text="${session.loginUser.name}"></span>
                 </a>
                 <dl class="layui-nav-child" style="text-align: center;">
@@ -132,25 +132,30 @@
                 </li>
                 <li class="layui-nav-item">
                     <a href="#">
-                        <i class="layui-icon layui-icon-auz"></i> <cite>系统权限管理</cite>
+                        <i class="layui-icon layui-icon-app"></i> <cite>系统权限管理</cite>
                     </a>
                     <dl class="layui-nav-child">
                         <dd>
-                            <a href="#" target="ZHY">
-                                <i class="layui-icon layui-icon-add-circle"></i> <cite>111</cite>
+                            <a href="/toUserMange" target="ZHY">
+                                <i class="layui-icon layui-icon-user"></i> <cite>系统用户管理</cite>
                             </a>
                         </dd>
                         <dd>
                             <a href="#" target="ZHY">
-                                <i class="layui-icon layui-icon-tips"></i> <cite>222</cite>
+                                <i class="layui-icon layui-icon-template-1"></i> <cite>系统菜单管理</cite>
                             </a>
                         </dd>
                         <dd>
                             <a href="#" target="ZHY">
-                                <i class="layui-icon layui-icon-time"></i> <cite>333</cite>
+                                <i class="layui-icon layui-icon-bot"></i> <cite>系统角色管理</cite>
                             </a>
                         </dd>
                     </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="#" target="ZHY">
+                        <i class="layui-icon layui-icon-set"></i> <cite>网站系统设置</cite>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -213,7 +218,28 @@
                 layer.msg('主题颜色');
             },
             menuNote: function () {
-                layer.msg('备忘录');
+                // 此处以一个简单的 Win10 风格记事本为例
+                layer.open({
+                    type: 1, // 页面层类型
+                    skin: 'layui-layer-win10', // 2.8+
+                    shade: 0.01,
+                    area: ['50%', '60%'],
+                    maxmin: true,
+                    title: '*无标题 - 记事本',
+                    content: [
+                        '<div style="padding: 0 8px; height: 20px; line-height: 20px; border-bottom: 1px solid #F0F0F0; box-sizing: border-box; font-size: 12px;">',
+                        // 自定义菜单，此处仅作样式演示，具体功能可自主实现
+                        [
+                            '<a href="javascript:;">文件(F)</a>',
+                            '<a href="javascript:;" >编辑(E)</a> ',
+                            '<a href="javascript:;" >格式(O)</a> ',
+                            '<a href="javascript:;" >查看(V)</a> ',
+                            '<a href="javascript:;" >帮助(H)</a> ',
+                        ].join('   '),
+                        '</div>',
+                        '<textarea style="position: absolute; top: 20px; width: 100%; height: calc(100% - 20px); padding: 6px; border: none; resize: none; overflow-y: scroll; box-sizing: border-box;" id="myNote"></textarea>'
+                    ].join('')
+                });
             },
             menuFull: function () { // 充满屏幕
                 if (!document.fullscreenElement) {

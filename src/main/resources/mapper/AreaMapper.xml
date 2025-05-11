@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nxu.mapper.AreaMapper">
+
+    <!--通过自身级别和上级编码查找地区-->
+    <select id="selectArea" resultType="com.nxu.entity.Area">
+        SELECT * FROM `area`
+        <where>
+            <if test="level != null and level != 0">
+                `level` = #{level}
+            </if>
+            <if test="parentCode != null and parentCode != ''">
+                AND `parent_code` = #{parentCode}
+            </if>
+        </where>
+    </select>
+</mapper>

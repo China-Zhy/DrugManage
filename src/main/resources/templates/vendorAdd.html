@@ -26,12 +26,34 @@
                         </select>
                     </div>
 
+                    <div class="layui-col-md12">
+                        <label class="layui-form-label">公司地址</label>
+                        <div class="layui-input-inline">
+                            <select id="quiz1" lay-verify="required" lay-filter="quiz1">
+                                <option value="">请选择省</option>
+                                <option th:each="a : ${areaList}" th:value="${a.code}" th:text="${a.name}"></option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="quiz2" lay-verify="required" lay-filter="quiz2">
+                                <option value="">请选择市</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="quiz3" lay-verify="required">
+                                <option value="">请选择县/区</option>
+                            </select>
+                        </div>
+                        <div class="layui-form-mid layui-text-em">*请按当前公司所在地址填写</div>
+                    </div>
+
                     <div class="layui-col-md6">
                         <label class="layui-form-label">详细地址</label>
                         <div class="layui-input-block">
-                            <input type="text" name="address" autocomplete="off" class="layui-input" lay-verify="required">
+                            <input type="text" id="quiz4" autocomplete="off" class="layui-input" lay-verify="required">
                         </div>
                     </div>
+                    <input type="text" name="address" id="address" hidden="hidden">
 
                     <div class="layui-col-md6">
                         <label class="layui-form-label">营业执照</label>
@@ -104,6 +126,54 @@
         let form = layui.form;
         let layer = layui.layer;
         let $ = layui.jquery;
+
+        // 监听一级选择事件
+        form.on('select(quiz1)', function (data) {
+            let quiz1 = data.value;
+            if (quiz1) {
+                // 清空市和县/区的选择框
+                $('#quiz2').html('<option value="">请选择市</option>');
+                $('#quiz3').html('<option value="">请选择县/区</option>');
+                form.render('select');
+
+                // 请求二级列表
+                $.get('/getArea/2/' + quiz1, function (data) {
+                    let quiz2Select = $('#quiz2');
+                    $.each(data, function (index, info) {
+                        quiz2Select.append('<option value="' + info.code + '">' + info.name + '</option>');
+                    });
+                    form.render('select');
+                }).fail(function () {
+                    layer.msg('请求二级列表失败！', {icon: 2});
+                });
+            }
+        });
+
+        // 监听二级选择事件
+        form.on('select(quiz2)', function (data) {
+            let quiz2 = data.value;
+            if (quiz2) {
+                // 清空县区选择框
+                $('#quiz3').html('<option value="">请选择县/区</option>');
+                form.render('select');
+
+                // 请求县区列表
+                $.get('/getArea/3/' + quiz2, function (data) {
+                    let quiz3Select = $('#quiz3');
+                    $.each(data, function (index, info) {
+                        quiz3Select.append('<option value="' + info.fullName + '">' + info.name + '</option>');
+                    });
+                    form.render('select');
+                }).fail(function () {
+                    layer.msg('请求三级列表失败！', {icon: 2});
+                });
+            }
+        });
+
+        // 拼接详细地址
+        $('#quiz3, #quiz4').on('change input', function () {
+            $('#address').val($('#quiz3').val() + '-' + $('#quiz4').val());
+        });
 
         // 提交事件
         form.on('submit(toDo)', function (data) {

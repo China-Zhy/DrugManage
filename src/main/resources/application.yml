@@ -11,6 +11,10 @@ spring:
   threads:
     virtual:
       enabled: true #启用虚拟线程
+  servlet:
+    multipart:
+      max-file-size: 3MB #单个文件大小：默认最大为1MB
+      max-request-size: 15MB  #单次请求总大小：默认最大为10MB
 
 mybatis: #配置MyBatis
   mapper-locations: classpath:mapper/*.xml
@@ -21,5 +25,5 @@ mybatis: #配置MyBatis
 server:
   servlet:
     session:
-      timeout: 3600s #设置会话过期时间
+      timeout: 60m #设置会话过期时间
   port: 8080

@@ -1,12 +1,13 @@
 package com.nxu;
 
 import com.github.pagehelper.PageInfo;
-import com.nxu.entity.Browse;
-import com.nxu.entity.Medicine;
-import com.nxu.entity.Notice;
+import com.nxu.entity.*;
+import com.nxu.entity.Record;
 import com.nxu.mapper.BrowseMapper;
 import com.nxu.mapper.NoticeMapper;
+import com.nxu.service.AreaService;
 import com.nxu.service.MedicineService;
+import com.nxu.service.StockService;
 import com.nxu.service.UserService;
 import com.nxu.utils.RedisService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @SpringBootTest
 @Slf4j
@@ -36,6 +35,12 @@ public class SimpleTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AreaService areaService;
+
+    @Autowired
+    private StockService stockService;
 
     // 测试-某用户的未浏览通知
     @Test
@@ -75,5 +80,36 @@ public class SimpleTest {
         HashMap<String, Object> map = new HashMap<>();
         map.put("type", 6);
         userService.getSomeUser(map).getList().forEach(System.out::println);
+    }
+
+    // 测试查找地区(级联菜单)
+    @Test
+    void test5() {
+        List<Area> areas = areaService.selectArea(3, "152500");
+        for (Area area : areas) {
+            System.out.println(area);
+        }
+    }
+
+    // 批量插入库存
+    @Test
+    void test6() {
+        User user = new User();
+        user.setId(7);
+        List<Record> records = new ArrayList<>();
+
+        for (int i = 1; i <= 30; i++) {
+            Record record = new Record();
+            record.setWhat(i);
+            record.setType(1);
+            record.setCount(50);
+            record.setPrice(20);
+            record.setBirthday(new Date());
+            record.setFrom(3);
+            record.setOther("初始化入库");
+            records.add(record);
+        }
+        int i = stockService.inputStock(records, user);
+        System.out.println(i);
     }
 }

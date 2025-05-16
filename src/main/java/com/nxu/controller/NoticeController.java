@@ -29,7 +29,7 @@ public class NoticeController {
     // 前往通知管理页面(管理员)
     @GetMapping("/toNoticeMange")
     public String toNotice() {
-        return "noticeMange";
+        return "notice/noticeMange";
     }
 
     // 获取全部通知数据(管理员)
@@ -53,14 +53,14 @@ public class NoticeController {
         User user = (User) session.getAttribute("loginUser");
         PageInfo<Notice> noticeByUser = noticeService.getNoticeByUser(user.getId(), user.getType(), page, limit);
         model.addAttribute("noticeList", noticeByUser.getList());
-        return "noticePerson";
+        return "notice/noticePerson";
     }
 
     // 前往通知发布页面
     @GetMapping("/toNoticeAdd")
     public String toNoticeAdd(Model model) {
         model.addAttribute("identityList", identityService.selectAllIdentity());
-        return "noticeAdd";
+        return "notice/noticeAdd";
     }
 
     // 添加新的通知
@@ -102,7 +102,7 @@ public class NoticeController {
         model.addAttribute("notice", notice);
         User sender = userService.getUserById(notice.getSender());
         model.addAttribute("sender", sender);
-        return "noticeDetail";
+        return "notice/noticeDetail";
     }
 
     // 前往系统维护通知页面
@@ -111,7 +111,7 @@ public class NoticeController {
         PageInfo<Notice> notices = noticeService.getNotices(2, null, 2, null, null);
         if (!notices.getList().isEmpty()) {
             model.addAttribute("noticeList", notices.getList());
-            return "noticeDisabled";
+            return "notice/noticeDisabled";
         } else {
             return "index";
         }

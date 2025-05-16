@@ -4,11 +4,9 @@ import com.github.pagehelper.PageInfo;
 import com.nxu.entity.*;
 import com.nxu.entity.Record;
 import com.nxu.mapper.BrowseMapper;
+import com.nxu.mapper.MenuMapper;
 import com.nxu.mapper.NoticeMapper;
-import com.nxu.service.AreaService;
-import com.nxu.service.MedicineService;
-import com.nxu.service.StockService;
-import com.nxu.service.UserService;
+import com.nxu.service.*;
 import com.nxu.utils.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -42,12 +40,15 @@ public class SimpleTest {
     @Autowired
     private StockService stockService;
 
+    @Autowired
+    private MenuService menuService;
+
     // 测试-某用户的未浏览通知
     @Test
     void test1() {
         List<Notice> notices = noticeMapper.selectNoticeByUser(3, 3);
         for (Notice notice : notices) {
-            System.out.println(notice);
+            log.info(notice.toString());
         }
     }
 
@@ -59,7 +60,7 @@ public class SimpleTest {
         map.put("what", 2);
         List<Browse> browses = browseMapper.selectBrowse(map);
         for (Browse browse : browses) {
-            System.out.println(browse);
+            log.info(browse.toString());
         }
     }
 
@@ -70,7 +71,7 @@ public class SimpleTest {
         redisService.setList("medicines", Arrays.asList(pageInfo.getList().toArray()));
         List<Object> medicines = redisService.getList("medicines");
         for (Object object : medicines) {
-            System.out.println(object);
+            log.info(object.toString());
         }
     }
 
@@ -87,7 +88,7 @@ public class SimpleTest {
     void test5() {
         List<Area> areas = areaService.selectArea(3, "152500");
         for (Area area : areas) {
-            System.out.println(area);
+            log.info(area.toString());
         }
     }
 
@@ -109,7 +110,42 @@ public class SimpleTest {
             record.setOther("初始化入库");
             records.add(record);
         }
-        int i = stockService.inputStock(records, user);
-        System.out.println(i);
+        stockService.inputStock(records, user);
+    }
+
+    // 根据角色获取菜单-给用户展示的菜单
+    @Test
+    void test7() {
+        List<Menu> menus = menuService.getMenuByIdentity(1);
+        for (Menu menu : menus) {
+            System.out.println("父：");
+            System.out.println(menu.toString());
+            if (!menu.getChildren().isEmpty()) {
+                System.out.println("子：");
+                menu.getChildren().forEach(System.out::println);
+                System.out.println("\n");
+            } else {
+                System.out.println("\n");
+            }
+        }
+    }
+
+    // 后台进行菜单管理的
+    @Test
+    void test8() {
+        menuService.getAllMenuForManage().forEach(System.out::println);
+    }
+
+    // 某角色有的菜单编号
+    @Test
+    void test9() {
+        ArrayList<Integer> roleHaveMenu = menuService.getRoleHaveMenuId(1);
+        roleHaveMenu.forEach(System.out::println);
+    }
+
+    // 获取全部简单的菜单
+    @Test
+    void test10() {
+        menuService.getSimpleMenus().forEach(System.out::println);
     }
 }

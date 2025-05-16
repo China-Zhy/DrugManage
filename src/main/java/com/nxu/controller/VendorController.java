@@ -34,14 +34,14 @@ public class VendorController {
     // 前往供应商管理页面
     @GetMapping("/toVendor")
     public String toVendor() {
-        return "vendor";
+        return "vendor/vendor";
     }
 
     // 获取全部供应商信息
     @GetMapping("/getAllVendor")
     @ResponseBody
     public HashMap<String, Object> getAllVendor(Integer page, Integer limit) {
-        PageInfo<Vendor> allVendor = vendorService.getAllVendor(page, limit);
+        PageInfo<Vendor> allVendor = vendorService.getAllVendor(page, limit, null);
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", 0);
         map.put("count", allVendor.getTotal());
@@ -54,9 +54,10 @@ public class VendorController {
     public String vendorAddHtml(Model model) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("type", 6);
+        map.put("status", 1);
         model.addAttribute("vendorUserList", userService.getSomeUser(map).getList());   // 查找供应商用户
         model.addAttribute("areaList", areaService.selectArea(1, null)); // 默认显示省
-        return "vendorAdd";
+        return "vendor/vendorAdd";
     }
 
     // 进行添加供应商操作
@@ -85,9 +86,10 @@ public class VendorController {
     public String toSetVendor(Model model, @PathVariable Integer id) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("type", 6);
+        map.put("status", 1);
         model.addAttribute("vendorUserList", userService.getSomeUser(map).getList());   // 查找供应商用户
         model.addAttribute("vendor", vendorService.getOneVendor(id));
-        return "vendorSet";
+        return "vendor/vendorSet";
     }
 
     // 进行更新供应商信息操作

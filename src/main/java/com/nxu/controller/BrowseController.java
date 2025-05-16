@@ -23,7 +23,7 @@ public class BrowseController {
     // 前往通知浏览记录页面
     @GetMapping("/toBrowse")
     public String toBrowse() {
-        return "browse";
+        return "notice/noticeBrowse";
     }
 
     // 添加通知浏览记录

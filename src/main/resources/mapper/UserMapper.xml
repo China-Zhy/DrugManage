@@ -52,7 +52,7 @@
     </select>
 
     <select id="selectSomeUser" resultType="com.nxu.entity.User">
-        select * from `user`
+        select id,`name`,phone,`password`,address,card,type,`status` from `user`
         <where>
             <if test="name != null and name != ''">
                 name LIKE CONCAT('%', #{name}, '%')

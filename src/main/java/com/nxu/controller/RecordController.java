@@ -20,7 +20,7 @@ public class RecordController {
     // 前往库存记录页面
     @GetMapping("/toRecord")
     public String toRecord() {
-        return "record";
+        return "stock/stockRecord";
     }
 
     // 根据条件查询库存记录数据
@@ -47,5 +47,4 @@ public class RecordController {
         map.put("data", pageInfo.getList());
         return map;
     }
-
 }

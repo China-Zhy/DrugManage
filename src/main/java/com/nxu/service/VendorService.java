@@ -11,5 +11,5 @@ public interface VendorService {
 
     Vendor getOneVendor(int vendorId);
 
-    PageInfo<Vendor> getAllVendor(Integer pageNum, Integer pageSize);
+    PageInfo<Vendor> getAllVendor(Integer pageNum, Integer pageSize, Integer status);
 }

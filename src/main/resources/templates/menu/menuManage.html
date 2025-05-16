@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>菜单管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+
+<!--数据表格-->
+<div class="layui-margin-3 layui-anim layui-anim-upbit">
+    <table class="layui-hide" id="ID-treeTable-demo"></table>
+</div>
+
+<script type="text/html" id="TPL-treeTable-demo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-btn-primary layui-border" lay-event="getChecked">添加新的一级菜单</button>
+    </div>
+</script>
+<script type="text/html" id="TPL-treeTable-demo-tools">
+    <div class="layui-btn-container">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+        <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="addChild">新增</a>
+        <a class="layui-btn layui-btn-xs" lay-event="more">更多</i></a>
+    </div>
+</script>
+
+<script src="/layui/layui.js"></script>
+<script>
+    layui.use(['treeTable', 'layer', 'jquery'], function () {
+        let treeTable = layui.treeTable;
+        let layer = layui.layer;
+        let $ = layui.jquery;
+
+        // 渲染
+        let inst = treeTable.render({
+            elem: '#ID-treeTable-demo',
+            url: '/getAllMenuData',
+            tree: {
+                view: {
+                    indent: 20 // 层级缩进量
+                }
+            },
+            toolbar: '#TPL-treeTable-demo',
+            cols: [
+                [
+                    {field: 'id', title: 'ID', width: 150},
+                    {field: 'name', title: '菜单名称'},
+                    {field: 'url', title: '菜单链接'},
+                    {field: 'icon', title: '菜单图标'},
+                    {field: 'parent', title: '上级编号', hide: true, width: 100, align: "center"},
+                    {field: 'level', title: '菜单级别', hide: true, width: 100, align: "center"},
+                    {
+                        field: 'status', title: '状态', align: "center", width: 150, templet: function (d) {
+                            return d.status === 1 ? '<span style="color: green;">使用中</span>' : '<span style="color: red;">已停用</span>';
+                        }
+                    },
+                    {fixed: "right", title: "操作", width: 180, align: "center", toolbar: "#TPL-treeTable-demo-tools"}
+                ]
+            ]
+        });
+
+        // 表头工具栏工具事件
+        treeTable.on("toolbar(ID-treeTable-demo)", function (obj) {
+            let config = obj.config;
+            let tableId = config.id;
+            let status = treeTable.checkStatus(tableId);
+            // 获取选中行
+            if (obj.event === "getChecked") {
+                if (!status.data.length) return layer.msg('无选中数据');
+                console.log(status);
+                layer.alert("当前数据选中已经输出到控制台，<br>您可按 F12 从控制台中查看结果。");
+            }
+        });
+
+        // 单元格工具事件
+        treeTable.on('tool(' + inst.config.id + ')', function (obj) {
+            let layEvent = obj.event; // 获得 lay-event 对应的值
+            let trElem = obj.tr;
+            let trData = obj.data;
+            let tableId = obj.config.id;
+            if (layEvent === "detail") {
+                layer.msg("查看操作：" + trData.name);
+            } else if (layEvent === "addChild") {
+                let data = {id: Date.now(), name: "新节点"};
+                let newNode2 = treeTable.addNodes(tableId, {
+                    parentIndex: trData["LAY_DATA_INDEX"],
+                    index: -1,
+                    data: data
+                });
+            } else if (layEvent === "more") {
+                layer.msg('更多操作')
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

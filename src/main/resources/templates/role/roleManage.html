@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>角色管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/layui/css/layui.css" rel="stylesheet">
+    <style>
+        /* 滚动条隐藏 */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        html {
+            scrollbar-width: none;
+        }
+
+        /* 卡片样式优化 */
+        .layui-card {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        /* 彩色阴影效果 */
+        .layui-card {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 鼠标悬停效果 */
+        .layui-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(41, 128, 185, 0.2);
+        }
+
+        /* 添加角色卡片的特殊样式 */
+        .layui-col-md4:last-child .layui-card:hover {
+            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.2);
+        }
+    </style>
+</head>
+<body>
+<div class="layui-bg-gray layui-padding-3">
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="layui-col-space16">
+                <!--现有角色卡片列表-->
+                <div class="layui-col-md4 layui-anim layui-anim-scale" th:each="item : ${dataList}">
+                    <div class="layui-card layui-padding-1">
+                        <div class="layui-card-header">
+                            <span style="font-weight: bold; font-size: 20px;" th:text="${item.identity.name}"></span>
+                            <div style="float: right;">
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-on="myEnter" th:name="${item.identity.name}" th:id="${item.identity.id}">权限管理</button>
+                            </div>
+                        </div>
+                        <div class="layui-card-body">
+                            <div class="layui-row">
+                                <div class="layui-col-md3" style="height: 150px;display: flex;align-items: center;justify-content: center;">
+                                    <i class="layui-icon layui-icon-user" style="font-size: 100px; color: green;"></i>
+                                </div>
+                                <div class="layui-col-md9" style="padding-left: 10px;">
+                                    <span class="layui-badge-rim" th:each="menu : ${item.menus}" th:text="${menu}" style="margin-left: 5px; margin-top: 5px;"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--添加角色的卡片-->
+                <div class="layui-col-md4 layui-anim layui-anim-scale">
+                    <div class="layui-card layui-padding-1">
+                        <div class="layui-card-header" style="text-align: center;">
+                            <span style="font-weight: bold; font-size: 20px;">添加更多角色</span>
+                        </div>
+                        <div class="layui-card-body">
+                            <div class="layui-row">
+                                <div class="layui-col-md12" style="height: 150px;display: flex;align-items: center;justify-content: center;">
+                                    <i class="layui-icon layui-icon-add-circle" style="font-size: 100px; color: green;" lay-on="myAdd"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/layui/layui.js"></script>
+<script>
+    layui.use(['layer', 'util', 'jquery'], function () {
+        let layer = layui.layer;
+        let util = layui.util;
+        let $ = layui.jquery;
+
+        util.on('lay-on', {
+            myEnter: function (data) {
+                layer.open({
+                    type: 2,
+                    title: ' 管理【' + data[0].name + '】拥有的菜单权限',
+                    area: ['520px', '500px'],
+                    scrollbar: false,
+                    content: ['/toRoleMenuEdit/' + data[0].id, 'no'],
+                    end: function () {
+                        location.reload();
+                    }
+                });
+            },
+            myAdd: function (data) {
+                layer.msg('添加')
+            }
+        });
+    });
+</script>
+</body>
+</html>

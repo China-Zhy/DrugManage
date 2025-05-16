@@ -30,7 +30,7 @@ public class MedicineController {
         HashMap<String, Object> dictionary = medicineService.getMedicineDictionary();
         model.addAttribute("nameList", dictionary.get("nameList"));
         model.addAttribute("codeList", dictionary.get("codeList"));
-        return "medicine";
+        return "medicine/medicine";
     }
 
     // 获取全部药品数据
@@ -57,7 +57,7 @@ public class MedicineController {
     // 前往添加药品页面
     @GetMapping("/toMedicineAdd")
     public String medicineAddHtml() {
-        return "medicineAdd";
+        return "medicine/medicineAdd";
     }
 
     // 进行添加药品操作

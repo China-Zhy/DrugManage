@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nxu.mapper.MenuMapper">
+
+    <!-- 菜单基本映射(用户展示) -->
+    <resultMap id="ShowMenuResultMap" type="com.nxu.entity.Menu">
+        <id column="id" property="id"/>
+        <!-- 嵌套查询子菜单 column:传递给子查询的参数，格式为 {参数名=列名} -->
+        <collection property="children" column="{parentId=id,identity=identity}" select="getShowChildrenMenus"/>
+    </resultMap>
+
+    <!-- 获取子菜单(用户展示) -->
+    <select id="getShowChildrenMenus" resultType="com.nxu.entity.Menu">
+        select m.* from menu m
+        join role_menu rm
+        on m.id = rm.menu_id
+        where m.level = 2  <!-- 二级菜单 -->
+        and m.parent = #{parentId}
+        and rm.identity_id = #{identity}
+        and m.status = 1
+        order by m.id
+    </select>
+
+    <!--根据身份类型获取全部菜单(用户展示)-->
+    <select id="selectMenuByIdentity" resultMap="ShowMenuResultMap">
+        select m.*, #{identity} as identity from menu m
+        join role_menu rm
+        on m.id = rm.menu_id
+        where m.level = 1  <!-- 一级菜单 -->
+        and m.status = 1
+        and rm.identity_id = #{identity}
+        order by m.id
+    </select>
+
+    <!--菜单基本映射(后台管理)-->
+    <resultMap id="ManageMenuResultMap" type="com.nxu.entity.Menu">
+        <id column="id" property="id"/>
+        <!-- 嵌套查询子菜单 column:传递给子查询的参数，格式为 {参数名=列名} -->
+        <collection property="children" column="{parentId=id}" select="getManageChildrenMenus"/>
+    </resultMap>
+
+    <!--获取子菜单(后台管理)-->
+    <select id="getManageChildrenMenus" resultType="com.nxu.entity.Menu">
+        select m.* from menu m
+        where m.level = 2  <!-- 二级菜单 -->
+        and m.parent = #{parentId}
+        order by m.id
+    </select>
+
+    <!--获取全部菜单(后台管理)-->
+    <select id="selectAllMenuForManage" resultMap="ManageMenuResultMap">
+        select * from `menu` where level = 1 order by id
+    </select>
+
+    <!--获取角色有的菜单编号(权限编辑)-->
+    <select id="selectRoleHaveMenuId" resultType="java.lang.Integer">
+        select m.id from menu m
+        join role_menu rm
+        on m.id = rm.menu_id
+        and rm.identity_id = #{identity}
+        order by m.id
+    </select>
+
+    <!--获取角色有的菜单名称(权限编辑)-->
+    <select id="selectRoleHaveMenuName" resultType="java.lang.String">
+        select m.name from menu m
+        join role_menu rm
+        on m.id = rm.menu_id
+        and rm.identity_id = #{identity}
+        order by m.id
+    </select>
+
+    <!--获取全部可选菜单-->
+    <select id="selectSimpleMenus" resultType="com.nxu.entity.Menu">
+        select * from menu where level &gt; 0 order by id
+    </select>
+
+    <!--通过ID获取菜单-->
+    <select id="selectMenuById" resultType="com.nxu.entity.Menu">
+        select * from menu where id = #{id}
+    </select>
+
+    <!--添加菜单-->
+    <insert id="insertMenu">
+        insert into `menu` values(null, #{name}, #{url}, #{icon}, #{parent}, #{level}, #{status})
+    </insert>
+
+    <!--编辑菜单-->
+    <update id="updateMenu">
+        update `menu`
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="url != null and url != ''">
+                url = #{url},
+            </if>
+            <if test="icon != null and icon != ''">
+                icon = #{icon},
+            </if>
+            <if test="parent != 0">
+                parent = #{parent},
+            </if>
+            <if test="level != 0">
+                `level` = #{level},
+            </if>
+            <if test="status != 0">
+                status = #{status}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--删除菜单-->
+    <delete id="deleteMenu">
+        delete from `menu` where id = #{id}
+    </delete>
+
+    <!--根据角色类型删除全部菜单权限-->
+    <delete id="deleteRoleMenuByIdentity">
+        delete from `role_menu` where identity_id = #{identityId}
+    </delete>
+
+    <!--添加角色的菜单权限-->
+    <insert id="insertManyRoleMenu" parameterType="map">
+        insert into `role_menu` (identity_id, menu_id)
+        values
+        <foreach collection="menuIds" item="menuId" separator=",">
+            (#{roleId}, #{menuId})
+        </foreach>
+    </insert>
+
+</mapper>

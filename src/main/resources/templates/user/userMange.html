@@ -16,6 +16,13 @@
     <div class="layui-form-item">
 
         <div class="layui-inline">
+            <label class="layui-form-label">用户姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-inline">
             <label class="layui-form-label">用户类型</label>
             <div class="layui-input-inline">
                 <select name="type">
@@ -36,13 +43,6 @@
             </div>
         </div>
 
-        <div class="layui-inline">
-            <label class="layui-form-label">用户姓名</label>
-            <div class="layui-input-inline">
-                <input type="text" name="name" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-
         <input id="data" hidden="hidden">
 
         <div class="layui-inline">
@@ -60,7 +60,7 @@
 <!--表格头部左端工具按钮-->
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm layui-bg-purple" lay-event="toAddData">新增用户</button>
+        <button class="layui-btn layui-btn-sm layui-bg-purple" lay-event="toAddData"><i class="layui-icon layui-icon-add-circle-fine"></i>添加新用户</button>
     </div>
 </script>
 
@@ -68,20 +68,9 @@
 <script type="text/html" id="toolDemo">
     <div class="layui-clear-space">
         <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">
-            <i class="layui-icon layui-icon-edit"></i>&ensp;编辑
+            <i class="layui-icon layui-icon-edit"></i> 编辑
         </a>
     </div>
-</script>
-
-<!--解析特殊值的含义-->
-<script type="text/html" id="table-type">
-    {{# if(d.status === 1) { }}
-    <span class="layui-badge layui-bg-green">可用</span>
-    {{# } else if(d.status == 2) { }}
-    <span class="layui-badge layui-bg-red">停用</span>
-    {{# } else { }}
-    <span class="layui-badge layui-bg-cyan">未知</span>
-    {{# } }}
 </script>
 
 <script src="/layui/layui.js"></script>
@@ -125,17 +114,20 @@
             cols: [
                 [
                     {field: 'id', title: 'ID', width: 80, align: 'center'},
-                    {field: 'name', title: '用户姓名', align: 'center'},
+                    {field: 'name', title: '用户姓名', width: 180, align: 'center'},
                     {field: 'phone', title: '手机号码', templet: '<div><span class="layui-badge layui-bg-gray">{{= d.phone }}</span></div>', align: 'center'},
+                    {field: 'card', title: '身份证号', align: 'center', minWidth: 240},
                     {
                         field: 'address', title: '居住地址', align: 'center', minWidth: 350, templet: function (d) {
                             return d.address.substring(21);
                         }
                     },
-                    {field: 'card', title: '身份证号', align: 'center', minWidth: 250},
+                    {
+                        field: 'status', title: '账号状态', align: "center", width: 120, templet: function (d) {
+                            return d.status === 1 ? '<span style="color: green;">使用中</span>' : '<span style="color: red;">已停用</span>';
+                        }
+                    },
                     {field: 'type', title: '身份类型', width: 120, templet: '<div><span class="layui-badge layui-bg-gray">{{= d.type }}</span></div>', align: 'center'},
-                    {field: 'base64', title: '用户头像', width: 120, templet: '<img src="{{= d.base64 }}" class="layui-nav-img" alt="">', align: 'center'},
-                    {field: 'status', title: '用户状态', width: 120, align: 'center', templet: '#table-type'},
                     {fixed: 'right', title: '相关操作', width: 120, templet: '#toolDemo', align: 'center'}
                 ]
             ],
@@ -150,7 +142,7 @@
                 case 'toAddData':
                     layer.open({
                         type: 2,
-                        title: '填写用户信息',
+                        title: '🔴🟢🔵填写用户信息',
                         scrollbar: false,
                         anim: 2,
                         content: ['/toUserAdd', 'no'],
@@ -175,7 +167,7 @@
             if (obj.event === 'edit') {
                 layer.open({
                     type: 2,
-                    title: '编辑用户信息',
+                    title: '🔴🟢🔵编辑用户信息',
                     scrollbar: false,
                     anim: 2,
                     content: ['/toUserEdit/' + data.id + '/1', 'no'],
@@ -197,9 +189,10 @@
             let data = obj.data; // 获得当前行数据
             layer.open({
                 type: 2,
-                title: '用户信息详情',
+                title: '🔴🟢🔵用户详情信息',
                 area: ['95%', '650px'],
                 scrollbar: false,
+                shadeClose: true,
                 anim: 2,
                 content: ['/toUserEdit/' + data.id + '/2', 'no']
             });

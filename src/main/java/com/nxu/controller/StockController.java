@@ -34,14 +34,14 @@ public class StockController {
         HashMap<String, Object> dictionary = medicineService.getMedicineDictionary();
         model.addAttribute("nameList", dictionary.get("nameList"));
         model.addAttribute("codeList", dictionary.get("codeList"));
-        return "stock";
+        return "stock/stock";
     }
 
     // 前往某药品库存页面
     @GetMapping("/toStockData/{id}")
     public String toStockData(Model model, @PathVariable("id") Integer medicineId) {
         model.addAttribute("medicineId", medicineId);
-        return "stockData";
+        return "stock/stockData";
     }
 
     // 获取某药品库存信息
@@ -63,7 +63,7 @@ public class StockController {
     public String toStockChange(Model model, @PathVariable int id, @PathVariable int count) {
         model.addAttribute("id", id);
         model.addAttribute("count", count);
-        return "stockOutput";
+        return "stock/stockOutput";
     }
 
     // 进行出库操作 (包含事务，代码都在服务层)
@@ -91,7 +91,7 @@ public class StockController {
         });
         model.addAttribute("medicineList", medicineList);
 
-        PageInfo<Vendor> allVendor = vendorService.getAllVendor(null, null);
+        PageInfo<Vendor> allVendor = vendorService.getAllVendor(null, null, 1);
         ArrayList<Identity> vendorList = new ArrayList<>();
 
         // 对于 CPU 密集型任务，可以使用并行流 parallelStream() 来利用多核 CPU，提高处理速度
@@ -103,7 +103,7 @@ public class StockController {
         });
         model.addAttribute("vendorList", vendorList);
 
-        return "stockInput";
+        return "stock/stockInput";
     }
 
     // 进行入库操作 (包含事务，代码都在服务层)

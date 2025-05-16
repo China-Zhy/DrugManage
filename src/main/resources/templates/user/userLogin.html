@@ -5,29 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>药品管理系统 - 登录</title>
     <link href="/layui/css/layui.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#165DFF',
-                        secondary: '#00CFFD',
-                        accent: '#722ED1',
-                        dark: '#1D2129',
-                    },
-                    fontFamily: {
-                        inter: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
     <style>
-        body {
-            overflow-x: hidden;
-            background-color: #3b82f6; /* 更浅的背景颜色 */
-        }
-
         #particles-js {
             position: fixed;
             width: 100%;
@@ -38,7 +16,7 @@
         }
     </style>
 </head>
-<body class="font-inter text-white min-h-screen">
+<body>
 <!--背景特效-开始-->
 <div id="particles-js"></div>
 <script>
@@ -212,6 +190,11 @@
 
 <script src="/layui/layui.js"></script>
 <script>
+    // 如果当前窗口是iframe，则强制在顶级窗口中打开目标URL
+    if (window.top !== window.self) {
+        window.top.location.href = window.self.location.href;
+    }
+
     <!--自定义验证码生成模块-->
     layui.define(function (e) {
         let a = layui.jquery;

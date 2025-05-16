@@ -32,12 +32,12 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public PageInfo<Vendor> getAllVendor(Integer pageNum, Integer pageSize) {
+    public PageInfo<Vendor> getAllVendor(Integer pageNum, Integer pageSize, Integer status) {
         if (pageNum == null || pageSize == null) {
-            return new PageInfo<>(vendorMapper.selectAllVendor());
+            return new PageInfo<>(vendorMapper.selectAllVendor(status));
         }
         PageHelper.startPage(pageNum, pageSize);
-        List<Vendor> vendors = vendorMapper.selectAllVendor();
+        List<Vendor> vendors = vendorMapper.selectAllVendor(status);
         return new PageInfo<>(vendors);
     }
 }

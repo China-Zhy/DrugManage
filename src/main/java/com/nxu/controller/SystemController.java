@@ -1,11 +1,14 @@
 package com.nxu.controller;
 
 import com.nxu.entity.Area;
+import com.nxu.entity.User;
 import com.nxu.service.AreaService;
+import com.nxu.service.MenuService;
 import jakarta.servlet.http.HttpSession;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,14 +21,27 @@ public class SystemController {
     @Autowired
     private AreaService areaService;
 
+    @Autowired
+    private MenuService menuService;
+
+    // 后台框架页面(根据用户类型加载菜单)
     @GetMapping("/")
-    public String indexHtml() {
+    public String indexHtml(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("loginUser");
+        model.addAttribute("menuList", menuService.getMenuByIdentity(user.getType()));
         return "index";
     }
 
-    @GetMapping("/toWelcome")
+    // 后台默认主页
+    @GetMapping("/toSystemHome")
     public String toWelcome() {
-        return "welcome";
+        return "system/systemHome";
+    }
+
+    // 前往系统设置页面
+    @GetMapping("/toSystemSetting")
+    public String toSystemSetting() {
+        return "system/systemSetting";
     }
 
     // 图片上传后转为二进制和base64格式存入数据库

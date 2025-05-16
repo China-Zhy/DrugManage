@@ -14,5 +14,5 @@ public interface VendorMapper {
 
     Vendor selectVendorById(int id);
 
-    List<Vendor> selectAllVendor();
+    List<Vendor> selectAllVendor(Integer status);
 }

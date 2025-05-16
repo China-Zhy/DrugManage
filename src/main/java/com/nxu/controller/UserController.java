@@ -35,7 +35,7 @@ public class UserController {
     // 前往用户登录页面
     @GetMapping("/toUserLogin")
     public String toUserLogin() {
-        return "userLogin";
+        return "user/userLogin";
     }
 
     // 将用户的登录信息存入session并添加登录日志
@@ -129,7 +129,7 @@ public class UserController {
     // 前往用户注册页面
     @GetMapping("/toUserEnroll")
     public String toUserEnroll() {
-        return "userEnroll";
+        return "user/userEnroll";
     }
 
     // 进行用户注册
@@ -159,7 +159,7 @@ public class UserController {
     @GetMapping("/toUserMange")
     public String toUserMange(Model model) {
         model.addAttribute("identityList", identityService.selectAllIdentity());
-        return "userMange";
+        return "user/userMange";
     }
 
     // 根据条件获取大量用户数据
@@ -185,7 +185,7 @@ public class UserController {
     public String toUserAdd(Model model) {
         model.addAttribute("identityList", identityService.selectAllIdentity());
         model.addAttribute("areaList", areaService.selectArea(1, null)); // 默认显示省
-        return "userAdd";
+        return "user/userAdd";
     }
 
     // 进行添加用户操作
@@ -229,7 +229,7 @@ public class UserController {
 
         model.addAttribute("identityList", identityService.selectAllIdentity());
 
-        return "userEdit";
+        return "user/userEdit";
     }
 
     // 进行用户更新操作

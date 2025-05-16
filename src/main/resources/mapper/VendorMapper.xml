@@ -49,6 +49,11 @@
 
     <select id="selectAllVendor" resultType="com.nxu.entity.Vendor">
         select * from `vendor`
+        <where>
+            <if test="status != null and status != 0">
+                status = #{status}
+            </if>
+        </where>
     </select>
 
 </mapper>

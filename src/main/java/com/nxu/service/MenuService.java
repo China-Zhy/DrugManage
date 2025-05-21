@@ -51,6 +51,8 @@ public interface MenuService {
 
     int delMenu(Integer id);
 
+    Menu getMenuById(Integer id);
+
     /**
      * 更新角色的菜单权限
      *

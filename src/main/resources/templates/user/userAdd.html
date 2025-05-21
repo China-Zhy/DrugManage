@@ -37,7 +37,7 @@
                     <div class="layui-col-md4">
                         <label class="layui-form-label">用户姓名：</label>
                         <div class="layui-input-block">
-                            <input type="text" name="name" autocomplete="off" class="layui-input" lay-verify="required">
+                            <input type="text" name="name" autocomplete="off" class="layui-input" lay-verify="required|myVerify">
                         </div>
                     </div>
 
@@ -141,7 +141,7 @@
         let upload = layui.upload;
         let element = layui.element;
 
-        let imageIsOk = false;
+        let imageIsOk = false;  // 图片上传结果
 
         // 单图片上传
         let uploadInst = upload.render({
@@ -230,6 +230,26 @@
             let code = $('#quiz1').val() + '/' + $('#quiz2').val() + '/' + $('#quiz3').val() + '/';
             let address = $('#quiz1 option:selected').text() + $('#quiz2 option:selected').text() + $('#quiz3 option:selected').text() + '-' + $('#quiz4').val();
             $('#address').val(code + address);
+        });
+
+        // 身份证姓名验证正则表达式（支持汉字和间隔符·）
+        const idCardNameRegex = /^[\u4e00-\u9fa5·]{2,30}$/;
+
+        // 自定义验证规则
+        form.verify({   // 验证出库数量是否小于等于原有库存数量
+            myVerify: function (value) {
+                if (idCardNameRegex.test(value)) {
+                    // 检查间隔符是否正确
+                    if (value.startsWith('·') || value.endsWith('·')) {
+                        return '间隔符·位置不正确！';
+                    }
+                    if ((value.split('·').length - 1) > 1) {
+                        return '间隔符·数量不正确！';
+                    }
+                } else {
+                    return '姓名输入有误，请按照身份证上的姓名填写！';
+                }
+            }
         });
 
         // 最终表单提交事件

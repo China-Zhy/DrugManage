@@ -10,6 +10,10 @@
         update `stock` set count = #{count} where id = #{id}
     </update>
 
+    <delete id="deleteStock">
+        delete from `stock` where id = #{id}
+    </delete>
+
     <select id="getStockById" resultType="com.nxu.entity.Stock">
         select * from `stock` where id = #{id}
     </select>

@@ -4,7 +4,6 @@ import com.github.pagehelper.PageInfo;
 import com.nxu.entity.*;
 import com.nxu.entity.Record;
 import com.nxu.mapper.BrowseMapper;
-import com.nxu.mapper.MenuMapper;
 import com.nxu.mapper.NoticeMapper;
 import com.nxu.service.*;
 import com.nxu.utils.RedisService;
@@ -13,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @SpringBootTest
@@ -105,12 +105,12 @@ public class SimpleTest {
             record.setType(1);
             record.setCount(50);
             record.setPrice(20);
-            record.setBirthday(new Date());
+            record.setBirthday(LocalDate.now());
             record.setFrom(3);
             record.setOther("初始化入库");
             records.add(record);
         }
-        stockService.inputStock(records, user);
+        stockService.inputStock(records, user, 1000);
     }
 
     // 根据角色获取菜单-给用户展示的菜单

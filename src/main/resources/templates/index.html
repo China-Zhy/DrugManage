@@ -2,15 +2,15 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>后台菜单框架页面</title>
+    <title>药品管理系统</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/layui/css/layui.css" rel="stylesheet">
 </head>
 <body>
-<div class="layui-layout layui-layout-admin" style="font-weight: bold;">
-    <div class="layui-header">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header" style="font-weight: bold;">
         <div class="layui-logo layui-bg-black" style="letter-spacing: 3px;">药品管理系统</div>
         <!-- 头部区域 -->
         <ul class="layui-nav layui-layout-left">
@@ -31,8 +31,8 @@
                     <i class="layui-icon layui-icon-github"></i>
                 </a>
             </li>
-            <li class="layui-nav-item" lay-unselect>
-                <a href="/toNoticePerson" target="ZHY" title="消息中心">
+            <li class="layui-nav-item" lay-unselect lay-header-event="menuNotice">
+                <a href="#" title="消息中心">
                     <i class="layui-icon layui-icon-notice"></i>
                     <!-- 如果有新消息，则显示小圆点 -->
                     <!--<span class="layui-badge-dot"></span>-->
@@ -67,20 +67,21 @@
             </li>
         </ul>
     </div>
-    <div class="layui-side layui-bg-black">
+    <div class="layui-side layui-bg-black" style="font-weight: bold;">
         <div class="layui-side-scroll">
             <!-- 左侧导航区域 -->
-            <ul class="layui-nav layui-nav-tree" lay-filter="test" lay-accordion style="letter-spacing: 1px;">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test" style="letter-spacing: 1px;" lay-accordion>
                 <!--遍历所有一级菜单-->
                 <li class="layui-nav-item" th:each="menus : ${menuList}" th:if="${menus.level == 1}">
-                    <a th:href="${menus.url}" target="ZHY">
+                    <a href="javascript:void(0);" th:data-id="${menus.id}" th:data-url="${menus.url}" th:data-name="${menus.name}"
+                       th:attr="lay-aside-event=${#lists.size(menus.children) > 0} ? null : 'menuAction'">
                         <i th:class="${menus.icon}"></i> <cite th:text="${menus.name}"></cite>
                     </a>
                     <!--如果一级菜单有子菜单，则生成二级菜单-->
                     <dl class="layui-nav-child" th:if="${#lists.size(menus.children) > 0}">
                         <!--遍历当前一级菜单的所有子菜单(二级菜单)-->
                         <dd th:each="childMenu : ${menus.children}">
-                            <a th:href="${childMenu.url}" target="ZHY">
+                            <a href="javascript:void(0);" th:data-id="${childMenu.id}" th:data-url="${childMenu.url}" th:data-name="${childMenu.name}" lay-aside-event="menuAction">
                                 <i th:class="${childMenu.icon}"></i> <cite th:text="${childMenu.name}"></cite>
                             </a>
                         </dd>
@@ -91,22 +92,33 @@
     </div>
     <!-- 内容主体区域 -->
     <div class="layui-body">
-        <iframe src="/toSystemHome" name="ZHY" id="ZHY" style="border: none;position: absolute;width: 100%;height: 100%;left: 0;top: 0;right: 0;bottom: 0;"></iframe>
+        <div class="layui-tabs layui-hide-v" id="demoTabs" lay-options="{closable: true, headerMode:'scroll'}" style="display: flex; flex-direction: column; height: 100%;">
+            <ul class="layui-tabs-header" style="flex-shrink: 0;">
+                <li lay-id="0" lay-closable="false">数据总览</li>
+            </ul>
+            <div class="layui-tabs-body" style="flex-grow: 1; overflow: auto; padding: 0;">
+                <div class="layui-tabs-item">
+                    <iframe src="/toSystemHome" style="border: none;position: absolute;width: 100%;height: 100%;left: 0;top: 0;right: 0;bottom: 0;margin-top: 40px;"></iframe>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- 底部固定区域 -->
-    <!--<div class="layui-footer">-->
-    <!--    <p style="text-align: center;">-->
-    <!--        <a href="https://blog.csdn.net/SuperCodeZhy" target="_blank">Copyright © 张宏业 https://blog.csdn.net/SuperCodeZhy</a>-->
-    <!--    </p>-->
-    <!--</div>-->
+    <!--底部固定区域-->
+    <!--    <div class="layui-footer">-->
+    <!--        <p style="text-align: center;">-->
+    <!--            <a href="https://blog.csdn.net/SuperCodeZhy" target="_blank">Copyright © 张宏业 https://blog.csdn.net/SuperCodeZhy</a>-->
+    <!--        </p>-->
+    <!--    </div>-->
 </div>
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['layer', 'util', 'jquery'], function () {
+    layui.use(['layer', 'util', 'jquery', 'tabs', 'dropdown'], function () {
         let layer = layui.layer;
         let util = layui.util;
         let $ = layui.jquery;
+        let tabs = layui.tabs;
+        let dropdown = layui.dropdown;
 
         // 页面头部工具栏点击事件
         util.event('lay-header-event', {
@@ -127,7 +139,34 @@
                 }
             },
             menuRefresh: function () {  // 刷新页面
-                $('#ZHY')[0].contentWindow.location.reload();
+                let activeTab = $('#demoTabs .layui-tabs-header li.layui-this');    // 获取当前激活的 tab 标签页
+                if (activeTab.length) {
+                    let tabId = activeTab.attr('lay-id');
+                    // 获取对应的 iframe 元素
+                    let iframe = $('#demoTabs .layui-tabs-body .layui-tabs-item[lay-id="' + tabId + '"] iframe');
+                    if (iframe.length) {
+                        iframe[0].contentWindow.location.reload();  // 刷新 iframe 页面
+                    }
+                }
+            },
+            menuNotice: function () {
+                if (tabs.getHeaderItem('demoTabs', 'menu_notice').length) {
+                    // 如果这个标签页存在，就切换到这个标签页
+                    layui.tabs.change('demoTabs', 'menu_notice');
+                } else {
+                    // 如果这个标签页不存在，就添加新标签为这个标签页
+                    tabs.add('demoTabs', {
+                        title: '🔹我的消息通知',
+                        content: '<iframe src="/toNoticePerson" style="border: none;position: absolute;width: 100%;height: 100%;left: 0;top: 0;right: 0;bottom: 0;margin-top: 40px;"></iframe>',
+                        id: 'menu_notice',
+                        done: function (data) {
+                            // 给新标签头添加上下文菜单
+                            dropdown.render($.extend({}, dropdownInst.config, {
+                                elem: data.headerItem // 新标签头元素
+                            }));
+                        }
+                    });
+                }
             },
             menuRight: function () {  // 右侧菜单
                 layer.open({
@@ -203,6 +242,65 @@
                 }, function () {
                     layer.msg('已取消登出！');
                 });
+            }
+        });
+
+        // 页面左侧菜单点击事件
+        util.event('lay-aside-event', {
+            menuAction: function (othis) {
+                // 通过 lay-id 判断当前标签页是否存在，通过 DOM 元素的 dataset 属性获取元素的属性值
+                if (tabs.getHeaderItem('demoTabs', 'menu' + othis[0].dataset.id).length) {
+                    // 如果这个标签页存在，就切换到这个标签页
+                    layui.tabs.change('demoTabs', 'menu' + othis[0].dataset.id);
+                } else {
+                    // 如果这个标签页不存在，就添加新标签为这个标签页
+                    tabs.add('demoTabs', {
+                        title: '🔹' + othis[0].dataset.name,
+                        content: '<iframe src="' + othis[0].dataset.url + '" style="border: none;position: absolute;width: 100%;height: 100%;left: 0;top: 0;right: 0;bottom: 0;margin-top: 40px;"></iframe>',
+                        id: 'menu' + othis[0].dataset.id,
+                        done: function (data) {
+                            // 给新标签头添加上下文菜单
+                            dropdown.render($.extend({}, dropdownInst.config, {
+                                elem: data.headerItem // 新标签头元素
+                            }));
+                        }
+                    });
+                }
+            }
+        });
+
+        // 为标签头添加上下文菜单
+        let dropdownInst = dropdown.render({
+            elem: '#demoTabs .layui-tabs-header>li',
+            trigger: 'contextmenu',
+            data: [{
+                title: '关闭当前标签页',
+                action: 'close',
+                mode: 'this',
+            }, {
+                type: '-'
+            }, {
+                title: '关闭其他标签页',
+                action: 'close',
+                mode: 'other'
+            }, {
+                title: '关闭右侧标签页',
+                action: 'close',
+                mode: 'right'
+            }, {
+                title: '关闭所有标签页',
+                action: 'close',
+                mode: 'all'
+            }],
+            click: function (data, othis, event) {
+                let index = this.elem.index(); // 获取活动标签索引
+                if (data.action === 'close') { // 关闭标签操作
+                    if (data.mode === 'this') {
+                        tabs.close('demoTabs', index); // 关闭当前标签
+                    } else {
+                        tabs.closeMult('demoTabs', data.mode, index); // 批量关闭标签
+                    }
+                }
             }
         });
     });

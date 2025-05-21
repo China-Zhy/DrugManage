@@ -3,7 +3,7 @@
 <mapper namespace="com.nxu.mapper.RecordMapper">
 
     <insert id="insertRecord">
-        insert into `record` values(null, NOW(), #{what}, #{type}, #{count}, #{price}, #{birthday}, #{from}, #{who}, #{other})
+        insert into `record` values(null, NOW(), #{what}, #{type}, #{count}, #{price}, #{birthday}, #{from}, #{who}, #{parent}, #{other})
     </insert>
 
     <select id="selectAllRecord" resultType="com.nxu.entity.Record">

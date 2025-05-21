@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nxu.mapper.ChecklistMapper">
+
+    <insert id="insertChecklist" useGeneratedKeys="true" keyProperty="id">
+        insert into `checklist` values (null, #{actionUser}, NOW(), #{totalAmount}, #{vendorId}, null, null)
+    </insert>
+
+    <update id="updateChecklist">
+        update `checklist` set verify_user = #{verifyUser} and verify_time = NOW() where id = #{id}
+    </update>
+
+</mapper>

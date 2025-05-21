@@ -82,8 +82,7 @@ public class StockController {
         PageInfo<Medicine> allMedicine = medicineService.getSomeMedicine(null, null, null, null);
         ArrayList<Identity> medicineList = new ArrayList<>();
 
-        // 对于 CPU 密集型任务，可以使用并行流 parallelStream() 来利用多核 CPU，提高处理速度
-        allMedicine.getList().parallelStream().forEach(medicine -> {
+        allMedicine.getList().forEach(medicine -> {
             Identity identity = new Identity();
             identity.setId(medicine.getId());
             identity.setName(STR."\{medicine.getCode()} | \{medicine.getName()} | \{medicine.getSpecs()}");
@@ -94,8 +93,7 @@ public class StockController {
         PageInfo<Vendor> allVendor = vendorService.getAllVendor(null, null, 1);
         ArrayList<Identity> vendorList = new ArrayList<>();
 
-        // 对于 CPU 密集型任务，可以使用并行流 parallelStream() 来利用多核 CPU，提高处理速度
-        allVendor.getList().parallelStream().forEach(vendor -> {
+        allVendor.getList().forEach(vendor -> {
             Identity identity = new Identity();
             identity.setId(vendor.getId());
             identity.setName(STR."\{vendor.getName()} | \{vendor.getCode()}");  // 使用String模板来格式化字符串
@@ -107,12 +105,11 @@ public class StockController {
     }
 
     // 进行入库操作 (包含事务，代码都在服务层)
-    @PostMapping("/doInputStock")
+    @PostMapping("/doInputStock/{totalAmount}")
     @ResponseBody
-    public HashMap<String, Object> doInputStock(@RequestBody List<Record> records, HttpSession session) {
+    public HashMap<String, Object> doInputStock(@RequestBody List<Record> records, @PathVariable double totalAmount, HttpSession session) {
         User user = (User) session.getAttribute("loginUser");   // 获取当前登录的用户
-        int i = stockService.inputStock(records, user);
-
+        int i = stockService.inputStock(records, user, totalAmount);
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", i);
         return map;

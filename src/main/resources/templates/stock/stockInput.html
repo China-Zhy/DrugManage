@@ -67,7 +67,7 @@
 
                 <!--供应商信息-->
                 <div class="layui-card" style="margin-bottom: 16px; border: 1px solid #e2e2e2;">
-                    <div class="layui-card-header">🟥 供应商户信息：</div>
+                    <div class="layui-card-header">🟩 供应商户信息：</div>
                     <div class="layui-card-body">
 
                         <div class="layui-form-item layui-col-space10" style="margin-bottom: 0;">
@@ -170,6 +170,7 @@
                 </template>
                 <!--使用 template 标签存放 模板药品入库信息模板(结束)-->
 
+                <!--药品入库信息-->
                 <div class="layui-card" style="margin-bottom: 16px; border: 1px solid #e2e2e2;">
                     <div class="layui-card-header">🟧 药品入库信息：</div>
                     <div class="layui-card-body" id="stockBox">
@@ -237,8 +238,8 @@
                     </div>
                 </div>
 
+                <!--底部操作按钮-->
                 <div class="layui-panel layui-padding-2 layui-col-md12">
-                    <!--底部操作按钮-->
                     <div class="layui-col-md4">
                         <div class="layui-col-md10 layui-col-lg-offset2">
                             <button type="button" class="layui-btn layui-btn-fluid layui-btn-primary layui-border-green layui-anim layui-anim-scaleSpring" lay-on="addStock">添加更多药品入库信息
@@ -259,15 +260,10 @@
                         </div>
                     </div>
                 </div>
-
             </form>
-
         </div>
     </div>
 </div>
-
-<br>
-<br>
 
 <script src="/layui/layui.js"></script>
 <script>
@@ -295,7 +291,7 @@
             }
         });
 
-        // select 选中事件
+        // select 选中事件-选择供应商
         form.on('select(vendor-select)', function (data) {
             let elem = data.elem; // 获得 select 原始 DOM 对象
             let value = data.value; // 获得被选中的值
@@ -313,7 +309,8 @@
                 }
             });
         });
-        // select 选中事件
+
+        // select 选中事件-选择药品
         form.on('select(medicine-select)', function (data) {
             let elem = data.elem; // 获得 select 原始 DOM 对象
             let value = data.value; // 获得被选中的值
@@ -364,8 +361,10 @@
                     if (response) {
                         layer.msg('身份验证通过！', {icon: 6});
                         setTimeout(() => {
-                            // 汇总输入的药品入库信息集合
-                            const stockData = [];
+
+                            const stockData = [];   // 汇总输入的药品入库信息集合
+
+                            let totalAmount = 0;    // 药品总价
 
                             $('select[name="medicineId[]"]').each(function (index) {
                                 const stock = {
@@ -376,12 +375,14 @@
                                     other: $('input[name="other[]"]').eq(index).val(),
                                     from: $('#vendor').val()
                                 }
+                                // 计算药品总价
+                                totalAmount += $('input[name="count[]"]').eq(index).val() * $('input[name="price[]"]').eq(index).val();
                                 stockData.push(stock);
                             });
 
                             // 进行提交
                             $.ajax({
-                                url: '/doInputStock',
+                                url: '/doInputStock/' + totalAmount,
                                 type: 'POST',
                                 contentType: 'application/json',
                                 data: JSON.stringify(stockData),

@@ -13,6 +13,8 @@ public interface StockMapper {
 
     int updateStock(@Param("id") int id, @Param("count") int count);
 
+    int deleteStock(int id);
+
     Stock getStockById(int id);
 
     List<Stock> selectStock(Integer medicineId);

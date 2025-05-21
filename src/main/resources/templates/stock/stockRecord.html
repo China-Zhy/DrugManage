@@ -100,8 +100,8 @@
             limits: [15, 30, 50],
             cols: [
                 [
-                    {type: 'checkbox'},
                     {field: 'id', title: 'ID', hide: true},
+                    {field: 'parent', title: '批次编号', align: 'center', templet: '<div><span class="layui-badge layui-bg-gray">{{= d.parent }}</span></div>'},
                     {field: 'when', title: '记录时间', align: 'center'},
                     {field: 'what', title: '药品编号', align: 'center', templet: '<div><span class="layui-badge layui-bg-gray">{{= d.what }}</span></div>'},
                     {field: 'type', title: '操作类型', align: 'center', templet: '#table-type'},

@@ -86,6 +86,11 @@ public class MenuServiceImpl implements MenuService {
         return menuMapper.deleteMenu(id);
     }
 
+    @Override
+    public Menu getMenuById(Integer id) {
+        return menuMapper.selectMenuById(id);
+    }
+
     /**
      * 更新角色的菜单权限
      *
@@ -102,7 +107,7 @@ public class MenuServiceImpl implements MenuService {
 
         Set<Integer> father = new CopyOnWriteArraySet<>();  // 一级菜单编号
 
-        menuIds.parallelStream().forEach(menuId -> {
+        menuIds.forEach(menuId -> {
             Menu menu = menuMapper.selectMenuById(menuId);
             if (menu != null && menu.getLevel() == 2) { // 二级菜单需要补全父级
                 father.add(menu.getParent());
@@ -110,7 +115,7 @@ public class MenuServiceImpl implements MenuService {
             }
         });
 
-        result.parallelStream().forEach(menuId -> {
+        result.forEach(menuId -> {
             if (!father.contains(menuId)) {
                 Menu menu = menuMapper.selectMenuById(menuId);
                 if (menu != null && menu.getLevel() == 1 && !menu.getUrl().startsWith("/")) {

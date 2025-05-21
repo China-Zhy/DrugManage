@@ -18,11 +18,12 @@ public interface StockService {
     /**
      * 药品入库(批量药品)
      *
-     * @param records 入库信息集合
-     * @param user    操作用户
+     * @param records     入库信息集合
+     * @param user        操作用户
+     * @param totalAmount 药品总价
      * @return 批量入库结果
      */
-    int inputStock(List<com.nxu.entity.Record> records, User user);
+    int inputStock(List<com.nxu.entity.Record> records, User user, double totalAmount);
 
     /**
      * 药品出库(单个药品)

@@ -75,8 +75,7 @@ public class MedicineServiceImpl implements MedicineService {
 
             List<Medicine> medicines = medicineMapper.selectSomeMedicine(null, null);
 
-            // 对于 CPU 密集型任务，可以使用并行流 parallelStream() 来利用多核 CPU，提高处理速度
-            medicines.parallelStream().forEach(medicine -> {
+            medicines.forEach(medicine -> {
                 nameDictionary.add(medicine.getName());
                 codeDictionary.add(medicine.getCode());
             });

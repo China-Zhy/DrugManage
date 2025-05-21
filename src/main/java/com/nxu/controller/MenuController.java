@@ -1,9 +1,11 @@
 package com.nxu.controller;
 
+import com.nxu.entity.Menu;
 import com.nxu.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
@@ -26,5 +28,11 @@ public class MenuController {
         map.put("code", 0);
         map.put("data", menuService.getAllMenuForManage());
         return map;
+    }
+
+    @GetMapping("/getOneMenuData/{id}")
+    @ResponseBody
+    public Menu getOneMenuData(@PathVariable Integer id) {
+        return menuService.getMenuById(id);
     }
 }

@@ -158,7 +158,7 @@ public class UserController {
     // 前往用户管理页面
     @GetMapping("/toUserMange")
     public String toUserMange(Model model) {
-        model.addAttribute("identityList", identityService.selectAllIdentity());
+        model.addAttribute("identityList", identityService.getAllIdentity());
         return "user/userMange";
     }
 
@@ -183,7 +183,7 @@ public class UserController {
     // 前往添加用户页面
     @GetMapping("/toUserAdd")
     public String toUserAdd(Model model) {
-        model.addAttribute("identityList", identityService.selectAllIdentity());
+        model.addAttribute("identityList", identityService.getAllIdentity());
         model.addAttribute("areaList", areaService.selectArea(1, null)); // 默认显示省
         return "user/userAdd";
     }
@@ -227,7 +227,7 @@ public class UserController {
         user.setAddress(address);
         model.addAttribute("user", user);
 
-        model.addAttribute("identityList", identityService.selectAllIdentity());
+        model.addAttribute("identityList", identityService.getAllIdentity());
 
         return "user/userEdit";
     }
@@ -255,5 +255,19 @@ public class UserController {
         map.put("code", userService.setUser(user));
         map.put("info", user);
         return map;
+    }
+
+    // 用户修改自己账号的密码
+    @GetMapping("/doSetUserPassword")
+    @ResponseBody
+    public Integer doSetUserPassword(@RequestParam String oldPass, @RequestParam String newPass, HttpSession session) {
+        User user = (User) session.getAttribute("loginUser");
+        if (!user.getPassword().equals(oldPass)) {
+            return 2;   // 原密码不一致
+        }
+        User newUser = new User();
+        newUser.setId(user.getId());
+        newUser.setPassword(newPass);
+        return userService.setUser(newUser);
     }
 }

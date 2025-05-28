@@ -18,4 +18,6 @@ public interface UserService {
     User login(String phone);
 
     PageInfo<User> getSomeUser(HashMap<String, Object> map);
+
+    int getUserCount(int type);
 }

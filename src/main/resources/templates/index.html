@@ -55,8 +55,8 @@
                     <span th:text="${session.loginUser.name}"></span>
                 </a>
                 <dl class="layui-nav-child" style="text-align: center;">
-                    <dd><a href="#">基本资料</a></dd>
-                    <dd><a href="#">修改密码</a></dd>
+                    <dd lay-header-event="aboutMe"><a href="#">基本资料</a></dd>
+                    <dd lay-header-event="setPass"><a href="#">修改密码</a></dd>
                     <dd lay-header-event="logout"><a href="#">退出登录</a></dd>
                 </dl>
             </li>
@@ -94,7 +94,7 @@
     <div class="layui-body">
         <div class="layui-tabs layui-hide-v" id="demoTabs" lay-options="{closable: true, headerMode:'scroll'}" style="display: flex; flex-direction: column; height: 100%;">
             <ul class="layui-tabs-header" style="flex-shrink: 0;">
-                <li lay-id="0" lay-closable="false">数据总览</li>
+                <li lay-id="0" lay-closable="false">🔹系统数据概览</li>
             </ul>
             <div class="layui-tabs-body" style="flex-grow: 1; overflow: auto; padding: 0;">
                 <div class="layui-tabs-item">
@@ -113,12 +113,13 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['layer', 'util', 'jquery', 'tabs', 'dropdown'], function () {
+    layui.use(['layer', 'util', 'jquery', 'tabs', 'dropdown', 'form'], function () {
         let layer = layui.layer;
         let util = layui.util;
         let $ = layui.jquery;
         let tabs = layui.tabs;
         let dropdown = layui.dropdown;
+        let form = layui.form;
 
         // 页面头部工具栏点击事件
         util.event('lay-header-event', {
@@ -217,6 +218,65 @@
                         document.getElementById("tool-screen-full").setAttribute("class", "layui-icon layui-icon-screen-full");
                     }
                 }
+            },
+            aboutMe: function () {
+
+            },
+            setPass: function () {
+                layer.open({
+                    type: 1,
+                    resize: false,
+                    shadeClose: true,
+                    area: '350px',
+                    title: '-----修改密码-----',
+                    content: ['<ul class="layui-form layui-form-pane" style="margin: 15px;">',
+                        '<li class="layui-form-item">',
+                        '<label class="layui-form-label">当前密码：</label>',
+                        '<div class="layui-input-block">',
+                        '<input type="password" name="oldPass" lay-verify="required" autocomplete="off" class="layui-input">',
+                        '</div>',
+                        '</li>',
+                        '<li class="layui-form-item">',
+                        '<label class="layui-form-label">最新密码：</label>',
+                        '<div class="layui-input-block">',
+                        '<input type="password" name="newPassOne" lay-verify="required" autocomplete="off" class="layui-input">',
+                        '</div>',
+                        '</li>',
+                        '<li class="layui-form-item">',
+                        '<label class="layui-form-label">确认密码：</label>',
+                        '<div class="layui-input-block">',
+                        '<input type="password" name="newPassTwo" lay-verify="required" autocomplete="off" class="layui-input">',
+                        '</div>',
+                        '</li>',
+                        '<li class="layui-form-item" style="text-align:center;">',
+                        '<button type="submit" lay-submit lay-filter="setPassword" class="layui-btn layui-btn-fluid">修 改 密 码</button>',
+                        '</li>',
+                        '</ul>'].join(''),
+                    success: function (layero, index) {
+                        layero.find('.layui-layer-content').css('overflow', 'visible');
+
+                        form.render().on('submit(setPassword)', function (data) {
+                            let field = data.field;
+                            if (field.newPassOne !== field.newPassTwo) {
+                                layer.msg('新密码两次输入不一致！', {icon: 2});
+                                return false;
+                            }
+
+                            // 发起更新密码的请求
+                            $.get('/doSetUserPassword', {'oldPass': field.oldPass, 'newPass': field.newPassOne}, function (response) {
+                                console.log(response)
+                                if (response === 1) {
+                                    layer.msg('密码已更新');
+                                    layer.close(index); //关闭层
+                                } else if (response === 2) {
+                                    layer.msg('原密码不正确，请重试！');
+                                } else {
+                                    layer.msg('修改失败，请联系管理员！');
+                                }
+                            });
+                        });
+                    }
+                });
             },
             logout: function () { // 退出登录
                 layer.confirm('确定退出登录嘛？', {

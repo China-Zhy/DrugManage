@@ -59,7 +59,7 @@ public class NoticeController {
     // 前往通知发布页面
     @GetMapping("/toNoticeAdd")
     public String toNoticeAdd(Model model) {
-        model.addAttribute("identityList", identityService.selectAllIdentity());
+        model.addAttribute("identityList", identityService.getAllIdentity());
         return "notice/noticeAdd";
     }
 

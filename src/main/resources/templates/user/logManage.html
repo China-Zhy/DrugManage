@@ -57,8 +57,16 @@
                     {field: 'who', title: '用户编号', align: 'center', templet: '<div><span class="layui-badge  layui-bg-cyan">{{= d.who }}</span></div>'},
                     {field: 'name', title: '用户昵称', align: 'center'},
                     {field: 'ip', title: 'IP地址', align: 'center'},
-                    {field: 'login', title: '登入时间', align: 'center'},
-                    {field: 'logout', title: '登出时间', align: 'center'},
+                    {
+                        field: 'login', title: '登入时间', align: 'center', templet: function (d) {
+                            return d.login.replace('T', ' ');
+                        }
+                    },
+                    {
+                        field: 'logout', title: '登出时间', align: 'center', templet: function (d) {
+                            return d.logout.replace('T', ' ');
+                        }
+                    },
                     {field: 'type', title: '状态信息', templet: '#table-type', align: 'center'}
                 ]
             ],

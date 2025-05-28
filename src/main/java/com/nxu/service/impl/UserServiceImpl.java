@@ -13,7 +13,6 @@ import java.util.HashMap;
 @Service
 public class UserServiceImpl implements UserService {
 
-
     @Autowired
     private UserMapper userMapper;
 
@@ -48,5 +47,10 @@ public class UserServiceImpl implements UserService {
             PageHelper.startPage(Integer.parseInt(map.get("page").toString()), Integer.parseInt(map.get("limit").toString()));
         }
         return new PageInfo<>(userMapper.selectSomeUser(map));
+    }
+
+    @Override
+    public int getUserCount(int type) {
+        return userMapper.queryUserCount(type);
     }
 }

@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface IdentityService {
 
-    int insertIdentity(String name);
+    int addIdentity(Identity identity);
 
-    int deleteIdentity(int id);
+    int delIdentity(int id);
 
-    int updateIdentity(String name);
+    int setIdentity(Identity identity);
 
-    List<Identity> selectAllIdentity();
+    List<Identity> getAllIdentity();
 }

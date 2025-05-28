@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 监听器
+ * 监听器：监听session是否过期，过期后更新用户登录日志中的在线状态
  */
 @WebListener
 @Component

@@ -1,5 +1,6 @@
 package com.nxu.controller;
 
+import com.nxu.entity.Identity;
 import com.nxu.entity.Menu;
 import com.nxu.service.IdentityService;
 import com.nxu.service.MenuService;
@@ -28,7 +29,7 @@ public class IdentityController {
         // 创建数据列表，每个元素是一个HashMap
         List<HashMap<String, Object>> dataList = new ArrayList<>();
 
-        identityService.selectAllIdentity().forEach(identity -> {
+        identityService.getAllIdentity().forEach(identity -> {
             List<String> menus = menuService.getRoleHaveMenuName(identity.getId());
 
             HashMap<String, Object> map = new HashMap<>();
@@ -59,4 +60,24 @@ public class IdentityController {
         return menuService.updateRoleMenus(roleId, values);     // 复杂的逻辑在服务层
     }
 
+    // 添加新角色
+    @GetMapping("/doAddRole")
+    @ResponseBody
+    public Integer doAddRole(String name) {
+        return identityService.addIdentity(new Identity(0, name));
+    }
+
+    // 修改角色名称
+    @PostMapping("/doSetRole")
+    @ResponseBody
+    public Integer doSetRole(@RequestParam Integer id, @RequestParam String name) {
+        return identityService.setIdentity(new Identity(id, name));
+    }
+
+    // 删除某个角色
+    @GetMapping("/doDelRole/{id}")
+    @ResponseBody
+    public Integer doDelRole(@PathVariable Integer id) {
+        return identityService.delIdentity(id);
+    }
 }

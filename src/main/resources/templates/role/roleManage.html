@@ -46,11 +46,13 @@
         <div class="layui-col-md12">
             <div class="layui-col-space16">
                 <!--现有角色卡片列表-->
-                <div class="layui-col-md4 layui-anim layui-anim-scale" th:each="item : ${dataList}">
+                <div class="layui-col-md4 layui-anim layui-anim-scale" th:each="item : ${dataList}" th:id="'card'+${item.identity.id}">
                     <div class="layui-card layui-padding-1">
                         <div class="layui-card-header">
-                            <span style="font-weight: bold; font-size: 20px;" th:text="${item.identity.name}"></span>
+                            <span style="font-weight: bold; font-size: 20px;" th:text="${item.identity.name}" th:id="'title'+${item.identity.id}"></span>
                             <div style="float: right;">
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-warm" lay-on="myEdit" th:name="${item.identity.name}" th:id="${item.identity.id}">编辑</button>
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-on="myDel" th:name="${item.identity.name}" th:id="${item.identity.id}">删除</button>
                                 <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-on="myEnter" th:name="${item.identity.name}" th:id="${item.identity.id}">权限管理</button>
                             </div>
                         </div>
@@ -66,8 +68,9 @@
                         </div>
                     </div>
                 </div>
+
                 <!--添加角色的卡片-->
-                <div class="layui-col-md4 layui-anim layui-anim-scale">
+                <div class="layui-col-md4 layui-anim layui-anim-scale" id="lastCard">
                     <div class="layui-card layui-padding-1">
                         <div class="layui-card-header" style="text-align: center;">
                             <span style="font-weight: bold; font-size: 20px;">添加更多角色</span>
@@ -93,6 +96,8 @@
         let util = layui.util;
         let $ = layui.jquery;
 
+        const nxu = /^[\u4e00-\u9fa5]{2,10}$/;
+
         util.on('lay-on', {
             myEnter: function (data) {
                 layer.open({
@@ -106,8 +111,79 @@
                     }
                 });
             },
-            myAdd: function (data) {
-                layer.msg('添加')
+            myEdit: function (data) {
+                layer.prompt({title: '请输入角色的新名称', formType: 0, value: data[0].name}, function (text, index) {
+                    if (!nxu.test(text)) {
+                        layer.msg('内容不合法，请输入2-10个汉字！', {icon: 2});
+                        return;
+                    }
+
+                    $.post("/doSetRole", {
+                        id: data[0].id,
+                        name: text
+                    }, function (res) {
+                        if (res) {
+                            layer.close(index);
+                            $('#title' + data[0].id).text(text);   // 修改页面上的角色名称
+                            layer.msg('修改成功');
+                        } else {
+                            layer.msg('修改失败，请联系管理员');
+                        }
+                    });
+                });
+            },
+            myDel: function (data) {
+                layer.confirm('确定删除这个角色嘛？', {
+                    btn: ['确定', '取消']
+                }, function () {
+                    $.get('/doDelRole/' + data[0].id, function (res) {
+                        if (res) {
+                            $('#card' + data[0].id).hide(500); // 0.5秒内逐渐隐藏
+                            layer.msg('删除成功');
+                        } else {
+                            layer.msg('提示：当前角色用户数不为0，无法删除！');
+                        }
+                    });
+                });
+            },
+            myAdd: function () {
+                layer.prompt({title: '请输入新角色的名称', formType: 0}, function (text, index) {
+                    if (!nxu.test(text)) {
+                        layer.msg('内容不合法，请输入2-10个汉字！', {icon: 2});
+                        return;
+                    }
+                    $.get('/doAddRole', {'name': text}, function (response) {
+                        if (response) {
+                            layer.close(index);
+                            layer.msg('添加成功');
+                            // 动态添加新角色的内容卡片
+                            let newCard = `                <div class="layui-col-md4 layui-anim layui-anim-scale" id="card${response}">
+                    <div class="layui-card layui-padding-1">
+                        <div class="layui-card-header">
+                            <span style="font-weight: bold; font-size: 20px;">${text}</span>
+                            <div style="float: right;">
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-warm" lay-on="myEdit" name="${text}" id="${response}">编辑</button>
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-on="myDel" name="${text}" id="${response}">删除</button>
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-on="myEnter" name="${text}" id="${response}">权限管理</button>
+                            </div>
+                        </div>
+                        <div class="layui-card-body">
+                            <div class="layui-row">
+                                <div class="layui-col-md3" style="height: 150px;display: flex;align-items: center;justify-content: center;">
+                                    <i class="layui-icon layui-icon-user" style="font-size: 100px; color: dodgerblue;"></i>
+                                </div>
+                                <div class="layui-col-md9" style="padding-left: 10px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                            // 在添加角色的卡片前面插入新卡片
+                            $('#lastCard').before(newCard);
+                        } else {
+                            layer.msg('添加失败，请联系管理员');
+                        }
+                    });
+                });
             }
         });
     });

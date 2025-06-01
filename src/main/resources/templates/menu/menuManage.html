@@ -15,16 +15,20 @@
     <table class="layui-hide" id="ID-treeTable-demo"></table>
 </div>
 
-<script type="text/html" id="TPL-treeTable-demo">
+<script type="text/html" id="treeTableHeader">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm layui-btn-primary layui-border" lay-event="addMenu">添加新的一级菜单</button>
+        <button class="layui-btn layui-btn-primary layui-border-purple layui-btn-sm" lay-event="addMenu">添加一级菜单</button>
     </div>
 </script>
-<script type="text/html" id="TPL-treeTable-demo-tools">
+
+<script type="text/html" id="treeTableRight">
     <div class="layui-btn-container">
-        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
-        <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="addChild">新增</a>
-        <a class="layui-btn layui-btn-xs" lay-event="more">更多</a>
+        {{# if(d.url === 'javascript:void(0);') { }}
+        <a class="layui-btn layui-btn-primary layui-border-orange layui-btn-xs" lay-event="addChild">添加二级菜单</a>
+        <a class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs" lay-event="detail">编辑菜单信息</a>
+        {{# } else { }}
+        <a class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs" lay-event="detail">编辑菜单信息</a>
+        {{# } }}
     </div>
 </script>
 
@@ -41,36 +45,34 @@
             url: '/getAllMenuData',
             tree: {
                 view: {
+                    expandAllDefault: true, // 是否默认展开全部节点
                     indent: 20 // 层级缩进量
                 }
             },
-            toolbar: '#TPL-treeTable-demo',
+            toolbar: '#treeTableHeader',
             cols: [
                 [
-                    {field: 'id', title: 'ID', width: 150},
+                    {field: 'id', title: 'ID', width: 120},
                     {field: 'name', title: '菜单名称'},
                     {field: 'url', title: '菜单链接'},
                     {field: 'icon', title: '菜单图标'},
-                    {field: 'parent', title: '上级编号', hide: true, width: 100, align: "center"},
-                    {field: 'level', title: '菜单级别', hide: true, width: 100, align: "center"},
+                    {field: 'parent', title: '上级编号', width: 100, align: "center"},
+                    {field: 'level', title: '菜单级别', width: 100, align: "center"},
                     {
                         field: 'status', title: '状态', align: "center", width: 150, templet: function (d) {
                             return d.status === 1 ? '<span style="color: green;">使用中</span>' : '<span style="color: red;">已停用</span>';
                         }
                     },
-                    {fixed: "right", title: "操作", width: 180, align: "center", toolbar: "#TPL-treeTable-demo-tools"}
+                    {fixed: "right", title: "操作", width: 205, align: "center", toolbar: "#treeTableRight"}
                 ]
             ]
         });
 
         // 表头工具栏工具事件
         treeTable.on("toolbar(ID-treeTable-demo)", function (obj) {
-            let config = obj.config;
-            let tableId = config.id;
-            let status = treeTable.checkStatus(tableId);
             // 获取选中行
             if (obj.event === "addMenu") {
-                layer.msg('添加菜单')
+                layer.msg('添加一级菜单')
             }
         });
 
@@ -81,7 +83,13 @@
             let trData = obj.data;
             let tableId = obj.config.id;
             if (layEvent === "detail") {
-                layer.msg("查看操作：" + trData.name);
+                layer.open({
+                    type: 2,
+                    title: '编辑菜单信息',
+                    area: ['800px', '480px'],
+                    scrollbar: false,
+                    content: ['/toMenuInfoEdit/' + trData.id, 'no']
+                });
             } else if (layEvent === "addChild") {
                 // let data = {id: Date.now(), name: "新节点"};
                 // let newNode2 = treeTable.addNodes(tableId, {
@@ -89,9 +97,7 @@
                 //     index: -1,
                 //     data: data
                 // });
-                layer.msg('添加子菜单');
-            } else if (layEvent === "more") {
-                layer.msg('更多操作');
+                layer.msg('添加二级菜单');
             }
         });
     });

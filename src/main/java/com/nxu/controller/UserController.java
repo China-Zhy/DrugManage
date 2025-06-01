@@ -247,8 +247,6 @@ public class UserController {
             // 如果用户没有更新头像，则都置为空，避免mapper层进行大文本更新
             user.setBinary(null);
             user.setBase64(null);
-        } else {
-            System.out.println("警告：用户头像更新有误！");
         }
 
         HashMap<String, Object> map = new HashMap<>();

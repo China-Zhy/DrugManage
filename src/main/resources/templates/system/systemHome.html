@@ -2,12 +2,148 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
-    <title>系统欢迎页面</title>
+    <title>系统数据展示</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/layui/css/layui.css" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        html {
+            scrollbar-width: none;
+        }
+    </style>
 </head>
 <body>
-欢迎您~
+
+<div class="layui-bg-gray layui-anim layui-anim-upbit" style="padding: 8px;">
+    <div class="layui-row layui-col-space8">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header" style="text-align: center;">【系统各类角色的用户数量】</div>
+                <div class="layui-card-body" style="height: 800px;">
+                    <div id="roleCount" style="height: 100%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header" style="text-align: center;">【系统近一周的用户访问量】</div>
+                <div class="layui-card-body" style="height: 800px;">
+                    <div id="stockInfo" style="height: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/layui/layui.js"></script>
+<script src="/layui/echarts.js"></script>
+<script>
+    layui.use(function () {
+        let $ = layui.jquery;
+
+        // 各角色用户数量-开始
+        let myChart = echarts.init(document.getElementById('roleCount'), null, {
+            renderer: 'canvas',
+            useDirtyRect: false
+        });
+
+        $.get('/getRoleUserCount', function (res) {
+            let option = {
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    top: '3%',
+                    left: 'center'
+                },
+                series: [
+                    {
+                        name: '用户数量',
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        avoidLabelOverlap: false,
+                        padAngle: 5,
+                        itemStyle: {
+                            borderRadius: 10
+                        },
+                        label: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: 40,
+                                fontWeight: 'bold'
+                            }
+                        },
+                        labelLine: {
+                            show: false
+                        },
+                        data: res   // 数据源
+                    }
+                ]
+            };
+
+            if (option && typeof option === 'object') {
+                myChart.setOption(option);
+            }
+        });
+        // 各角色用户数量-结束
+
+        // 近一周药品出库情况-开始
+        let myChart2 = echarts.init(document.getElementById('stockInfo'), null, {
+            renderer: 'canvas',
+            useDirtyRect: false
+        });
+
+        $.get('/getUserLoginLog', function (res) {
+
+            // 使用 map 函数生成数组
+            let names = $.map(res, function (entity) {
+                return entity.name;
+            });
+
+            let values = $.map(res, function (entity) {
+                return entity.value;
+            });
+
+            let option2 = {
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: names
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        data: values,
+                        type: 'bar'
+                    }
+                ]
+            };
+
+            if (option2 && typeof option2 === 'object') {
+                myChart2.setOption(option2);
+            }
+        });
+        // 近一周药品出库情况-结束
+
+        window.addEventListener('resize', myChart.resize);
+        window.addEventListener('resize', myChart2.resize);
+    });
+</script>
 </body>
 </html>

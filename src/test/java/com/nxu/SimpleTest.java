@@ -1,6 +1,7 @@
 package com.nxu;
 
 import com.github.pagehelper.PageInfo;
+import com.nxu.entity.PieCharts;
 import com.nxu.entity.*;
 import com.nxu.entity.Record;
 import com.nxu.mapper.BrowseMapper;
@@ -42,6 +43,9 @@ public class SimpleTest {
 
     @Autowired
     private MenuService menuService;
+
+    @Autowired
+    private EchartsService echartsService;
 
     // 测试-某用户的未浏览通知
     @Test
@@ -147,5 +151,23 @@ public class SimpleTest {
     @Test
     void test10() {
         menuService.getSimpleMenus().forEach(System.out::println);
+    }
+
+    // 各角色的用户数量
+    @Test
+    void test11() {
+        List<PieCharts> theNumberOfUsersInDifferentRoles = echartsService.getTheNumberOfUsersInDifferentRoles();
+        for (PieCharts pieCharts : theNumberOfUsersInDifferentRoles) {
+            System.out.println(pieCharts.toString());
+        }
+    }
+
+    // 系统近一周的用户访问量
+    @Test
+    void test12() {
+        List<PieCharts> theNumberOfUserVisitsInThePastWeek = echartsService.getTheNumberOfUserVisitsInThePastWeek();
+        for (PieCharts pieCharts : theNumberOfUserVisitsInThePastWeek) {
+            System.out.println(pieCharts.toString());
+        }
     }
 }

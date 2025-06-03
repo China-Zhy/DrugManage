@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nxu.mapper.EchartsMapper">
+
+    <select id="getTheNumberOfUsersInDifferentRoles" resultType="com.nxu.entity.PieCharts">
+        SELECT
+        r.name AS name,
+        COUNT(u.id) AS value
+        FROM
+        identity r
+        LEFT JOIN
+        `user` u ON r.id = u.type
+        GROUP BY
+        r.id, r.name
+        ORDER BY
+        r.id
+    </select>
+
+    <select id="getTheNumberOfUserVisitsInThePastWeek" resultType="com.nxu.entity.PieCharts">
+        WITH RECURSIVE date_range AS (
+        SELECT CURDATE() - INTERVAL 6 DAY AS name
+        UNION ALL
+        SELECT name + INTERVAL 1 DAY
+        FROM date_range
+        WHERE name &lt; CURDATE()
+        )
+        SELECT
+        dr.name,
+        COUNT(l.who) AS value
+        FROM
+        date_range dr
+        LEFT JOIN
+        log l ON DATE(l.login) = dr.name
+        GROUP BY
+        dr.name
+        ORDER BY
+        dr.name;
+    </select>
+
+</mapper>

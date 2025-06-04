@@ -145,7 +145,7 @@
                         title: '🔴🟢🔵填写用户信息',
                         scrollbar: false,
                         anim: 2,
-                        content: ['/toUserAdd', 'no'],
+                        content: '/toUserAdd',
                         success: function (layero, index, that) {
                             layer.full(index); // 最大化
                         },
@@ -170,7 +170,7 @@
                     title: '🔴🟢🔵编辑用户信息',
                     scrollbar: false,
                     anim: 2,
-                    content: ['/toUserEdit/' + data.id + '/1', 'no'],
+                    content: '/toUserEdit/' + data.id + '/1',
                     success: function (layero, index, that) {
                         layer.full(index); // 最大化
                     },
@@ -194,7 +194,7 @@
                 scrollbar: false,
                 shadeClose: true,
                 anim: 2,
-                content: ['/toUserEdit/' + data.id + '/2', 'no']
+                content: '/toUserEdit/' + data.id + '/2'
             });
         });
     })

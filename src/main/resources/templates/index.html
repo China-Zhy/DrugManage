@@ -14,14 +14,10 @@
     <div class="layui-header" style="font-weight: bold;">
         <div class="layui-logo layui-bg-black" style="letter-spacing: 3px;">药品管理系统</div>
         <ul class="layui-nav layui-layout-left">
-            <!-- 移动端显示 -->
-            <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-header-event="menuLeft">
-                <i class="layui-icon layui-icon-spread-left"></i>
-            </li>
-            <li class="layui-nav-item layui-hide-xs" lay-unselect lay-header-event="menuChange">
+            <li class="layui-nav-item" lay-unselect lay-header-event="menuChange">
                 <a href="#" title="边栏伸缩"><i id="leftEnumIcon" class="layui-icon layui-icon-shrink-right"></i></a>
             </li>
-            <li class="layui-nav-item" lay-unselect lay-header-event="menuRefresh">
+            <li class="layui-nav-item layui-hide-xs" lay-unselect lay-header-event="menuRefresh">
                 <a href="#" title="刷新页面"><i class="layui-icon layui-icon-refresh-3"></i></a>
             </li>
         </ul>
@@ -31,14 +27,14 @@
                     <i class="layui-icon layui-icon-github"></i>
                 </a>
             </li>
-            <li class="layui-nav-item" lay-unselect lay-header-event="menuNotice">
+            <li class="layui-nav-item layui-hide-xs" lay-unselect lay-header-event="menuNotice">
                 <a href="#" title="消息中心">
                     <i class="layui-icon layui-icon-notice"></i>
                     <!-- 如果有新消息，则显示小圆点 -->
                     <!--<span class="layui-badge-dot"></span>-->
                 </a>
             </li>
-            <li class="layui-nav-item" lay-unselect lay-header-event="menuNote">
+            <li class="layui-nav-item layui-hide-xs" lay-unselect lay-header-event="menuNote">
                 <a href="#" title="小备忘录"><i class="layui-icon layui-icon-note"></i></a>
             </li>
             <li class="layui-nav-item layui-hide-xs" lay-unselect lay-header-event="menuFull">
@@ -46,7 +42,7 @@
                     <i class="layui-icon layui-icon-screen-full" id="tool-screen-full"></i>
                 </a>
             </li>
-            <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
+            <li class="layui-nav-item">
                 <a href="#">
                     <img th:src="${session.loginUser.base64}" class="layui-nav-img" alt="头像">
                     <span th:text="${session.loginUser.name}"></span>
@@ -57,8 +53,8 @@
                     <dd lay-header-event="logout"><a href="#">退出登录</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item layui-hide-xs" lay-unselect lay-header-event="menuMore">
-                <a href="#">
+            <li class="layui-nav-item layui-hide-xs" lay-unselect lay-header-event="menuAbout">
+                <a href="#" title="更多信息">
                     <i class="layui-icon layui-icon-more-vertical"></i>
                 </a>
             </li>
@@ -111,20 +107,21 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['layer', 'util', 'jquery', 'tabs', 'dropdown', 'form'], function () {
-        let layer = layui.layer;
-        let util = layui.util;
-        let $ = layui.jquery;
-        let tabs = layui.tabs;
-        let dropdown = layui.dropdown;
-        let form = layui.form;
+    layui.use(['layer', 'tabs', 'jquery', 'util', 'dropdown', 'form'], function () {
+        let layer = layui.layer;        // 弹出层
+        let tabs = layui.tabs;          // 标签页
+        let $ = layui.jquery;           // jQuery
+        let util = layui.util;          // 工具模块
+        let dropdown = layui.dropdown;  // 下拉菜单
+        let form = layui.form;          // 表单组件
+        let device = layui.device();    // 浏览器信息
 
-        // 页面头部工具栏点击事件
+        if (device.mobile) {
+            layer.msg('移动设备访问效果不佳，建议使用电脑浏览');
+        }
+
+        // 页面顶部工具栏点击事件
         util.event('lay-header-event', {
-            menuLeft: function (othis) { // 移动端显示
-                layer.msg('移动端展开左侧菜单的操作');
-                console.log(othis)
-            },
             menuChange: function () {   // 边栏伸缩
                 let btn = $('#leftEnumIcon');
                 if (btn.hasClass('layui-icon-shrink-right')) {
@@ -167,16 +164,16 @@
                     });
                 }
             },
-            menuMore: function () {
+            menuAbout: function () {
                 layer.open({
-                    type: 1,
+                    type: 2,
                     title: '更多信息',
-                    content: '<div style="padding: 15px;"><h3>药品管理系统</h3><h4>作者：张宏业</h4><h4>邮箱：3030695949@qq.com</h4></div>',
-                    area: ['260px', '100%'],
-                    offset: 'rt',
-                    anim: 'slideLeft',
+                    offset: 'r',
+                    anim: 'slideLeft', // 从右往左
+                    area: ['25%', '100%'],
+                    shade: 0.5,
                     shadeClose: true,
-                    scrollbar: false
+                    content: '/toSystemAbout'
                 });
             },
             menuNote: function () {
@@ -298,7 +295,7 @@
                 });
             },
             logout: function () { // 退出登录
-                layer.confirm('确定退出登录嘛？', {
+                layer.confirm('确定退出登录嘛?', {
                     btn: ['确定', '取消']
                 }, function () {
                     $.ajax({
@@ -306,20 +303,20 @@
                         type: 'GET',
                         success: function (res) {
                             if (res.code) {
-                                layer.msg('登出成功！', {icon: 1});
+                                layer.msg('登出成功', {icon: 1});
                                 setTimeout(() => {
                                     window.location = '/toUserLogin';
                                 }, 2000)
                             } else {
-                                layer.msg('登出失败！', {icon: 2});
+                                layer.msg('登出失败', {icon: 2});
                             }
                         },
                         error: function () {
-                            layer.msg('Ajax请求异常！', {icon: 0});
+                            layer.msg('Ajax请求异常', {icon: 0});
                         }
                     });
                 }, function () {
-                    layer.msg('已取消登出！');
+                    layer.msg('已取消登出');
                 });
             }
         });

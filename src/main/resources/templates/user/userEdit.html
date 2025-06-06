@@ -33,7 +33,6 @@
                                 <i class="layui-icon layui-icon-upload"></i> 上传用户照片
                             </button>
                         </div>
-                        <div id="ID-upload-demo-text" class="layui-col-md12" style="margin-top: 10px;" th:if="${openType==1}"></div>
                     </div>
 
                     <!--右侧基本信息-->
@@ -141,17 +140,12 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['form', 'layer', 'jquery', 'upload', 'element'], function () {
-        let form = layui.form;
-        let layer = layui.layer;
-        let $ = layui.jquery;
-        let upload = layui.upload;
-        let element = layui.element;
+    layui.use(['form', 'layer', 'jquery', 'upload', 'element'], function (form, layer, $, upload, element) {
 
         let imageIsOk = true;
 
         // 单图片上传
-        let uploadInst = upload.render({
+        upload.render({
             elem: '#ID-upload-demo-btn',
             url: '/uploadImage',
             size: 512, // 限制文件大小，单位KB
@@ -165,19 +159,13 @@
             done: function (res) {
                 if (res === 0) {
                     imageIsOk = false;
-                    return layer.msg('上传失败！');
+                    return layer.msg('上传失败');
                 }
-                layer.msg('上传成功！')
-                $('#ID-upload-demo-text').html('上传成功😀');
+                layer.msg('上传成功');
                 $('#base64').val('1');    // 表示用户头像重新上传了
             },
             error: function () {
-                // 演示失败状态，并实现重传
-                let demoText = $('#ID-upload-demo-text');
-                demoText.html('<span style="color: #FF5722;">上传失败😥</span>&ensp;<a class="layui-btn layui-bg-purple layui-btn-xs demo-reload">点我重试</a>');
-                demoText.find('.demo-reload').on('click', function () {
-                    uploadInst.upload();
-                });
+                layer.msg('上传出错，请联系管理员');
             },
             // 进度条
             progress: function (n, elem, e) {
@@ -206,7 +194,7 @@
                     });
                     form.render('select');
                 }).fail(function () {
-                    layer.msg('请求二级列表失败！', {icon: 2});
+                    layer.msg('请求二级列表失败', {icon: 2});
                 });
             }
         });
@@ -226,7 +214,7 @@
                     });
                     form.render('select');
                 }).fail(function () {
-                    layer.msg('请求三级列表失败！', {icon: 2});
+                    layer.msg('请求三级列表失败', {icon: 2});
                 });
             }
         });

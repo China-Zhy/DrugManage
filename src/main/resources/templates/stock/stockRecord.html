@@ -47,17 +47,6 @@
     </div>
 </form>
 
-<!--解析特殊值的含义-->
-<script type="text/html" id="table-type">
-    {{# if(d.type === 1) { }}
-    <span class="layui-badge layui-bg-blue">入库</span>
-    {{# } else if(d.type == 2) { }}
-    <span class="layui-badge">出库</span>
-    {{# } else { }}
-    <span class="layui-badge layui-bg-cyan">未知</span>
-    {{# } }}
-</script>
-
 <!--数据表格-->
 <div class="layui-margin-3 layui-anim layui-anim-upbit">
     <table class="layui-hide" id="test" lay-filter="test"></table>
@@ -72,11 +61,7 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-
-    layui.use(['table', 'form', 'layer'], function () {
-        let table = layui.table;
-        let form = layui.form;
-        let layer = layui.layer;
+    layui.use(['table', 'form', 'layer'], function (table, form, layer) {
 
         // 搜索按钮事件
         form.on('submit(toDo)', function (data) {
@@ -96,15 +81,19 @@
             elem: '#test',
             url: '/getRecordData',
             page: true,
-            limit: 15,
-            limits: [15, 30, 50],
+            limit: 20,
+            limits: [20, 30, 50],
             cols: [
                 [
                     {field: 'id', title: 'ID', hide: true},
                     {field: 'parent', title: '批次编号', align: 'center', templet: '<div><span class="layui-badge layui-bg-gray">{{= d.parent }}</span></div>'},
                     {field: 'when', title: '记录时间', align: 'center'},
                     {field: 'what', title: '药品编号', align: 'center', templet: '<div><span class="layui-badge layui-bg-gray">{{= d.what }}</span></div>'},
-                    {field: 'type', title: '操作类型', align: 'center', templet: '#table-type'},
+                    {
+                        field: 'type', title: '操作类型', align: 'center', width: 120, templet: function (d) {
+                            return d.type === 1 ? '<span style="color: green;">入库</span>' : '<span style="color: blue;">出库</span>';
+                        }
+                    },
                     {field: 'count', title: '药品数量', align: 'center'},
                     {field: 'price', title: '药品单价', align: 'center'},
                     {field: 'birthday', title: '生产日期', align: 'center'},

@@ -42,9 +42,7 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['table', 'layer'], function () {
-        let table = layui.table;
-        let layer = layui.layer;
+    layui.use(['table', 'layer'], function (table, layer) {
 
         // 创建渲染实例
         table.render({

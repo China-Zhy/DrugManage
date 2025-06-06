@@ -2,7 +2,7 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>角色权限编辑</title>
+    <title>角色权限编辑(穿梭框风格)</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,11 +27,7 @@
     const haveId = /*[[${haveId}]]*/ [];
 </script>
 <script>
-    layui.use(['transfer', 'util', 'layer', 'jquery'], function () {
-        let transfer = layui.transfer;
-        let util = layui.util;
-        let layer = layui.layer;
-        let $ = layui.jquery;
+    layui.use(['transfer', 'util', 'layer', 'jquery'], function (transfer, util, layer, $) {
 
         // 渲染穿梭框组件
         transfer.render({
@@ -58,10 +54,10 @@
         // 批量事件
         util.on('lay-on', {
             doConfirm: function () {
-                let getData = transfer.getData('demo-inst'); // 获取右侧数据
+                let checkedData = transfer.getData('demo-inst'); // 获取右侧数据
 
                 // 提取所有的 value
-                const values = getData.map(item => item.value);
+                const values = checkedData.map(item => item.value);
 
                 // 进行权限更新
                 $.ajax({

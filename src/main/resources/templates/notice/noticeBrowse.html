@@ -43,11 +43,7 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-
-    layui.use(['table', 'form', 'layer'], function () {
-        let table = layui.table;
-        let form = layui.form;
-        let layer = layui.layer;
+    layui.use(['table', 'form', 'layer'], function (table, form, layer) {
 
         // 搜索按钮事件
         form.on('submit(toDo)', function (data) {

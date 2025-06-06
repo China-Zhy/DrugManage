@@ -34,12 +34,9 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['treeTable', 'layer', 'jquery'], function () {
-        let treeTable = layui.treeTable;
-        let layer = layui.layer;
-        let $ = layui.jquery;
+    layui.use(['treeTable', 'layer', 'jquery', 'util'], function (treeTable, layer, $, util) {
 
-        // 渲染
+        // 渲染树形表格
         let inst = treeTable.render({
             elem: '#ID-treeTable-demo',
             url: '/getAllMenuData',
@@ -88,7 +85,7 @@
                     title: '编辑菜单信息',
                     area: ['800px', '480px'],
                     scrollbar: false,
-                    content: ['/toMenuInfoEdit/' + trData.id, 'no']
+                    content: '/toMenuInfoEdit/' + trData.id
                 });
             } else if (layEvent === "addChild") {
                 // let data = {id: Date.now(), name: "新节点"};
@@ -100,6 +97,8 @@
                 layer.msg('添加二级菜单：未实现');
             }
         });
+
+        util.fixbar();  // 回到顶部
     });
 </script>
 

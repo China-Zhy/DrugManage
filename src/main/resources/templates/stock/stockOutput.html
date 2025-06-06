@@ -56,10 +56,7 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['form', 'layer', 'jquery'], function () {
-        let form = layui.form;
-        let layer = layui.layer;
-        let $ = layui.jquery;
+    layui.use(['form', 'layer', 'jquery'], function (form, layer, $) {
 
         let myInput = $('#count').val();    // 获取用户输入的药品数量
 
@@ -89,16 +86,16 @@
                 data: JSON.stringify(field),
                 success: function (res) {
                     if (res.code) {
-                        layer.msg('出库成功！', {icon: 1});
+                        layer.msg('出库成功', {icon: 1});
                         setTimeout(function () {
                             parent.layer.close(parent.layer.getFrameIndex(window.name));    // 关闭弹出层
                         }, 2000);
                     } else {
-                        layer.msg('出库失败！', {icon: 2});
+                        layer.msg('出库失败', {icon: 2});
                     }
                 },
                 error: function () {
-                    layer.msg('Ajax请求异常！', {icon: 0});
+                    layer.msg('Ajax请求异常', {icon: 0});
                 }
             });
             return false; // 阻止默认 form 跳转

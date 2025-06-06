@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>角色权限编辑(树组件风格)</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+
+<!--菜单树组件-->
+<div class="layui-margin-3 layui-anim layui-anim-upbit">
+    <div id="ID-tree-demo"></div>
+    <hr class="layui-border-purple">
+    <div style="width: 100%; text-align: center;">
+        <button type="button" class="layui-btn layui-bg-purple" lay-on="setTree">确 认</button>
+    </div>
+</div>
+
+<!--当前角色ID-->
+<input type="text" id="roleId" th:value="${identityId}" hidden="hidden">
+
+<script src="/layui/layui.js"></script>
+<script th:inline="javascript">
+    // 注入列表并转为 JSON
+    let menus = /*[[${menus}]]*/ [];
+    const haveId = /*[[${haveId}]]*/ [];
+
+    // 递归函数，根据数据的 status 字段添加 disabled 属性
+    function setDisabledStatus(data) {
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].level === 1 && data[i].children != null) {
+                data[i].spread = true;  // 展开子节点
+            }
+            if (data[i].status === 2) { // 2 表示停用
+                data[i].disabled = true;
+            }
+            if (data[i].children && data[i].children.length > 0) {
+                setDisabledStatus(data[i].children);
+            }
+        }
+        return data;
+    }
+
+    menus = setDisabledStatus(menus);
+</script>
+<script>
+    layui.use(['tree', 'util', 'layer', 'jquery'], function (tree, util, layer, $) {
+
+        // 渲染树组件
+        tree.render({
+            elem: '#ID-tree-demo',
+            data: menus,
+            customName: { // 自定义 data 字段名
+                title: 'name'
+            },
+            showCheckbox: true, // 是否显示复选框
+            accordion: false, // 是否开启手风琴模式
+            onlyIconControl: false, // 是否仅允许节点左侧图标控制展开收缩
+            id: 'myMenuTree',
+            isJump: true, // 是否允许点击节点时弹出新窗口跳转
+            text: {
+                defaultNodeName: '未命名', // 节点默认名称
+                none: '无数据' // 数据为空时的提示文本
+            },
+            click: function (obj) {
+                let data = obj.data; // 得到当前点击的节点数据
+                if (data.url.startsWith('/')) {
+                    parent.layer.open({
+                        type: 2,
+                        title: '预览【' + data.name + '】页面',
+                        shadeClose: true,
+                        area: ['90%', '90%'],
+                        content: data.url
+                    });
+                }
+            }
+        });
+
+        tree.setChecked('myMenuTree', haveId);  // 设置对应 id 的节点选中
+
+        // 批量事件
+        util.on('lay-on', {
+            setTree: function () {
+                let checkedData = tree.getChecked('myMenuTree'); // 获取选中节点的数据
+
+                let checkedIds = []; // 提取所有选中菜单的 ID
+
+                function extractIds(data) {
+                    for (let i = 0; i < data.length; i++) {
+                        checkedIds.push(data[i].id);
+                        if (data[i].children && data[i].children.length > 0) {
+                            extractIds(data[i].children);
+                        }
+                    }
+                }
+
+                extractIds(checkedData);
+
+                // 进行权限更新
+                $.ajax({
+                    url: '/doSetRoleMenu/' + $('#roleId').val(),
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(checkedIds),
+                    success: function (res) {
+                        layer.msg(res === 1 ? '更新成功' : '更新失败');
+                        setTimeout(function () {
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));    // 关闭弹出层
+                        }, 2000);
+                    },
+                    error: function (error) {
+                        console.error('发送数据时出错:', error);
+                        layer.msg('Ajax请求异常', {icon: 0});
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

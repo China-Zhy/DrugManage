@@ -55,10 +55,13 @@
         <div class="layui-form-item">
             <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="demo-reg">注 册</button>
         </div>
+        <div class="layui-form-item">
+            <a href="/toUserLogin" style="float: left; margin-top: 7px; margin-left: 5px; color: white;">登录帐号</a>
+            <a href="#" style="float: right; margin-top: 7px; margin-right: 5px; color: white;">忘记密码</a>
+        </div>
     </div>
 </form>
 
-<!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
 <script src="/layui/layui.js"></script>
 <script>
     // 如果当前窗口是iframe，则强制在顶级窗口中打开目标URL
@@ -66,12 +69,7 @@
         window.top.location.href = window.self.location.href;
     }
 
-    layui.use(['form', 'layer', 'util', 'jquery'], function () {
-
-        let form = layui.form;
-        let layer = layui.layer;
-        let util = layui.util;
-        let $ = layui.jquery;
+    layui.use(['form', 'layer', 'util', 'jquery'], function (form, layer, util, $) {
 
         // 自定义验证规则
         form.verify({
@@ -93,7 +91,6 @@
                 if (isvalid) {
                     layer.msg('手机号规则验证通过');
                     // 此处可继续书写「发送验证码」等后续逻辑
-                    // …
                 }
             }
         });
@@ -106,15 +103,10 @@
             layer.alert(JSON.stringify(field), {
                 title: '当前填写的字段值'
             });
-
             // 此处可执行 Ajax 等操作
-            // …
-
             return false; // 阻止默认 form 跳转
         });
-
     });
 </script>
-
 </body>
 </html>

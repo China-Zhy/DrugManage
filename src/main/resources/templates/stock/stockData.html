@@ -27,10 +27,7 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['table', 'layer', 'jquery'], function () {
-        let table = layui.table;
-        let layer = layui.layer;
-        let $ = layui.jquery;
+    layui.use(['table', 'layer', 'jquery'], function (table, layer, $) {
 
         // 创建渲染实例
         table.render({
@@ -67,9 +64,9 @@
                 layer.open({
                     type: 2,
                     title: '填写药品出库信息',
-                    area: ['500px', '400px'],
+                    area: ['60%', '50%'],
                     scrollbar: false,
-                    content: ['/toStockOutput/' + data.id + '/' + data.count, 'no'],
+                    content: '/toStockOutput/' + data.id + '/' + data.count,
                     end: function () {
                         table.reload(obj.config.id);
                     }

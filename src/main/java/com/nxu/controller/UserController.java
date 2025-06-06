@@ -42,11 +42,20 @@ public class UserController {
     void addSessionAndLog(HttpSession session, HttpServletRequest request, User user) {
         session.setAttribute("loginUser", user);    // 把登录用户信息存入session
 
+        String ip;
+        // X-Forwarded-For格式可能是"客户端IP,代理1的IP,代理2的IP..."，取第一个即为客户端真实IP
+        String xffHeader = request.getHeader("X-Forwarded-For");
+        if (xffHeader == null || xffHeader.isEmpty()) {
+            ip = request.getRemoteAddr();
+        } else {
+            ip = xffHeader.split(",")[0];
+        }
+
         // 添加用户的登录日志
         Log log = new Log();
         log.setWho(user.getId());
         log.setName(user.getName());
-        log.setIp(request.getRemoteAddr());     // 获取用户的IP地址
+        log.setIp(ip);      // 设置IP地址
         log.setType(0);     // 操作类型(0-用户在线 1-主动退出 2-会话过期)
 
         logService.addLog(log);
@@ -64,7 +73,7 @@ public class UserController {
 
         if (user == null) {
             map.put("code", 0);
-            map.put("info", "该手机号尚未注册！");
+            map.put("info", "该手机号尚未注册");
         } else {
             if (password.equals(user.getPassword())) {
 
@@ -76,7 +85,7 @@ public class UserController {
                     addSessionAndLog(session, request, user);
 
                     map.put("code", 1);
-                    map.put("info", STR."登录成功！欢迎您：\{user.getName()}");
+                    map.put("info", STR."登录成功，欢迎您：\{user.getName()}");
                 } else {
                     // 当前存在系统维护通知
 
@@ -94,7 +103,7 @@ public class UserController {
                         addSessionAndLog(session, request, user);
 
                         map.put("code", 1);
-                        map.put("info", STR."系统维护中，欢迎您：\{user.getName()}");
+                        map.put("info", STR."系统维护中，欢迎您 \{user.getName()}");
                     } else {
                         map.put("code", 3);     // 存在系统维护通知
                         map.put("info", "系统维护中，即将跳转通知页面！");

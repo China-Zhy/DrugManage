@@ -31,6 +31,14 @@ public interface MenuService {
     ArrayList<Integer> getRoleHaveMenuId(Integer identity);
 
     /**
+     * 获取用于树组件的菜单编号
+     *
+     * @param identity 用户身份类型
+     * @return 菜单编号集合
+     */
+    ArrayList<Integer> getRoleHaveMenuIdTree(Integer identity);
+
+    /**
      * 权限编辑-获取角色拥有的菜单菜单名称
      *
      * @param identity 用户身份类型

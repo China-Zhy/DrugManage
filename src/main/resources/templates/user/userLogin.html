@@ -16,6 +16,19 @@
             left: 0;
             z-index: -1;
         }
+
+        /* 添加以下样式让登录表单垂直居中 */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-form {
+            width: 320px;
+        }
+
     </style>
 </head>
 <body>
@@ -144,52 +157,55 @@
 </script>
 <!--背景特效-结束-->
 
-<form class="layui-form">
-    <div style="width: 320px; margin: 15% auto 0;">
-        <h1 style="font-size: 50px; margin-bottom: 20px; color: white; text-align: center;">药品管理系统</h1>
-        <div class="layui-form-item">
-            <div class="layui-input-wrap">
-                <div class="layui-input-prefix">
-                    <i class="layui-icon layui-icon-cellphone"></i>
+<div class="login-container">
+    <div class="login-form">
+        <form class="layui-form">
+            <h1 style="font-size: 50px; margin-bottom: 20px; color: white; text-align: center;">药品管理系统</h1>
+            <div class="layui-form-item">
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-cellphone"></i>
+                    </div>
+                    <input type="number" name="phone" lay-verify="required|phone" placeholder="手机号" lay-reqtext="请输入手机号" autocomplete="off" class="layui-input" lay-affix="clear">
                 </div>
-                <input type="number" name="phone" lay-verify="required|phone" placeholder="手机号" lay-reqtext="请输入手机号" autocomplete="off" class="layui-input" lay-affix="clear">
             </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-input-wrap">
-                <div class="layui-input-prefix">
-                    <i class="layui-icon layui-icon-password"></i>
+            <div class="layui-form-item">
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-password"></i>
+                    </div>
+                    <input type="password" name="password" lay-verify="required" placeholder="密   码" lay-reqtext="请输入密码" autocomplete="off" class="layui-input" lay-affix="eye">
                 </div>
-                <input type="password" name="password" lay-verify="required" placeholder="密   码" lay-reqtext="请输入密码" autocomplete="off" class="layui-input" lay-affix="eye">
             </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-row">
-                <div class="layui-col-xs7">
-                    <div class="layui-input-wrap">
-                        <div class="layui-input-prefix">
-                            <i class="layui-icon layui-icon-vercode"></i>
+            <div class="layui-form-item">
+                <div class="layui-row">
+                    <div class="layui-col-xs7">
+                        <div class="layui-input-wrap">
+                            <div class="layui-input-prefix">
+                                <i class="layui-icon layui-icon-vercode"></i>
+                            </div>
+                            <input type="text" name="captcha" id="captcha" lay-verify="required" placeholder="验证码" lay-reqtext="请输入验证码" autocomplete="off" class="layui-input"
+                                   lay-affix="clear">
                         </div>
-                        <input type="text" name="captcha" id="captcha" lay-verify="required" placeholder="验证码" lay-reqtext="请输入验证码" autocomplete="off" class="layui-input" lay-affix="clear">
                     </div>
-                </div>
-                <div class="layui-col-xs5">
-                    <div style="margin-left: 10px;">
-                        <canvas id="canvas" width="122" height="36" style="display: inline-block;border-radius: 2px;cursor: pointer;background-color: white;border: 1px solid #e2e2e2;"></canvas>
+                    <div class="layui-col-xs5">
+                        <div style="margin-left: 10px;">
+                            <canvas id="canvas" width="122" height="36"
+                                    style="display: inline-block;border-radius: 2px;cursor: pointer;background-color: white;border: 1px solid #e2e2e2;"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="layui-form-item">
-            <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="demo-login">登 录</button>
-        </div>
-        <div class="layui-form-item">
-            <a href="/toUserEnroll" style="float: left; margin-top: 7px; margin-left: 5px; color: white;">注册帐号</a>
-            <a href="#" style="float: right; margin-top: 7px; margin-right: 5px; color: white;">忘记密码</a>
-        </div>
+            <div class="layui-form-item">
+                <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="demo-login">登 录</button>
+            </div>
+            <div class="layui-form-item">
+                <a href="/toUserEnroll" style="float: left; margin-top: 7px; margin-left: 5px; color: white;">注册帐号</a>
+                <a href="#" style="float: right; margin-top: 7px; margin-right: 5px; color: white;">忘记密码</a>
+            </div>
+        </form>
     </div>
-</form>
-
+</div>
 <script src="/layui/layui.js"></script>
 <script>
     // 如果当前窗口是iframe，则强制在顶级窗口中打开目标URL
@@ -254,11 +270,7 @@
         e("captcha", obj);
     });
 
-    layui.use(['form', 'layer', 'captcha', 'jquery'], function () {
-        let form = layui.form;
-        let layer = layui.layer;
-        let captcha = layui.captcha;
-        let $ = layui.jquery;
+    layui.use(['form', 'layer', 'captcha', 'jquery'], function (form, layer, captcha, $) {
 
         let show_num = [];
         captcha.draw(show_num);
@@ -267,7 +279,7 @@
             captcha.draw(show_num);
         });
 
-        // 自动填充验证码
+        // 自动填充验证码(仅测试时方便，正式使用请删除或注释)
         // $('#captcha').val(show_num.join(""));
 
         // 表单提交事件
@@ -276,7 +288,7 @@
 
             let code = field["captcha"];
             if (show_num.join("") !== code.toLowerCase()) {
-                layer.msg('验证码错误,请重新输入！', {icon: 2});
+                layer.msg('验证码错误,请重新输入', {icon: 2});
                 return false;
             }
 
@@ -321,7 +333,7 @@
                     }
                 },
                 error: function () {
-                    layer.msg('Ajax请求异常！', {icon: 0});
+                    layer.msg('Ajax请求异常', {icon: 0});
                 }
             });
             return false; // 阻止默认 form 跳转

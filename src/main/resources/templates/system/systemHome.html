@@ -20,6 +20,7 @@
                 </div>
             </div>
         </div>
+
         <div class="layui-col-md6">
             <div class="layui-card">
                 <div class="layui-card-header" style="text-align: center;">【系统近一周的用户访问量】</div>
@@ -28,14 +29,22 @@
                 </div>
             </div>
         </div>
+
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header" style="text-align: center;">【系统功能模块图-测试版】</div>
+                <div class="layui-card-body">
+                    <img src="/image/function.png" alt="图片" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<script src="/layui/layui.js"></script>
 <script src="/layui/echarts.js"></script>
+<script src="/layui/layui.js"></script>
 <script>
-    layui.use(function () {
-        let $ = layui.jquery;
+    layui.use(['jquery', 'util'], function ($, util) {
 
         // 各角色用户数量-开始
         let myChart = echarts.init(document.getElementById('roleCount'), null, {
@@ -134,6 +143,8 @@
 
         window.addEventListener('resize', myChart.resize);
         window.addEventListener('resize', myChart2.resize);
+
+        util.fixbar();  // 回到顶部
     });
 </script>
 </body>

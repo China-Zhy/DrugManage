@@ -20,7 +20,7 @@
     </select>
 
     <insert id="insertMedicine">
-        insert into `medicine` values(null, #{name}, #{code}, #{compose}, #{specs}, #{usage}, #{image}, #{origin}, #{status})
+        insert into `medicine` values(null, #{name}, #{code}, #{compose}, #{specs}, #{usage}, #{image}, #{origin}, 1)
     </insert>
 
     <update id="updateMedicine">

@@ -44,6 +44,12 @@ public class SystemController {
         return "system/systemSetting";
     }
 
+    // 前往更多信息页面
+    @GetMapping("/toSystemAbout")
+    public String toSystemAbout() {
+        return "system/systemAbout";
+    }
+
     // 图片上传后转为二进制和base64格式存入数据库
     @PostMapping("/uploadImage")
     @ResponseBody

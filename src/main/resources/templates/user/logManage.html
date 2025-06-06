@@ -30,9 +30,7 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['table'], function () {
-        let table = layui.table;
-
+    layui.use(['table'], function (table) {
         // 创建渲染实例
         table.render({
             elem: '#test',

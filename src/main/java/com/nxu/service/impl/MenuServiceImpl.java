@@ -51,6 +51,27 @@ public class MenuServiceImpl implements MenuService {
     }
 
     /**
+     * 获取用于树组件的菜单编号
+     *
+     * @param identity 用户身份类型
+     * @return 菜单编号集合
+     */
+    @Override
+    public ArrayList<Integer> getRoleHaveMenuIdTree(Integer identity) {
+        ArrayList<Integer> integers = menuMapper.selectRoleHaveMenuId(identity);
+
+        ArrayList<Integer> list = new ArrayList<>();
+
+        for (Integer integer : integers) {
+            Menu menu = menuMapper.selectMenuById(integer);
+            if (menu.getUrl().startsWith("/")) {
+                list.add(integer);  // 适应树组件的初始化选中(只能选择孩子，如果选择父亲，所有孩子都会选中)
+            }
+        }
+        return list;
+    }
+
+    /**
      * 权限编辑-获取角色拥有的菜单菜单名称
      *
      * @param identity 用户身份类型

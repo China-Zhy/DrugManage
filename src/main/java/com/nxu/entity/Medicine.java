@@ -14,7 +14,7 @@ public class Medicine {         // 药品信息
     private String compose;     // 药品成分
     private String specs;       // 药品规格
     private String usage;       // 用法用量
-    private String image;       // 药品照片
+    private String image;       // 药品照片 (base64存储)
     private String origin;      // 生产厂家
     private int status;         // 状态信息 (1-可用 2-禁用)
 }

@@ -29,43 +29,42 @@
                         </div>
                         <div class="layui-col-md12" style="margin-top: 10px;">
                             <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-fluid" id="ID-upload-demo-btn">
-                                <i class="layui-icon layui-icon-upload"></i> 上传用户照片
+                                <i class="layui-icon layui-icon-upload"></i> 上传用户头像照片
                             </button>
                         </div>
-                        <div id="ID-upload-demo-text" class="layui-col-md12" style="margin-top: 10px;"></div>
                     </div>
 
                     <!--右侧基本信息-->
                     <div class="layui-col-md4">
-                        <label class="layui-form-label">用户姓名：</label>
+                        <label class="layui-form-label">用户姓名</label>
                         <div class="layui-input-block">
                             <input type="text" name="name" autocomplete="off" class="layui-input" lay-verify="required|myVerify">
                         </div>
                     </div>
 
                     <div class="layui-col-md4">
-                        <label class="layui-form-label">手机号码：</label>
+                        <label class="layui-form-label">手机号码</label>
                         <div class="layui-input-block">
                             <input type="text" name="phone" autocomplete="off" class="layui-input" lay-verify="required|phone">
                         </div>
                     </div>
 
                     <div class="layui-col-md4">
-                        <label class="layui-form-label">身份证号：</label>
+                        <label class="layui-form-label">身份证号</label>
                         <div class="layui-input-block">
                             <input type="text" name="card" id="card" autocomplete="off" class="layui-input" lay-verify="required|identity">
                         </div>
                     </div>
 
                     <div class="layui-col-md4">
-                        <label class="layui-form-label">默认密码：</label>
+                        <label class="layui-form-label">默认密码</label>
                         <div class="layui-input-block">
                             <input type="text" name="password" id="password" class="layui-input" disabled>
                         </div>
                     </div>
 
                     <div class="layui-col-md4">
-                        <label class="layui-form-label">用户身份：</label>
+                        <label class="layui-form-label">用户身份</label>
                         <div class="layui-input-block">
                             <select name="type" lay-verify="required">
                                 <option value=""></option>
@@ -75,7 +74,7 @@
                     </div>
 
                     <div class="layui-col-md4">
-                        <label class="layui-form-label">账号状态：</label>
+                        <label class="layui-form-label">账号状态</label>
                         <div class="layui-input-block">
                             <select name="status">
                                 <option value="1">可用</option>
@@ -85,7 +84,7 @@
                     </div>
 
                     <div class="layui-col-md8">
-                        <label class="layui-form-label">居住地址：</label>
+                        <label class="layui-form-label">居住地址</label>
                         <div class="layui-input-inline">
                             <select id="quiz1" lay-verify="required" lay-filter="quiz1">
                                 <option value="">请选择省</option>
@@ -106,7 +105,7 @@
                     </div>
 
                     <div class="layui-col-md8">
-                        <label class="layui-form-label">详细位置：</label>
+                        <label class="layui-form-label">详细位置</label>
                         <div class="layui-input-block">
                             <input type="text" id="quiz4" autocomplete="off" class="layui-input" lay-verify="required">
                         </div>
@@ -115,7 +114,7 @@
                     <input type="text" name="address" id="address" hidden="hidden">
 
                     <div class="layui-col-md8 layui-form-text">
-                        <label class="layui-form-label">其他信息：</label>
+                        <label class="layui-form-label">其他信息</label>
                         <div class="layui-input-block">
                             <textarea name="other" class="layui-textarea" lay-verify="required" maxlength="500" rows="10"></textarea>
                         </div>
@@ -136,17 +135,12 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['form', 'layer', 'jquery', 'upload', 'element'], function () {
-        let form = layui.form;
-        let layer = layui.layer;
-        let $ = layui.jquery;
-        let upload = layui.upload;
-        let element = layui.element;
+    layui.use(['form', 'layer', 'jquery', 'upload', 'element'], function (form, layer, $, upload, element) {
 
         let imageIsOk = false;  // 图片上传结果
 
         // 单图片上传
-        let uploadInst = upload.render({
+        upload.render({
             elem: '#ID-upload-demo-btn',
             url: '/uploadImage',
             size: 512, // 限制文件大小，单位KB
@@ -159,19 +153,13 @@
             },
             done: function (res) {
                 if (res === 0) {
-                    return layer.msg('上传失败！');
+                    return layer.msg('上传失败');
                 }
-                layer.msg('上传成功！')
-                $('#ID-upload-demo-text').html('上传成功😀');
+                layer.msg('上传成功');
                 imageIsOk = true;
             },
             error: function () {
-                // 演示失败状态，并实现重传
-                let demoText = $('#ID-upload-demo-text');
-                demoText.html('<span style="color: #FF5722;">上传失败😥</span>&ensp;<a class="layui-btn layui-bg-purple layui-btn-xs demo-reload">点我重试</a>');
-                demoText.find('.demo-reload').on('click', function () {
-                    uploadInst.upload();
-                });
+                layer.msg('上传出错，请联系管理员');
             },
             // 进度条
             progress: function (n, elem, e) {
@@ -201,7 +189,7 @@
                     });
                     form.render('select');
                 }).fail(function () {
-                    layer.msg('请求二级列表失败！', {icon: 2});
+                    layer.msg('请求二级列表失败', {icon: 2});
                 });
             }
         });
@@ -222,7 +210,7 @@
                     });
                     form.render('select');
                 }).fail(function () {
-                    layer.msg('请求三级列表失败！', {icon: 2});
+                    layer.msg('请求三级列表失败', {icon: 2});
                 });
             }
         });
@@ -243,13 +231,13 @@
                 if (idCardNameRegex.test(value)) {
                     // 检查间隔符是否正确
                     if (value.startsWith('·') || value.endsWith('·')) {
-                        return '间隔符·位置不正确！';
+                        return '间隔符·位置不正确';
                     }
                     if ((value.split('·').length - 1) > 1) {
-                        return '间隔符·数量不正确！';
+                        return '间隔符·数量不正确';
                     }
                 } else {
-                    return '姓名输入有误，请按照身份证上的姓名填写！';
+                    return '姓名输入有误，请按照身份证上的姓名填写';
                 }
             }
         });
@@ -258,7 +246,7 @@
         form.on('submit(toDo)', function (data) {
 
             if (!imageIsOk) {
-                layer.msg('请上传用户头像！', {icon: 0});
+                layer.msg('请上传用户头像', {icon: 0});
                 return false; // 阻止默认 form 跳转
             }
 
@@ -271,17 +259,17 @@
                 data: JSON.stringify(field),
                 success: function (res) {
                     if (res === 1) {
-                        layer.msg('添加成功！', {icon: 1});
+                        layer.msg('添加成功', {icon: 1});
                         setTimeout(function () {
                             parent.layer.close(parent.layer.getFrameIndex(window.name));    // 关闭弹出层
                         }, 2000);
                     } else {
-                        layer.msg('添加失败！', {icon: 2});
+                        layer.msg('添加失败', {icon: 2});
                         imageIsOk = false;
                     }
                 },
                 error: function () {
-                    layer.msg('Ajax请求异常！', {icon: 0});
+                    layer.msg('Ajax请求异常', {icon: 0});
                 }
             });
             return false; // 阻止默认 form 跳转

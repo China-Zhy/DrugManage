@@ -82,10 +82,7 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['form', 'layer', 'jquery'], function () {
-        let form = layui.form;
-        let layer = layui.layer;
-        let $ = layui.jquery;
+    layui.use(['form', 'layer', 'jquery'], function (form, layer, $) {
 
         // 禁止键盘输入
         $('#chooseIcon').keydown(function (event) {
@@ -141,7 +138,7 @@
                     }
                 },
                 error: function () {
-                    layer.msg('Ajax请求异常！', {icon: 0});
+                    layer.msg('Ajax请求异常', {icon: 0});
                 }
             });
             return false; // 阻止默认 form 跳转

@@ -104,10 +104,7 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['form', 'layer', 'jquery'], function () {
-        let form = layui.form;
-        let layer = layui.layer;
-        let $ = layui.jquery;
+    layui.use(['form', 'layer', 'jquery'], function (form, layer, $) {
 
         // 提交事件
         form.on('submit(toDo)', function (data) {
@@ -120,7 +117,7 @@
                 data: JSON.stringify(field),
                 success: function (res) {
                     if (res.code) {
-                        layer.msg('更新成功！', {icon: 1});
+                        layer.msg('更新成功', {icon: 1});
 
                         // 通过window.parent访问父页面的全局变量并修改
                         window.parent.parentData = res.info;
@@ -129,11 +126,11 @@
                             parent.layer.close(parent.layer.getFrameIndex(window.name));    // 关闭弹出层
                         }, 2000);
                     } else {
-                        layer.msg('更新失败！', {icon: 2});
+                        layer.msg('更新失败', {icon: 2});
                     }
                 },
                 error: function () {
-                    layer.msg('Ajax请求异常！', {icon: 0});
+                    layer.msg('Ajax请求异常', {icon: 0});
                 }
             });
             return false; // 阻止默认 form 跳转

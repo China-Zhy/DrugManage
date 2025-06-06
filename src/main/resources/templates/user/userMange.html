@@ -75,12 +75,7 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['table', 'form', 'layer', 'jquery'], function () {
-        let table = layui.table;
-        let form = layui.form;
-        let layer = layui.layer;
-        let $ = layui.jquery;
-
+    layui.use(['table', 'form', 'layer'], function (table, form, layer) {
         // 搜索按钮事件
         form.on('submit(toDo)', function (data) {
             let field = data.field; // 获取表单字段值
@@ -197,8 +192,7 @@
                 content: '/toUserEdit/' + data.id + '/2'
             });
         });
-    })
-    ;
+    });
 </script>
 </body>
 </html>

@@ -1,6 +1,5 @@
 package com.nxu.controller;
 
-import com.nxu.entity.Medicine;
 import com.nxu.entity.Menu;
 import com.nxu.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;

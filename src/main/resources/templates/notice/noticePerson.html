@@ -34,10 +34,7 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['layer', 'util', 'jquery'], function () {
-        let layer = layui.layer;
-        let util = layui.util;
-        let $ = layui.jquery;
+    layui.use(['layer', 'util', 'jquery'], function (layer, util, $) {
 
         util.on('lay-on', {
             lookDetail: function (data) {
@@ -62,11 +59,11 @@
                                 if (res.code) {
                                     layer.msg('浏览记录添加成功');
                                 } else {
-                                    layer.msg('浏览记录添加失败！');
+                                    layer.msg('浏览记录添加失败');
                                 }
                             },
                             error: function () {
-                                layer.msg('Ajax请求异常！', {icon: 0});
+                                layer.msg('Ajax请求异常', {icon: 0});
                             }
                         });
                         layer.close(index); // 关闭弹层
@@ -86,6 +83,8 @@
                 });
             }
         });
+
+        util.fixbar();  // 回到顶部
     });
 </script>
 

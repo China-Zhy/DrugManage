@@ -56,10 +56,7 @@
 <script src="/layui/layui.js"></script>
 <script>
 
-    layui.use(['table', 'form', 'layer'], function () {
-        let table = layui.table;
-        let form = layui.form;
-        let layer = layui.layer;
+    layui.use(['table', 'form', 'layer'], function (table, form, layer) {
 
         // 搜索按钮事件
         form.on('submit(toDo)', function (data) {
@@ -111,10 +108,11 @@
             layer.open({
                 type: 2,
                 title: '【' + data.name + ' ' + data.code + '】 的库存信息',
-                area: ['800px', '600px'],
+                area: ['70%', '80%'],
+                skin: 'layui-layer-molv',
                 shadeClose: true,
                 scrollbar: false,
-                content: ['/toStockData/' + data.id, 'no']
+                content: '/toStockData/' + data.id
             });
         });
     });

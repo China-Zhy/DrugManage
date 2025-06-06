@@ -42,15 +42,26 @@ public class IdentityController {
         return "role/roleManage";
     }
 
-    // 前往角色的菜单编辑页面
-    @GetMapping("/toRoleMenuEdit/{identity}")
-    public String toRoleMenuEdit(Model model, @PathVariable int identity) {
+    // 前往角色的菜单编辑页面(穿梭框)
+    @GetMapping("/toRoleMenuEdit1/{identity}")
+    public String toRoleMenuEdit1(Model model, @PathVariable int identity) {
         model.addAttribute("identityId", identity);
-        List<Menu> menus = menuService.getSimpleMenus();
-        model.addAttribute("menus", menus);   // 全部可选的简单菜单
+        List<Menu> menus = menuService.getSimpleMenus();    // 全部可选的简单菜单
+        model.addAttribute("menus", menus);
         ArrayList<Integer> roleHaveMenuId = menuService.getRoleHaveMenuId(identity);
-        model.addAttribute("haveId", roleHaveMenuId);   // 当前角色拥有的菜单编号
-        return "role/roleMenuEdit";
+        model.addAttribute("haveId", roleHaveMenuId);   // 当前角色拥有的菜单编号(适应穿梭框)
+        return "role/roleMenuEdit1";
+    }
+
+    // 前往角色的菜单编辑页面(树组件)
+    @GetMapping("/toRoleMenuEdit2/{identity}")
+    public String toRoleMenuEdit2(Model model, @PathVariable int identity) {
+        model.addAttribute("identityId", identity);
+        List<Menu> menus = menuService.getAllMenuForManage();   // 全部可选的复杂菜单
+        model.addAttribute("menus", menus);
+        ArrayList<Integer> roleHaveMenuId = menuService.getRoleHaveMenuIdTree(identity);
+        model.addAttribute("haveId", roleHaveMenuId);   // 当前角色拥有的菜单编号(适应树组件)
+        return "role/roleMenuEdit2";
     }
 
     // 进行角色权限更新(接收前端传来的菜单ID列表→递归补全缺失的父级菜单→清除旧权限，添加新权限)

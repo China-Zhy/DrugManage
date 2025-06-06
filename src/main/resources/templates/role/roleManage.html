@@ -42,15 +42,16 @@
                         <div class="layui-card-header">
                             <span style="font-weight: bold; font-size: 20px;" th:text="${item.identity.name}" th:id="'title'+${item.identity.id}"></span>
                             <div style="float: right;">
-                                <button type="button" class="layui-btn layui-btn-xs layui-btn-warm" lay-on="myEdit" th:name="${item.identity.name}" th:id="${item.identity.id}">编辑</button>
+                                <button type="button" class="layui-btn layui-btn-xs" lay-on="myEdit" th:name="${item.identity.name}" th:id="${item.identity.id}">编辑</button>
                                 <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-on="myDel" th:name="${item.identity.name}" th:id="${item.identity.id}">删除</button>
                                 <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-on="myEnter" th:name="${item.identity.name}" th:id="${item.identity.id}">权限管理</button>
+                                <button type="button" class="layui-btn layui-btn-xs layui-bg-purple" lay-on="myInput" th:name="${item.identity.name}" th:id="${item.identity.id}">权限管理</button>
                             </div>
                         </div>
                         <div class="layui-card-body">
                             <div class="layui-row">
                                 <div class="layui-col-md3" style="height: 150px;display: flex;align-items: center;justify-content: center;">
-                                    <i class="layui-icon layui-icon-user" style="font-size: 100px; color: green;"></i>
+                                    <i class="layui-icon layui-icon-user" style="font-size: 100px; color: #23292e;"></i>
                                 </div>
                                 <div class="layui-col-md9" style="padding-left: 10px;">
                                     <span class="layui-badge-rim" th:each="menu : ${item.menus}" th:text="${menu}" style="margin-left: 5px; margin-top: 5px;"></span>
@@ -82,10 +83,7 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['layer', 'util', 'jquery'], function () {
-        let layer = layui.layer;
-        let util = layui.util;
-        let $ = layui.jquery;
+    layui.use(['layer', 'util', 'jquery'], function (layer, util, $) {
 
         const nxu = /^[\u4e00-\u9fa5]{2,10}$/;
 
@@ -96,7 +94,19 @@
                     title: ' 管理【' + data[0].name + '】拥有的菜单权限',
                     area: ['520px', '500px'],
                     scrollbar: false,
-                    content: ['/toRoleMenuEdit/' + data[0].id, 'no'],
+                    content: '/toRoleMenuEdit1/' + data[0].id,
+                    end: function () {
+                        location.reload();
+                    }
+                });
+            },
+            myInput: function (data) {
+                layer.open({
+                    type: 2,
+                    title: ' 管理【' + data[0].name + '】拥有的菜单权限',
+                    area: ['350px', '560px'],
+                    scrollbar: false,
+                    content: '/toRoleMenuEdit2/' + data[0].id,
                     end: function () {
                         location.reload();
                     }
@@ -105,7 +115,7 @@
             myEdit: function (data) {
                 layer.prompt({title: '请输入角色的新名称', formType: 0, value: data[0].name}, function (text, index) {
                     if (!nxu.test(text)) {
-                        layer.msg('内容不合法，请输入2-10个汉字！', {icon: 2});
+                        layer.msg('内容不合法，请输入2-10个汉字', {icon: 2});
                         return;
                     }
 
@@ -124,7 +134,7 @@
                 });
             },
             myDel: function (data) {
-                layer.confirm('确定删除这个角色嘛？', {
+                layer.confirm('确定删除这个角色嘛?', {
                     btn: ['确定', '取消']
                 }, function () {
                     $.get('/doDelRole/' + data[0].id, function (res) {
@@ -132,7 +142,7 @@
                             $('#card' + data[0].id).hide(500); // 0.5秒内逐渐隐藏
                             layer.msg('删除成功');
                         } else {
-                            layer.msg('提示：当前角色用户数不为0，无法删除！');
+                            layer.msg('提示：当前角色用户数不为0，无法删除');
                         }
                     });
                 });
@@ -140,7 +150,7 @@
             myAdd: function () {
                 layer.prompt({title: '请输入新角色的名称', formType: 0}, function (text, index) {
                     if (!nxu.test(text)) {
-                        layer.msg('内容不合法，请输入2-10个汉字！', {icon: 2});
+                        layer.msg('内容不合法，请输入2-10个汉字', {icon: 2});
                         return;
                     }
                     $.get('/doAddRole', {'name': text}, function (response) {
@@ -177,6 +187,8 @@
                 });
             }
         });
+
+        util.fixbar();  // 回到顶部
     });
 </script>
 </body>

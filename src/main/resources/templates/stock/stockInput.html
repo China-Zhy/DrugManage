@@ -256,12 +256,7 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['form', 'layer', 'jquery', 'util', 'laydate'], function () {
-        let form = layui.form;
-        let layer = layui.layer;
-        let $ = layui.jquery;
-        let util = layui.util;
-        let laydate = layui.laydate;
+    layui.use(['form', 'layer', 'jquery', 'util', 'laydate'], function (form, layer, $, util, laydate) {
 
         // 渲染日期组件
         laydate.render({
@@ -294,7 +289,7 @@
                     parentDiv.find('input:eq(3)').val(res.address);
                 },
                 error: function (err) {
-                    layer.msg('Ajax请求异常！', {icon: 0});
+                    layer.msg('Ajax请求异常', {icon: 0});
                 }
             });
         });
@@ -313,7 +308,7 @@
                     parentDiv.find('input:eq(3)').val(res.origin);
                 },
                 error: function (err) {
-                    layer.msg('Ajax请求异常！', {icon: 0});
+                    layer.msg('Ajax请求异常', {icon: 0});
                 }
             });
         });
@@ -332,7 +327,7 @@
             },
             delStock: function () {
                 if (stockBox.children().length <= 1) {
-                    layer.msg('不能删除了，至少包含一组药品入库信息！')
+                    layer.msg('不能删除了，至少包含一组药品入库信息')
                 } else {
                     stockBox.children().last().add(stockBox.children().last().prev()).remove();
                 }
@@ -377,27 +372,29 @@
                                 data: JSON.stringify(stockData),
                                 success: function (res) {
                                     if (res.code) {
-                                        layer.msg('入库成功！', {icon: 1});
+                                        layer.msg('入库成功', {icon: 1});
                                         setTimeout(function () {
                                             location.reload();  // 尝试从缓存中加载页面
                                         }, 2000);
                                     } else {
-                                        layer.msg('入库失败！', {icon: 2});
+                                        layer.msg('入库失败', {icon: 2});
                                     }
                                 },
                                 error: function () {
-                                    layer.msg('Ajax请求异常！', {icon: 0});
+                                    layer.msg('Ajax请求异常', {icon: 0});
                                 }
                             });
                         }, 2000);
                     } else {
-                        layer.msg('身份验证未通过！', {icon: 5});
+                        layer.msg('身份验证未通过', {icon: 5});
                         return false; // 阻止默认 form 跳转
                     }
                 });
             });
             return false; // 阻止默认 form 跳转
         });
+
+        util.fixbar();  // 回到顶部
     });
 </script>
 </body>

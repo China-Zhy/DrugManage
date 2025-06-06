@@ -3,6 +3,7 @@ package com.nxu.controller;
 import com.github.pagehelper.PageInfo;
 import com.nxu.entity.Medicine;
 import com.nxu.service.MedicineService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,7 +64,11 @@ public class MedicineController {
     // 进行添加药品操作
     @PostMapping("/doAddMedicine")
     @ResponseBody
-    public HashMap<String, Object> doAddMedicine(@RequestBody Medicine medicine) {
+    public HashMap<String, Object> doAddMedicine(@RequestBody Medicine medicine, HttpSession session) {
+        medicine.setImage((String) session.getAttribute("base64Image"));
+        session.removeAttribute("binaryImage");
+        session.removeAttribute("base64Image");
+
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", medicineService.addMedicine(medicine));
         return map;
@@ -84,10 +89,18 @@ public class MedicineController {
     // 进行更新药品操作
     @PostMapping("/doSetMedicine")
     @ResponseBody
-    public HashMap<String, Object> doSetMedicine(@RequestBody Medicine medicine) {
+    public HashMap<String, Object> doSetMedicine(@RequestBody Medicine medicine, HttpSession session) {
+        // 判断药品是否更换了照片
+        if (medicine.getImage().equals("1")) {
+            medicine.setImage((String) session.getAttribute("base64Image"));
+            session.removeAttribute("binaryImage");
+            session.removeAttribute("base64Image");
+        } else if (medicine.getImage().equals("0")) {
+            medicine.setImage(null);    // 如果药品照片没有更新，则都置为空，避免mapper层进行大文本更新
+        }
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", medicineService.setMedicine(medicine));
+        map.put("image", medicine.getImage());
         return map;
     }
-
 }

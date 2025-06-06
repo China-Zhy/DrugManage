@@ -71,12 +71,7 @@
 
 <script src="/layui/layui.js"></script>
 <script>
-    layui.use(['table', 'form', 'layer', 'dropdown', 'jquery'], function () {
-        let table = layui.table;
-        let form = layui.form;
-        let layer = layui.layer;
-        let dropdown = layui.dropdown;
-        let $ = layui.jquery;
+    layui.use(['table', 'form', 'layer', 'dropdown', 'jquery', 'upload', 'element'], function (table, form, layer, dropdown, $, upload, element) {
 
         // 搜索按钮事件
         form.on('submit(toDo)', function (data) {
@@ -185,10 +180,9 @@
                     layer.open({
                         type: 2,
                         title: '添加药品信息',
-                        area: ['1000px', '550px'],
+                        area: ['90%', '90%'],
                         scrollbar: false,
-                        skin: 'layui-layer-molv',
-                        content: ['/toMedicineAdd', 'no'],
+                        content: '/toMedicineAdd',
                         end: function () {
                             table.reload(obj.config.id);
                         }
@@ -205,78 +199,133 @@
                 layer.open({
                     type: 1,
                     title: '编辑药品信息',
-                    area: ['1000px', '560px'],
+                    area: ['90%', '90%'],
                     scrollbar: false,
                     shadeClose: true,
                     skin: 'layui-layer-lan',
-                    content: '<div class="layui-padding-2 layui-row layui-col-space15" style="margin-top: 5px; margin-right: 0;">\n' +
-                        '    <div class="layui-col-md12">\n' +
-                        '        <form class="layui-form layui-form-pane">\n' +
-                        '            <div class="layui-form-item layui-col-space20">\n' +
-                        '                <div class="layui-col-md6">\n' +
-                        '                    <label class="layui-form-label">药品名称</label>\n' +
-                        '                    <div class="layui-input-block">\n' +
-                        '                        <input type="text" name="name" autocomplete="off" value="' + data.name + '" class="layui-input" lay-verify="required">\n' +
+                    content: '<div class="layui-margin-3 layui-anim layui-anim-upbit" style="margin-top: 15px;">\n' +
+                        '    <div class="layui-row">\n' +
+                        '        <div class="layui-col-md12">\n' +
+                        '            <form class="layui-form layui-form-pane">\n' +
+                        '                <div class="layui-form-item layui-col-space32">\n' +
+                        '\n' +
+                        '                    <!--左侧上传照片-->\n' +
+                        '                    <div class="layui-col-md5">\n' +
+                        '                        <div class="layui-col-md12">\n' +
+                        '                            <div class="layui-panel" style="aspect-ratio: 1/1;">\n' +
+                        '                                <img id="ID-upload-demo-img" style="width: 100%; height: 100%;" src="' + data.image + '" alt="照片">\n' +
+                        '                                <input type="text" name="image" id="base64" value="0" hidden="hidden">' +
+                        '                            </div>\n' +
+                        '                        </div>\n' +
+                        '                        <div class="layui-col-md12" style="margin-top: 10px;">\n' +
+                        '                            <div class="layui-progress layui-progress-big" lay-showPercent="yes" lay-filter="filter-demo">\n' +
+                        '                                <div class="layui-progress-bar" lay-percent=""></div>\n' +
+                        '                            </div>\n' +
+                        '                        </div>\n' +
+                        '                        <div class="layui-col-md12" style="margin-top: 10px;">\n' +
+                        '                            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-fluid" id="ID-upload-demo-btn">\n' +
+                        '                                <i class="layui-icon layui-icon-upload"></i> 更换药品包装照片\n' +
+                        '                            </button>\n' +
+                        '                        </div>\n' +
                         '                    </div>\n' +
+                        '\n' +
+                        '                    <div class="layui-col-md7">\n' +
+                        '                        <label class="layui-form-label">药品名称</label>\n' +
+                        '                        <div class="layui-input-block">\n' +
+                        '                            <input type="text" name="name" value="' + data.name + '" autocomplete="off" class="layui-input" lay-verify="required">\n' +
+                        '                        </div>\n' +
+                        '                    </div>\n' +
+                        '\n' +
+                        '                    <div class="layui-col-md7">\n' +
+                        '                        <label class="layui-form-label">国药准字</label>\n' +
+                        '                        <div class="layui-input-block">\n' +
+                        '                            <input type="text" name="code" value="' + data.code + '"  autocomplete="off" class="layui-input" lay-verify="required">\n' +
+                        '                        </div>\n' +
+                        '                    </div>\n' +
+                        '\n' +
+                        '                    <div class="layui-col-md7">\n' +
+                        '                        <label class="layui-form-label">药品规格</label>\n' +
+                        '                        <div class="layui-input-block">\n' +
+                        '                            <input type="text" name="specs" value="' + data.specs + '"  autocomplete="off" class="layui-input" lay-verify="required">\n' +
+                        '                        </div>\n' +
+                        '                    </div>\n' +
+                        '\n' +
+                        '                    <div class="layui-col-md7">\n' +
+                        '                        <label class="layui-form-label">用法用量</label>\n' +
+                        '                        <div class="layui-input-block">\n' +
+                        '                            <input type="text" name="usage" value="' + data.usage + '"  autocomplete="off" class="layui-input" lay-verify="required">\n' +
+                        '                        </div>\n' +
+                        '                    </div>\n' +
+                        '\n' +
+                        '                    <div class="layui-col-md7">\n' +
+                        '                        <label class="layui-form-label">生产厂家</label>\n' +
+                        '                        <div class="layui-input-block">\n' +
+                        '                            <input type="text" name="origin" value="' + data.origin + '"  autocomplete="off" class="layui-input" lay-verify="required">\n' +
+                        '                        </div>\n' +
+                        '                    </div>\n' +
+                        '\n' +
+                        '                    <div class="layui-col-md7 layui-form-text">\n' +
+                        '                        <label class="layui-form-label">药品成分</label>\n' +
+                        '                        <div class="layui-input-block">\n' +
+                        '                            <textarea name="compose" class="layui-textarea" lay-verify="required" maxlength="1000" rows="10">' + data.compose + '</textarea>\n' +
+                        '                        </div>\n' +
+                        '                    </div>\n' +
+                        '                    <input hidden="hidden" name="id" value="' + data.id + '">\n' +
                         '                </div>\n' +
                         '\n' +
-                        '                <div class="layui-col-md6">\n' +
-                        '                    <label class="layui-form-label">国药准字</label>\n' +
-                        '                    <div class="layui-input-block">\n' +
-                        '                        <input type="text" name="code" autocomplete="off" value="' + data.code + '" class="layui-input" lay-verify="required">\n' +
+                        '                <div class="layui-form-item layui-col-space20">\n' +
+                        '                    <div class="layui-col-md12" style="text-align: center;">\n' +
+                        '                        <button class="layui-btn" lay-submit lay-filter="toSet">更新</button>\n' +
+                        '                        <button type="reset" class="layui-btn layui-btn-primary">恢复</button>\n' +
                         '                    </div>\n' +
                         '                </div>\n' +
-                        '\n' +
-                        '                <div class="layui-col-md6">\n' +
-                        '                    <label class="layui-form-label">药品规格</label>\n' +
-                        '                    <div class="layui-input-block">\n' +
-                        '                        <input type="text" name="specs" autocomplete="off" value="' + data.specs + '" class="layui-input" lay-verify="required">\n' +
-                        '                    </div>\n' +
-                        '                </div>\n' +
-                        '\n' +
-                        '                <div class="layui-col-md6">\n' +
-                        '                    <label class="layui-form-label">用法用量</label>\n' +
-                        '                    <div class="layui-input-block">\n' +
-                        '                        <input type="text" name="usage" autocomplete="off" value="' + data.usage + '" class="layui-input" lay-verify="required">\n' +
-                        '                    </div>\n' +
-                        '                </div>\n' +
-                        '\n' +
-                        '                <div class="layui-col-md6">\n' +
-                        '                    <label class="layui-form-label">包装照片</label>\n' +
-                        '                    <div class="layui-input-block">\n' +
-                        '                        <input type="text" name="image" autocomplete="off" value="' + data.image + '" class="layui-input" lay-verify="required">\n' +
-                        '                    </div>\n' +
-                        '                </div>\n' +
-                        '\n' +
-                        '                <div class="layui-col-md6">\n' +
-                        '                    <label class="layui-form-label">生产厂家</label>\n' +
-                        '                    <div class="layui-input-block">\n' +
-                        '                        <input type="text" name="origin" autocomplete="off" value="' + data.origin + '" class="layui-input" lay-verify="required">\n' +
-                        '                    </div>\n' +
-                        '                </div>\n' +
-                        '\n' +
-                        '                <div class="layui-col-md12 layui-form-text">\n' +
-                        '                    <label class="layui-form-label">药品成分</label>\n' +
-                        '                    <div class="layui-input-block">\n' +
-                        '                        <textarea name="compose" class="layui-textarea" lay-verify="required" maxlength="1000" rows="8">' + data.compose + '</textarea>\n' +
-                        '                    </div>\n' +
-                        '                </div>\n' +
-                        '            </div>\n' +
-                        '\n' +
-                        '            <div class="layui-form-item layui-col-space20">\n' +
-                        '                <div class="layui-col-md12" style="text-align: center;">\n' +
-                        '                    <button class="layui-btn layui-bg-blue" lay-submit lay-filter="toSet">更新</button>\n' +
-                        '                    <button type="reset" class="layui-btn layui-btn-primary">恢复</button>\n' +
-                        '                </div>\n' +
-                        '            </div>' +
-                        '            <input hidden="hidden" name="id" value="' + data.id + '">\n' +
-                        '        </form>\n' +
+                        '            </form>\n' +
+                        '        </div>\n' +
                         '    </div>\n' +
                         '</div>',
                     success: function (layero, index) {
+
+                        let imageIsOk = true;
+
+                        // 单图片上传
+                        upload.render({
+                            elem: '#ID-upload-demo-btn',
+                            url: '/uploadImage',
+                            size: 512, // 限制文件大小，单位KB
+                            before: function (obj) {
+                                // 预读本地文件示例，不支持ie8
+                                obj.preview(function (index, file, result) {
+                                    $('#ID-upload-demo-img').attr('src', result); // 图片链接（base64）
+                                });
+                                element.progress('filter-demo', '0%'); // 进度条复位
+                            },
+                            done: function (res) {
+                                if (res === 0) {
+                                    imageIsOk = false;
+                                    return layer.msg('上传失败');
+                                }
+                                layer.msg('上传成功');
+                                $('#base64').val('1');    // 表示药品照片重新上传了
+                            },
+                            error: function () {
+                                layer.msg('上传出错，请联系管理员');
+                            },
+                            // 进度条
+                            progress: function (n, elem, e) {
+                                element.progress('filter-demo', n + '%'); // 可配合 layui 进度条元素使用
+                            }
+                        });
+
                         // 表单提交事件
                         form.on('submit(toSet)', function (data) {
+
+                            if (!imageIsOk) {
+                                layer.msg('请上传药品包装照片', {icon: 0});
+                                return false; // 阻止默认 form 跳转
+                            }
+
                             let field = data.field; // 获取表单字段值
+
                             $.ajax({
                                 url: '/doSetMedicine',
                                 type: 'POST',
@@ -284,18 +333,23 @@
                                 data: JSON.stringify(field),
                                 success: function (res) {
                                     if (res.code) {
-                                        layer.msg('更新成功！', {icon: 1});
+                                        layer.msg('更新成功', {icon: 1});
+                                        if (res.image == null) {
+                                            field.image = $("#ID-upload-demo-img").attr("src");     // 原有照片
+                                        } else {
+                                            field.image = res.image;    // 最新照片
+                                        }
                                         table.updateRow(obj.config.id, {    // 更新某行数据
                                             index: obj.index,
                                             data: field
                                         });
                                         layer.close(index); // 关闭当前弹出层
                                     } else {
-                                        layer.msg('更新失败！', {icon: 2});
+                                        layer.msg('更新失败', {icon: 2});
                                     }
                                 },
                                 error: function (err) {
-                                    layer.msg('Ajax请求异常！', {icon: 0});
+                                    layer.msg('Ajax请求异常', {icon: 0});
                                 }
                             });
                             return false; // 阻止默认 form 提交
@@ -318,7 +372,7 @@
                         if (menudata.id === 'detail') {
                             layer.msg('当前药品ID:' + data.id);
                         } else if (menudata.id === 'del') {
-                            layer.confirm('真的要删除【药品' + data.id + '】吗？', function (index) {
+                            layer.confirm('真的要删除【药品' + data.id + '】吗?', function (index) {
 
                                 // 向服务端发送删除指令
                                 $.ajax({
@@ -326,15 +380,15 @@
                                     type: 'GET',
                                     success: function (res) {
                                         if (res.code) {
-                                            layer.msg('删除成功！', {icon: 1});
+                                            layer.msg('删除成功', {icon: 1});
                                             obj.del(); // 删除对应行（tr）的DOM结构
                                             // table.reload(obj.config.id);
                                         } else {
-                                            layer.msg('删除失败！', {icon: 2});
+                                            layer.msg('删除失败', {icon: 2});
                                         }
                                     },
                                     error: function (err) {
-                                        layer.msg('Ajax请求异常！', {icon: 0});
+                                        layer.msg('Ajax请求异常', {icon: 0});
                                         console.log(err);
                                     }
                                 });

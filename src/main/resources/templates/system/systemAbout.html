@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
-    <title>更多信息页面</title>
+    <title>更多信息</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +10,17 @@
 </head>
 <body>
 
-<div class="layui-anim layui-anim-upbit layui-padding-2">
+<div class="layui-padding-3">
+
+    <blockquote class="layui-elem-quote">
+        <h3>药品管理系统</h3>
+        <h4>作者：张宏业</h4>
+        <h4>手机：18201521341</h4>
+        <h4>邮箱：3030695949@qq.com</h4>
+        <h4>博客：<a href="https://blog.csdn.net/SuperCodeZhy" target="_blank">https://blog.csdn.net/SuperCodeZhy</a></h4>
+        <h4>GitHub：<a href="https://github.com/China-Zhy/DrugManage" target="_blank">https://github.com/China-Zhy/DrugManage</a></h4>
+    </blockquote>
+    <br>
 
     <hr class="layui-border-red">
     <hr class="layui-border-orange">
@@ -18,24 +28,11 @@
     <hr class="layui-border-cyan">
     <hr class="layui-border-blue">
     <hr class="layui-border-black">
-
     <br/>
-
-    <blockquote class="layui-elem-quote">
-        <h3>药品管理系统</h3>
-        <h4>作者：张宏业</h4>
-        <h4>手机：18201521341</h4>
-        <h4>宗门：宁夏大学 软件工程</h4>
-        <h4>邮箱：3030695949@qq.com</h4>
-        <h4>博客：https://blog.csdn.net/SuperCodeZhy</h4>
-    </blockquote>
-    <br>
 
     <fieldset class="layui-elem-field layui-field-title">
         <legend>新中国成立后至今的重要历史阶段</legend>
     </fieldset>
-
-    <br/>
 
     <div class="layui-timeline">
         <div class="layui-timeline-item">
@@ -94,9 +91,24 @@
         </div>
     </div>
 
+    <!--访问API接口-->
+    <div class="layui-btn-group">
+        <a href="/toSystemBelle?url=https://v2.xxapi.cn/api/meinvpic" target="_blank">
+            <button type="button" class="layui-btn">美女照片</button>
+        </a>
+        <a href="/toSystemBelle?url=https://v2.xxapi.cn/api/baisi" target="_blank">
+            <button type="button" class="layui-btn layui-bg-blue">白丝照片</button>
+        </a>
+        <a href="/toSystemBelle?url=https://v2.xxapi.cn/api/heisi" target="_blank">
+            <button type="button" class="layui-btn layui-bg-orange">黑丝照片</button>
+        </a>
+        <a href="/toSystemBelle?url=https://v2.xxapi.cn/api/randomAcgPic?type=wap" target="_blank">
+            <button type="button" class="layui-btn layui-bg-red">卡通照片</button>
+        </a>
+        <a href="/toSystemBelle?url=https://v2.xxapi.cn/api/wapmeinvpic" target="_blank">
+            <button type="button" class="layui-btn layui-bg-purple">美女照片</button>
+        </a>
+    </div>
 </div>
-
-<br>
-
 </body>
 </html>

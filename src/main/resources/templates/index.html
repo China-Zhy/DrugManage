@@ -23,6 +23,11 @@
         </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                <a href="https://blog.csdn.net/SuperCodeZhy" title="关于作者" target="_blank">
+                    <i class="layui-icon layui-icon-face-smile-b"></i>
+                </a>
+            </li>
+            <li class="layui-nav-item layui-hide-xs" lay-unselect>
                 <a href="https://github.com/China-Zhy/DrugManage" title="项目代码" target="_blank">
                     <i class="layui-icon layui-icon-github"></i>
                 </a>
@@ -117,7 +122,7 @@
         let device = layui.device();    // 浏览器信息
 
         if (device.mobile) {
-            layer.msg('移动设备访问效果不佳，建议使用电脑浏览');
+            layer.alert('移动设备显示效果不佳，建议使用电脑访问😀');
         }
 
         // 页面顶部工具栏点击事件
@@ -170,7 +175,7 @@
                     title: '更多信息',
                     offset: 'r',
                     anim: 'slideLeft', // 从右往左
-                    area: ['25%', '100%'],
+                    area: ['30%', '100%'],
                     shade: 0.5,
                     shadeClose: true,
                     content: '/toSystemAbout'
@@ -236,7 +241,7 @@
                 }
             },
             aboutMe: function () {
-
+                layer.msg('未实现');
             },
             setPass: function () {
                 layer.open({

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>好好学习，天天向上</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/layui/css/layui.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .image-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: white;
+        }
+
+        .image-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .image-card:hover img {
+            transform: scale(1.03);
+        }
+
+        .loading-indicator {
+            text-align: center;
+            padding: 20px 0;
+            color: #999;
+            display: none;
+        }
+
+        .loading-indicator .layui-icon {
+            display: inline-block;
+            margin-right: 10px;
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .no-more {
+            text-align: center;
+            padding: 20px 0;
+            color: #999;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<input id="urlInfo" type="text" th:value="${url}" hidden="hidden">
+
+<!-- 图片卡片容器 -->
+<div class="image-grid" id="imageContainer"></div>
+
+<!-- 加载状态指示器 -->
+<div id="loadingIndicator" class="loading-indicator">
+    <i class="layui-icon layui-icon-loading"></i>
+    <span>加载更多图片</span>
+</div>
+
+<!-- 无更多数据提示 -->
+<div id="noMoreTip" class="no-more">没有更多图片了</div>
+
+<script src="/layui/layui.js"></script>
+<script>
+    let $ = layui.$;
+    $(function () {
+        // 全局变量
+        const $imageContainer = $('#imageContainer');
+        const $loadingIndicator = $('#loadingIndicator');
+        const $noMoreTip = $('#noMoreTip');
+        let currentPage = 1;
+        const maxPages = 50; // 最大加载页数
+        let isLoading = false; // 加载状态锁
+
+        // 初始化加载首批图片
+        loadImages();
+
+        // 滚动加载监听
+        $(window).on('scroll', throttle(checkScroll, 300));
+
+        // 检查是否需要加载更多
+        function checkScroll() {
+            if (isLoading || currentPage >= maxPages) return;
+
+            const winHeight = $(window).height();
+            const scrollTop = $(window).scrollTop();
+            const docHeight = $(document).height();
+
+            // 距离底部150px时触发加载
+            if (scrollTop + winHeight >= docHeight - 150) {
+                loadImages();
+            }
+        }
+
+        // 加载图片
+        function loadImages() {
+            isLoading = true;
+            $loadingIndicator.show();
+
+            // 模拟加载延迟
+            setTimeout(() => {
+                fetchImages(currentPage)
+                    .then(images => {
+                        if (images && images.length > 0) {
+                            // 生成图片卡片HTML
+                            const cardHTML = images.map(imgUrl => `
+                  <div class="image-card">
+                    <img data-src="${imgUrl}" alt="" class="lazy">
+                  </div>
+                `).join('');
+                            // 插入图片并触发懒加载
+                            $imageContainer.append(cardHTML);
+                            lazyLoadImages();
+                            currentPage++;
+                        } else {
+                            $noMoreTip.show();
+                        }
+                    })
+                    .catch(err => {
+                        console.error('图片加载失败', err);
+                        alert('加载图片失败，请重试');
+                    })
+                    .finally(() => {
+                        isLoading = false;
+                        $loadingIndicator.hide();
+                    });
+            }, 600);
+        }
+
+        // 获取图片列表
+        function fetchImages(page) {
+            return new Promise((resolve, reject) => {
+                const imagePromises = [];
+                for (let i = 0; i < 10; i++) {
+                    imagePromises.push(fetchRandomImage());
+                }
+                Promise.all(imagePromises).then(resolve).catch(reject);
+            });
+        }
+
+        // 获取单张随机图片
+        function fetchRandomImage() {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: $('#urlInfo').val() + '?param=' + Math.random(),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code === 200) {
+                            resolve(res.data);
+                        } else {
+                            reject(new Error('API错误：' + res.msg));
+                        }
+                    },
+                    error: function (xhr, status, err) {
+                        reject(new Error(`请求失败：${status} - ${err}`));
+                    }
+                });
+            });
+        }
+
+        // 懒加载图片
+        function lazyLoadImages() {
+            const $lazyImages = $('.lazy:not([data-loaded])');
+            $lazyImages.each(function () {
+                const $img = $(this);
+                const src = $img.data('src');
+
+                if (isInView($img) && src) {
+                    $img.attr('src', src)
+                        .on('load', function () {
+                            $img.addClass('loaded');
+                        })
+                        .on('error', function () {
+                            $img.attr('src', 'https://via.placeholder.com/280x180?text=加载失败');
+                        });
+                }
+            });
+        }
+
+        // 判断元素是否在视口中
+        function isInView($elem) {
+            const elemTop = $elem.offset().top;
+            const elemBottom = elemTop + $elem.height();
+            const winHeight = $(window).height();
+            const scrollTop = $(window).scrollTop();
+
+            return elemBottom > scrollTop && elemTop < scrollTop + winHeight;
+        }
+
+        // 节流函数
+        function throttle(func, wait) {
+            let timeout;
+            return function () {
+                const context = this;
+                const args = arguments;
+                if (!timeout) {
+                    timeout = setTimeout(() => {
+                        timeout = null;
+                        func.apply(context, args);
+                    }, wait);
+                }
+            };
+        }
+    });
+</script>
+</body>
+</html>

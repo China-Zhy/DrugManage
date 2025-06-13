@@ -71,4 +71,11 @@ public class SystemController {
     public List<Area> getArea(@PathVariable("level") Integer level, @PathVariable("code") String code) {
         return areaService.selectArea(level, code);
     }
+
+    // 娱乐：使用公共API接口展示图片
+    @GetMapping("/toSystemBelle")
+    public String toSystemBelle(Model model, @RequestParam("url") String url) {
+        model.addAttribute("url", url);
+        return "system/systemBelle";
+    }
 }

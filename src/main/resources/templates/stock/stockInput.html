@@ -113,7 +113,7 @@
                         </div>
 
                         <div class="layui-col-md3">
-                            <label class="layui-form-label">包装照片：</label>
+                            <label class="layui-form-label">用法用量：</label>
                             <div class="layui-input-block">
                                 <input type="text" class="layui-input" disabled>
                             </div>
@@ -181,7 +181,7 @@
                             </div>
 
                             <div class="layui-col-md3">
-                                <label class="layui-form-label">包装照片：</label>
+                                <label class="layui-form-label">用法用量：</label>
                                 <div class="layui-input-block">
                                     <input type="text" class="layui-input" disabled>
                                 </div>
@@ -304,7 +304,7 @@
                 success: function (res) {
                     const parentDiv = $(elem).closest('.layui-form-item');
                     parentDiv.find('input:eq(1)').val(res.specs);
-                    parentDiv.find('input:eq(2)').val(res.image);
+                    parentDiv.find('input:eq(2)').val(res.usage);
                     parentDiv.find('input:eq(3)').val(res.origin);
                 },
                 error: function (err) {

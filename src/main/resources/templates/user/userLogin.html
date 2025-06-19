@@ -196,7 +196,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="demo-login">登 录</button>
+                <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="demo-login" id="login">登 录</button>
             </div>
             <div class="layui-form-item">
                 <a href="/toUserEnroll" style="float: left; margin-top: 7px; margin-left: 5px; color: white;">注册帐号</a>
@@ -291,6 +291,8 @@
                 return false;
             }
 
+            $('#login').addClass('layui-btn-disabled');
+
             $.ajax({
                 url: '/doUserLogin',
                 type: 'POST',
@@ -304,6 +306,8 @@
                         case 0:
                             layer.msg(res.info, {icon: 0});
                             captcha.draw(show_num); // 生成新的验证码
+                            $('#captcha').val('');
+                            $('#login').removeClass('layui-btn-disabled');
                             break;
                         case 1:
                             layer.msg(res.info, {icon: 1});
@@ -322,6 +326,8 @@
                         case 2:
                             layer.msg(res.info, {icon: 2});
                             captcha.draw(show_num); // 生成新的验证码
+                            $('#captcha').val('');
+                            $('#login').removeClass('layui-btn-disabled');
                             break;
                         case 3:
                             layer.msg(res.info, {icon: 5});

@@ -18,7 +18,7 @@ public class MenuController {
     // 打开菜单管理页面
     @GetMapping("/toMenuManage")
     public String toMenuManage() {
-        return "menu/menuManage";
+        return "menu/menu-manage";
     }
 
     // 获取全部菜单数据
@@ -34,14 +34,14 @@ public class MenuController {
     // 打开图标选择页面
     @GetMapping("/toChooseIcon")
     public String toChooseIcon() {
-        return "menu/chooseIcon";
+        return "menu/choose-icon";
     }
 
     // 打开菜单编辑页面
     @GetMapping("/toMenuInfoEdit/{id}")
     public String toMenuInfoEdit(Model model, @PathVariable Integer id) {
         model.addAttribute("menu", menuService.getMenuById(id));
-        return "menu/menuInfoEdit";
+        return "menu/menu-info-edit";
     }
 
     // 进行更新菜单操作

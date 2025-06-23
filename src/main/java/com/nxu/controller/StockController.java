@@ -41,7 +41,7 @@ public class StockController {
     @GetMapping("/toStockData/{id}")
     public String toStockData(Model model, @PathVariable("id") Integer medicineId) {
         model.addAttribute("medicineId", medicineId);
-        return "stock/stockData";
+        return "stock/stock-detail";
     }
 
     // 获取某药品库存信息
@@ -63,7 +63,7 @@ public class StockController {
     public String toStockChange(Model model, @PathVariable int id, @PathVariable int count) {
         model.addAttribute("id", id);
         model.addAttribute("count", count);
-        return "stock/stockOutput";
+        return "stock/stock-output";
     }
 
     // 进行出库操作 (包含事务，代码都在服务层)
@@ -101,7 +101,7 @@ public class StockController {
         });
         model.addAttribute("vendorList", vendorList);
 
-        return "stock/stockInput";
+        return "stock/stock-input";
     }
 
     // 进行入库操作 (包含事务，代码都在服务层)

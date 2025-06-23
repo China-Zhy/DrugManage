@@ -39,7 +39,7 @@ public class IdentityController {
         });
 
         model.addAttribute("dataList", dataList);
-        return "role/roleManage";
+        return "role/role-manage";
     }
 
     // 前往角色的菜单编辑页面(穿梭框)
@@ -50,7 +50,7 @@ public class IdentityController {
         model.addAttribute("menus", menus);
         ArrayList<Integer> roleHaveMenuId = menuService.getRoleHaveMenuId(identity);
         model.addAttribute("haveId", roleHaveMenuId);   // 当前角色拥有的菜单编号(适应穿梭框)
-        return "role/roleMenuEdit1";
+        return "role/role-menu-edit1";
     }
 
     // 前往角色的菜单编辑页面(树组件)
@@ -61,7 +61,7 @@ public class IdentityController {
         model.addAttribute("menus", menus);
         ArrayList<Integer> roleHaveMenuId = menuService.getRoleHaveMenuIdTree(identity);
         model.addAttribute("haveId", roleHaveMenuId);   // 当前角色拥有的菜单编号(适应树组件)
-        return "role/roleMenuEdit2";
+        return "role/role-menu-edit2";
     }
 
     // 进行角色权限更新(接收前端传来的菜单ID列表→递归补全缺失的父级菜单→清除旧权限，添加新权限)

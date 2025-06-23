@@ -20,7 +20,7 @@ public class RecordController {
     // 前往库存记录页面
     @GetMapping("/toRecord")
     public String toRecord() {
-        return "stock/stockRecord";
+        return "stock/stock-record";
     }
 
     // 根据条件查询库存记录数据

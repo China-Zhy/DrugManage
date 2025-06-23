@@ -57,7 +57,7 @@ public class VendorController {
         map.put("status", 1);
         model.addAttribute("vendorUserList", userService.getSomeUser(map).getList());   // 查找供应商用户
         model.addAttribute("areaList", areaService.selectArea(1, null)); // 默认显示省
-        return "vendor/vendorAdd";
+        return "vendor/vendor-add";
     }
 
     // 进行添加供应商操作
@@ -89,7 +89,7 @@ public class VendorController {
         map.put("status", 1);
         model.addAttribute("vendorUserList", userService.getSomeUser(map).getList());   // 查找供应商用户
         model.addAttribute("vendor", vendorService.getOneVendor(id));
-        return "vendor/vendorSet";
+        return "vendor/vendor-edit";
     }
 
     // 进行更新供应商信息操作

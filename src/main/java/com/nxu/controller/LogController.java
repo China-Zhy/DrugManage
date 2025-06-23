@@ -19,7 +19,7 @@ public class LogController {
     // 前往登录日志管理页面
     @GetMapping("/toLogManage")
     public String medicineHtml() {
-        return "user/logManage";
+        return "user/log-manage";
     }
 
     // 获取登录日志数据
@@ -35,5 +35,4 @@ public class LogController {
 
         return map;
     }
-
 }

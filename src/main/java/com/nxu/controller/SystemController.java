@@ -35,19 +35,19 @@ public class SystemController {
     // 后台默认主页
     @GetMapping("/toSystemHome")
     public String toWelcome() {
-        return "system/systemHome";
+        return "system/system-home";
     }
 
     // 前往系统设置页面
     @GetMapping("/toSystemSetting")
     public String toSystemSetting() {
-        return "system/systemSetting";
+        return "system/system-setting";
     }
 
     // 前往更多信息页面
     @GetMapping("/toSystemAbout")
     public String toSystemAbout() {
-        return "system/systemAbout";
+        return "system/system-about";
     }
 
     // 图片上传后转为二进制和base64格式存入数据库
@@ -76,6 +76,6 @@ public class SystemController {
     @GetMapping("/toSystemBelle")
     public String toSystemBelle(Model model, @RequestParam("url") String url) {
         model.addAttribute("url", url);
-        return "system/systemBelle";
+        return "system/system-belle";
     }
 }

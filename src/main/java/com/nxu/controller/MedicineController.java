@@ -58,7 +58,7 @@ public class MedicineController {
     // 前往添加药品页面
     @GetMapping("/toMedicineAdd")
     public String medicineAddHtml() {
-        return "medicine/medicineAdd";
+        return "medicine/medicine-add";
     }
 
     // 进行添加药品操作

@@ -2,164 +2,17 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
-    <title>药品管理系统 - 登录</title>
+    <title>登录 - 药品管理系统</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/layui/css/layui.css" rel="stylesheet">
-    <style>
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-        }
-
-        /* 添加以下样式让登录表单垂直居中 */
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .login-form {
-            width: 320px;
-        }
-    </style>
 </head>
 <body>
-<!--背景特效-开始-->
-<div id="particles-js"></div>
-<script>
-    // 粒子系统实现
-    document.addEventListener('DOMContentLoaded', () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        document.getElementById('particles-js').appendChild(canvas);
-
-        // 设置Canvas尺寸
-        function setCanvasSize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        setCanvasSize();
-        window.addEventListener('resize', setCanvasSize);
-
-        // 粒子类
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 1.2; // 稍快的速度
-                this.vy = (Math.random() - 0.5) * 1.2; // 稍快的速度
-                this.radius = Math.random() * 3 + 1.5; // 更大的粒子
-                this.color = this.getRandomColor();
-            }
-
-            getRandomColor() {
-                const colors = [
-                    'rgba(22, 93, 255, 0.9)', // 更高的不透明度
-                    'rgba(0, 207, 253, 0.9)', // 更高的不透明度
-                    'rgba(114, 46, 209, 0.9)'  // 更高的不透明度
-                ];
-                return colors[Math.floor(Math.random() * colors.length)];
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                // 边界检测
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-            }
-
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-                ctx.closePath();
-            }
-        }
-
-        // 创建粒子数组 (增加粒子数量)
-        const particles = [];
-        const particleCount = Math.min(150, Math.floor(canvas.width * canvas.height / 8000)); // 更多粒子
-
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
-
-        // 鼠标交互
-        const mouse = {x: null, y: null, radius: 120}; // 更大的交互范围
-
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
-
-        // 动画循环
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // 绘制渐变背景 (更浅的色调)
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, '#60a5fa'); // 浅蓝色
-            gradient.addColorStop(1, '#93c5fd'); // 更浅的蓝色
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // 更新并绘制所有粒子
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-
-                // 计算与鼠标的距离
-                const dx = mouse.x - particles[i].x;
-                const dy = mouse.y - particles[i].y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                // 鼠标与粒子的交互 (更强的吸引力)
-                if (distance < mouse.radius) {
-                    particles[i].x += dx * 0.008; // 更强的吸引力
-                    particles[i].y += dy * 0.008; // 更强的吸引力
-                }
-
-                // 粒子之间连线 (增强连线效果)
-                for (let j = i; j < particles.length; j++) {
-                    const dx2 = particles[j].x - particles[i].x;
-                    const dy2 = particles[j].y - particles[i].y;
-                    const distance2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-
-                    if (distance2 < 120) { // 更长的连线距离
-                        ctx.beginPath();
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 - distance2 / 1000})`; // 更高的不透明度
-                        ctx.lineWidth = 0.8; // 更粗的连线
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                        ctx.closePath();
-                    }
-                }
-            }
-
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-    });
-</script>
-<!--背景特效-结束-->
-
-<div class="login-container">
-    <div class="login-form">
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <div style="width: 320px; margin-bottom: 5%;">
         <form class="layui-form">
-            <h1 style="font-size: 50px; margin-bottom: 20px; color: white; text-align: center;">药品管理系统</h1>
+            <p style="font-size: 45px; font-weight: bold; letter-spacing: 6px; margin-bottom: 15px; text-align: center; color: #16baaa;">药品管理系统</p>
             <div class="layui-form-item">
                 <div class="layui-input-wrap">
                     <div class="layui-input-prefix">
@@ -189,8 +42,7 @@
                     </div>
                     <div class="layui-col-xs5">
                         <div style="margin-left: 10px;">
-                            <canvas id="canvas" width="122" height="36"
-                                    style="display: inline-block;border-radius: 2px;cursor: pointer;background-color: white;border: 1px solid #e2e2e2;"></canvas>
+                            <canvas id="canvas" width="122" height="36" style="display: inline-block;border-radius: 2px;cursor: pointer;background-color: white;border: 1px solid #e2e2e2;"></canvas>
                         </div>
                     </div>
                 </div>
@@ -199,8 +51,8 @@
                 <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="demo-login" id="login">登 录</button>
             </div>
             <div class="layui-form-item">
-                <a href="/toUserEnroll" style="float: left; margin-top: 7px; margin-left: 5px; color: white;">注册帐号</a>
-                <a href="#" style="float: right; margin-top: 7px; margin-right: 5px; color: white;">忘记密码</a>
+                <a href="/toUserEnroll" style="float: left; margin-top: 5px; margin-left: 5px;">注册帐号</a>
+                <a href="#" style="float: right; margin-top: 5px; margin-right: 5px;">忘记密码</a>
             </div>
         </form>
     </div>

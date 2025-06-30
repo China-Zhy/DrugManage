@@ -6,7 +6,7 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="/layui/css/layui.css" rel="stylesheet">
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet">
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">
@@ -110,7 +110,7 @@
     <!--    </div>-->
 </div>
 
-<script src="/layui/layui.js"></script>
+<script th:src="@{/layui/layui.js}"></script>
 <script>
     layui.use(['layer', 'tabs', 'jquery', 'util', 'dropdown', 'form'], function () {
         let layer = layui.layer;        // 弹出层

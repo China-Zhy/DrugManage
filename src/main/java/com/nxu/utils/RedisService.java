@@ -21,19 +21,21 @@ public class RedisService {
         redisTemplate.opsForValue().set(key, value, timeout, unit);
     }
 
-    public Object get(String key) {
-        return redisTemplate.opsForValue().get(key);
+    @SuppressWarnings("unchecked")
+    public <T> T get(String key) {
+        return (T) redisTemplate.opsForValue().get(key);
     }
 
     public boolean delete(String key) {
         return redisTemplate.delete(key);
     }
 
-    public void setList(String key, List<Object> objectList) {
+    public <T> void setList(String key, List<T> objectList) {
         redisTemplate.opsForList().rightPushAll(key, objectList);
     }
 
-    public List<Object> getList(String key) {
-        return redisTemplate.opsForList().range(key, 0, -1);
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getList(String key) {
+        return (List<T>) redisTemplate.opsForList().range(key, 0, -1);
     }
 }

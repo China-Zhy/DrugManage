@@ -31,6 +31,7 @@ public class MedicineController {
         HashMap<String, Object> dictionary = medicineService.getMedicineDictionary();
         model.addAttribute("nameList", dictionary.get("nameList"));
         model.addAttribute("codeList", dictionary.get("codeList"));
+        // 后续要实现更改Redis中存入的数据
         return "medicine/medicine";
     }
 

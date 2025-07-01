@@ -56,7 +56,7 @@ public class MedicineServiceImpl implements MedicineService {
     /**
      * 获取药品信息字典
      *
-     * @return 药品信息字典，包含 nameList codeList
+     * @return 药品信息字典，包含 nameList和codeList
      */
     @Override
     public HashMap<String, Object> getMedicineDictionary() {

@@ -36,8 +36,7 @@
                             <div class="layui-input-prefix">
                                 <i class="layui-icon layui-icon-vercode"></i>
                             </div>
-                            <input type="text" name="captcha" id="captcha" lay-verify="required" placeholder="验证码" lay-reqtext="请输入验证码" autocomplete="off" class="layui-input"
-                                   lay-affix="clear">
+                            <input type="text" name="captcha" id="captcha" lay-verify="required" placeholder="验证码" lay-reqtext="请输入验证码" autocomplete="off" class="layui-input" lay-affix="clear">
                         </div>
                     </div>
                     <div class="layui-col-xs5">
@@ -131,7 +130,11 @@
         });
 
         // 自动填充验证码(仅测试时方便，正式使用请删除或注释)
-        // $('#captcha').val(show_num.join(""));
+        $('#captcha').val(show_num.join(""));
+
+        layer.msg('已填充测试账户信息，可直接登录');
+        $('input[name="phone"]').val('18201521341');
+        $('input[name="password"]').val('123456');
 
         // 表单提交事件
         form.on('submit(demo-login)', function (data) {

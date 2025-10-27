@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Service
 public class RecordServiceImpl implements RecordService {
 
@@ -29,4 +32,5 @@ public class RecordServiceImpl implements RecordService {
         List<com.nxu.entity.Record> records = recordMapper.selectAllRecord(record);
         return new PageInfo<>(records);
     }
+
 }

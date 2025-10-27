@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Mapper
 public interface AreaMapper {
 
@@ -16,5 +19,6 @@ public interface AreaMapper {
      * @param parentCode 上级编码
      * @return 地区结合
      */
-    List<Area> selectArea(@Param("level") Integer level,@Param("parentCode") String parentCode);
+    List<Area> selectArea(@Param("level") Integer level, @Param("parentCode") String parentCode);
+
 }

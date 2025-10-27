@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Service
 public class AreaServiceImpl implements AreaService {
 
@@ -25,4 +28,5 @@ public class AreaServiceImpl implements AreaService {
     public List<Area> selectArea(Integer level, String parentCode) {
         return areaMapper.selectArea(level, parentCode);
     }
+
 }

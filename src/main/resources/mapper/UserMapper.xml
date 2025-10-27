@@ -3,7 +3,7 @@
 <mapper namespace="com.nxu.mapper.UserMapper">
 
     <insert id="insertUser">
-        insert into `user` values (null, #{name}, #{phone}, #{password}, #{address}, #{card}, #{other}, #{type}, #{status}, #{binary}, #{base64})
+        insert into `user` values (null, #{name}, #{phone}, #{password}, #{address}, #{card}, #{base64}, #{other}, #{type}, #{status})
     </insert>
 
     <update id="updateUser">
@@ -32,9 +32,6 @@
             </if>
             <if test="status != null and status != 0">
                 `status` = #{status},
-            </if>
-            <if test="binary != null">
-                `binary` = #{binary},
             </if>
             <if test="base64 != null">
                 `base64` = #{base64}

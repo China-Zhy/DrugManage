@@ -4,6 +4,9 @@ import com.nxu.entity.Area;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 public interface AreaService {
     /**
      * 通过自身级别和上级编码查找地区
@@ -13,4 +16,5 @@ public interface AreaService {
      * @return 地区结合
      */
     List<Area> selectArea(Integer level, String parentCode);
+
 }

@@ -8,6 +8,8 @@ import java.util.concurrent.Executors;
 
 /**
  * 虚拟线程配置类
+ *
+ * @author ZhangHongYe
  */
 @Configuration
 public class ThreadConfig {
@@ -17,4 +19,5 @@ public class ThreadConfig {
         // 使用虚拟线程来处理每一个请求
         return protocolHandler -> protocolHandler.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
     }
+
 }

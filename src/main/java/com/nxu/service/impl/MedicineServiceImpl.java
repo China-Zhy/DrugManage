@@ -8,11 +8,16 @@ import com.nxu.service.MedicineService;
 import com.nxu.utils.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Service
 public class MedicineServiceImpl implements MedicineService {
 
@@ -43,9 +48,25 @@ public class MedicineServiceImpl implements MedicineService {
         return medicineMapper.insertMedicine(medicine);
     }
 
+    /**
+     * 使用 悲观锁（行级锁）修改药品信息：适合并发量不高的场景
+     * 优点：实现简单，适合并发量低的场景，能 100% 保证一致性。
+     * 缺点：锁持有时间随事务长度增加，高并发下可能导致锁竞争激烈，性能下降。
+     *
+     * @param medicine 药品信息
+     * @return 修改结果
+     */
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)  // 至少读已提交，避免脏读
     public int setMedicine(Medicine medicine) {
+        // 先通过SELECT ... FOR UPDATE查询并锁定该药品的库存记录（仅锁定当前行，不影响其他药品）
+        Medicine oldMedicine = medicineMapper.lockMedicine(medicine.getId());
+        // 各种条件判断
+        if (oldMedicine == null) {
+            throw new RuntimeException("药品信息不一致");
+        }
         return medicineMapper.updateMedicine(medicine);
+        // 事务提交后，锁自动释放，其他事务可继续操作
     }
 
     @Override
@@ -88,4 +109,5 @@ public class MedicineServiceImpl implements MedicineService {
         }
         return map;
     }
+
 }

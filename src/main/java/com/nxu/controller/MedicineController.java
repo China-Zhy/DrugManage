@@ -67,7 +67,6 @@ public class MedicineController {
     @ResponseBody
     public HashMap<String, Object> doAddMedicine(@RequestBody Medicine medicine, HttpSession session) {
         medicine.setImage((String) session.getAttribute("base64Image"));
-        session.removeAttribute("binaryImage");
         session.removeAttribute("base64Image");
 
         HashMap<String, Object> map = new HashMap<>();
@@ -94,7 +93,6 @@ public class MedicineController {
         // 判断药品是否更换了照片
         if (medicine.getImage().equals("1")) {
             medicine.setImage((String) session.getAttribute("base64Image"));
-            session.removeAttribute("binaryImage");
             session.removeAttribute("base64Image");
         } else if (medicine.getImage().equals("0")) {
             medicine.setImage(null);    // 如果药品照片没有更新，则都置为空，避免mapper层进行大文本更新
@@ -104,4 +102,5 @@ public class MedicineController {
         map.put("image", medicine.getImage());
         return map;
     }
+
 }

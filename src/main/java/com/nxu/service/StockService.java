@@ -7,9 +7,10 @@ import com.nxu.entity.User;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 public interface StockService {
-
-    int changeStock(int id, int count);
 
     Stock getStockById(int id);
 
@@ -33,4 +34,5 @@ public interface StockService {
      * @return 出库结果
      */
     int outputStock(Record record, User user);
+
 }

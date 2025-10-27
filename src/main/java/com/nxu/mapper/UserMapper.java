@@ -7,6 +7,9 @@ import org.apache.ibatis.annotations.Param;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Mapper
 public interface UserMapper {
 
@@ -27,4 +30,5 @@ public interface UserMapper {
 
     // 改变某类用户角色类型
     int updateUserType(@Param("oldType") int oldType, @Param("newType") int newType);
+
 }

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Service
 public class VendorServiceImpl implements VendorService {
 
@@ -40,4 +43,5 @@ public class VendorServiceImpl implements VendorService {
         List<Vendor> vendors = vendorMapper.selectAllVendor(status);
         return new PageInfo<>(vendors);
     }
+
 }

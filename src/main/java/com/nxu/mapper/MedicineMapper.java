@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Mapper
 public interface MedicineMapper {
 
@@ -25,4 +28,13 @@ public interface MedicineMapper {
     int updateMedicine(Medicine medicine);
 
     int deleteMedicine(int id);
+
+    /**
+     * 锁定药品信息→悲观锁/行级锁：适合并发量不高的场景
+     *
+     * @param id 药品ID
+     * @return 药品信息
+     */
+    Medicine lockMedicine(int id);
+
 }

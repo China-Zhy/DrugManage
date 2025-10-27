@@ -11,6 +11,8 @@ import java.io.IOException;
 
 /**
  * 过滤器: 判断用户是否登录, 未登录则只允许访问登陆注册和部分静态资源
+ *
+ * @author ZhangHongYe
  */
 @WebFilter(filterName = "SessionFilter", urlPatterns = "/*")
 @Component
@@ -39,4 +41,5 @@ public class SessionFilter implements Filter {
             chain.doFilter(request, response);
         }
     }
+
 }

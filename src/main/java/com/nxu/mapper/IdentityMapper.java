@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Mapper
 public interface IdentityMapper {
 
@@ -15,4 +18,5 @@ public interface IdentityMapper {
     int updateIdentity(Identity identity);
 
     List<Identity> selectAllIdentity();
+
 }

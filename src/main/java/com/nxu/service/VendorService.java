@@ -3,6 +3,9 @@ package com.nxu.service;
 import com.github.pagehelper.PageInfo;
 import com.nxu.entity.Vendor;
 
+/**
+ * @author ZhangHongYe
+ */
 public interface VendorService {
 
     int addVendor(Vendor vendor);
@@ -12,4 +15,5 @@ public interface VendorService {
     Vendor getOneVendor(int vendorId);
 
     PageInfo<Vendor> getAllVendor(Integer pageNum, Integer pageSize, Integer status);
+
 }

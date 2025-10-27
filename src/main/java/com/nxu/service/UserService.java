@@ -5,6 +5,9 @@ import com.nxu.entity.User;
 
 import java.util.HashMap;
 
+/**
+ * @author ZhangHongYe
+ */
 public interface UserService {
 
     int addUser(User user);
@@ -20,4 +23,5 @@ public interface UserService {
     PageInfo<User> getSomeUser(HashMap<String, Object> map);
 
     int getUserCount(int type);
+
 }

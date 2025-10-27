@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Mapper
 public interface EchartsMapper {
 
@@ -21,4 +24,5 @@ public interface EchartsMapper {
      * @return 条形统计图
      */
     List<PieCharts> getTheNumberOfUserVisitsInThePastWeek();
+
 }

@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Service
 public class IdentityServiceImpl implements IdentityService {
 
@@ -49,4 +52,5 @@ public class IdentityServiceImpl implements IdentityService {
     public List<Identity> getAllIdentity() {
         return identityMapper.selectAllIdentity();
     }
+
 }

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
+/**
+ * @author ZhangHongYe
+ */
 @Controller
 public class VendorController {
 
@@ -101,4 +104,5 @@ public class VendorController {
         map.put("info", vendor);
         return map;
     }
+
 }

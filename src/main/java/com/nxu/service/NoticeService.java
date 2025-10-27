@@ -3,6 +3,9 @@ package com.nxu.service;
 import com.github.pagehelper.PageInfo;
 import com.nxu.entity.Notice;
 
+/**
+ * @author ZhangHongYe
+ */
 public interface NoticeService {
 
     int addNotice(Notice notice);
@@ -17,4 +20,5 @@ public interface NoticeService {
      * 查询某个用户未浏览的通知
      */
     PageInfo<Notice> getNoticeByUser(Integer userId, Integer userType, Integer page, Integer limit);
+
 }

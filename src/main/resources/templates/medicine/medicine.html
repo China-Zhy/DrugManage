@@ -109,15 +109,15 @@
             cols: [
                 [
                     {field: 'id', title: 'ID', width: 60, hide: true},
-                    {field: 'name', title: '药品名称', width: 150},
-                    {field: 'code', title: '国药准字', width: 120, templet: '<div><span class="layui-badge layui-bg-gray">{{= d.code }}</span></div>'},
-                    {field: 'specs', width: 150, title: '药品规格'},
+                    {field: 'name', title: '药品名称', width: 200},
+                    {field: 'code', title: '国药准字', width: 140, templet: '<div><span class="layui-badge layui-bg-gray">{{= d.code }}</span></div>'},
+                    {field: 'specs', width: 180, title: '药品规格'},
                     {
                         field: 'compose',
                         title: '药品成分',
                         fieldTitle: '药品成分',
                         hide: 0,
-                        minWidth: 300,
+                        minWidth: 250,
                         expandedMode: 'tips',
                         edit: 'text'
                     },
@@ -125,8 +125,8 @@
                         field: 'usage',
                         title: '用法用量',
                         edit: 'textarea',
-                        minWidth: 300,
-                        expandedWidth: 400
+                        minWidth: 200,
+                        expandedWidth: 300
                     },
                     {field: 'image', title: '药品照片', width: 100, hide: true},
                     {field: 'origin', title: '生产厂家', width: 250},

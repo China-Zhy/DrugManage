@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author ZhangHongYe
+ */
 @Service
 public class RedisService {
 
@@ -36,4 +39,5 @@ public class RedisService {
     public List<Object> getList(String key) {
         return redisTemplate.opsForList().range(key, 0, -1);
     }
+
 }

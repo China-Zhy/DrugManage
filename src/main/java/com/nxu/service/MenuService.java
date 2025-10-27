@@ -5,6 +5,9 @@ import com.nxu.entity.Menu;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 public interface MenuService {
 
     /**
@@ -69,4 +72,5 @@ public interface MenuService {
      * @return 更新结果
      */
     int updateRoleMenus(Integer roleId, List<Integer> menuIds);
+
 }

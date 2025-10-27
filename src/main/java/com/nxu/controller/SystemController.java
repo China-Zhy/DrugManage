@@ -15,6 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Controller
 public class SystemController {
 
@@ -56,7 +59,6 @@ public class SystemController {
     public Integer uploadImage(@RequestParam("file") MultipartFile file, HttpSession session) throws IOException {
         if (!file.isEmpty()) {
             byte[] binaryData = file.getBytes();
-            session.setAttribute("binaryImage", binaryData);
             session.setAttribute("base64Image", STR."data:image/jpeg;base64,\{Base64.encodeBase64String(binaryData)}");
             return 1;
         } else {
@@ -78,4 +80,5 @@ public class SystemController {
         model.addAttribute("url", url);
         return "system/system-belle";
     }
+
 }

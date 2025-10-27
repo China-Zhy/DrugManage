@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Service
 public class EchartsServiceImpl implements EchartsService {
 
@@ -33,4 +36,5 @@ public class EchartsServiceImpl implements EchartsService {
     public List<PieCharts> getTheNumberOfUserVisitsInThePastWeek() {
         return echartsMapper.getTheNumberOfUserVisitsInThePastWeek();
     }
+
 }

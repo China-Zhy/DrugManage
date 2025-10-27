@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Mapper
 public interface LogMapper {
 
@@ -14,4 +17,5 @@ public interface LogMapper {
     int updateLog(@Param("id") int id, @Param("type") int type);
 
     List<Log> selectAllLog();
+
 }

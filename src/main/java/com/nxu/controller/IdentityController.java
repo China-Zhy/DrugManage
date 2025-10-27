@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Controller
 public class IdentityController {
 
@@ -91,4 +94,5 @@ public class IdentityController {
     public Integer doDelRole(@PathVariable Integer id) {
         return identityService.delIdentity(id);
     }
+
 }

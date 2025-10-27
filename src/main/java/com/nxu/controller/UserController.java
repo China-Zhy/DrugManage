@@ -201,11 +201,12 @@ public class UserController {
     @PostMapping("/doUserAdd")
     @ResponseBody
     public Integer doUserAdd(@RequestBody User user, HttpSession session) {
-        user.setBinary((byte[]) session.getAttribute("binaryImage"));
         user.setBase64((String) session.getAttribute("base64Image"));
-        session.removeAttribute("binaryImage");
-        session.removeAttribute("base64Image");
-        return userService.addUser(user);
+        if (userService.addUser(user) == 1) {
+            session.removeAttribute("base64Image");
+            return 1;
+        }
+        return 0;
     }
 
     // 前往编辑(或详情)用户页面
@@ -248,13 +249,10 @@ public class UserController {
 
         // 判断用户是否更改了头像
         if (user.getBase64().equals("1")) {
-            user.setBinary((byte[]) session.getAttribute("binaryImage"));
             user.setBase64((String) session.getAttribute("base64Image"));
-            session.removeAttribute("binaryImage");
             session.removeAttribute("base64Image");
         } else if (user.getBase64().equals("0")) {
             // 如果用户没有更新头像，则都置为空，避免mapper层进行大文本更新
-            user.setBinary(null);
             user.setBase64(null);
         }
 

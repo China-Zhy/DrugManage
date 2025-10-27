@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author ZhangHongYe
+ */
 @Controller
 public class RecordController {
 
@@ -47,4 +50,5 @@ public class RecordController {
         map.put("data", pageInfo.getList());
         return map;
     }
+
 }

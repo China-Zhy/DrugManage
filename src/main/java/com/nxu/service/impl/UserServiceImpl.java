@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
+/**
+ * @author ZhangHongYe
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -53,4 +56,5 @@ public class UserServiceImpl implements UserService {
     public int getUserCount(int type) {
         return userMapper.queryUserCount(type);
     }
+
 }

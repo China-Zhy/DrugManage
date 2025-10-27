@@ -4,6 +4,9 @@ import com.nxu.entity.Identity;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 public interface IdentityService {
 
     int addIdentity(Identity identity);
@@ -13,4 +16,5 @@ public interface IdentityService {
     int setIdentity(Identity identity);
 
     List<Identity> getAllIdentity();
+
 }

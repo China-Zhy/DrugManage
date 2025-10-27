@@ -4,10 +4,14 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Mapper
 public interface RecordMapper {
 
     int insertRecord(com.nxu.entity.Record record);
 
     List<com.nxu.entity.Record> selectAllRecord(com.nxu.entity.Record record);
+
 }

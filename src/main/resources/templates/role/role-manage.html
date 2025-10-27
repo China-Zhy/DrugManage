@@ -87,6 +87,38 @@
 
         const nxu = /^[\u4e00-\u9fa5]{2,10}$/;
 
+        // 新增：设置所有卡片高度一致的函数
+        function setCardsHeight() {
+            // 选中所有角色卡片（包括"添加更多角色"卡片）
+            const $cards = $('.layui-card');
+            if ($cards.length === 0) return;
+
+            // 重置卡片高度为自动（避免多次计算时受之前固定高度影响）
+            $cards.height('auto');
+
+            // 计算最大高度
+            let maxHeight = 0;
+            $cards.each(function () {
+                const currentHeight = $(this).outerHeight(); // 包含内边距和边框的高度
+                if (currentHeight > maxHeight) {
+                    maxHeight = currentHeight;
+                }
+            });
+
+            // 统一设置所有卡片高度为最大高度
+            $cards.height(maxHeight);
+        }
+
+        // 页面加载完成后初始化卡片高度
+        $(function () {
+            setCardsHeight();
+        });
+
+        // 监听窗口大小变化，重新调整高度（可选，根据需求决定是否需要）
+        $(window).on('resize', function () {
+            setCardsHeight();
+        });
+
         util.on('lay-on', {
             myEnter: function (data) {
                 layer.open({

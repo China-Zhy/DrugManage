@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author ZhangHongYe
+ */
 @Mapper
 public interface MenuMapper {
 
@@ -72,4 +75,5 @@ public interface MenuMapper {
      * @return 添加的数量
      */
     int insertManyRoleMenu(@Param("roleId") Integer roleId, @Param("menuIds") Set<Integer> menuIds);
+
 }

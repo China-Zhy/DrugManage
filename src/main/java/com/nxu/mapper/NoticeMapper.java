@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Mapper
 public interface NoticeMapper {
 
@@ -21,4 +24,5 @@ public interface NoticeMapper {
      * 查询某个用户未浏览的通知
      */
     List<Notice> selectNoticeByUser(@Param("userId") Integer userId, @Param("userType") Integer userType);
+
 }

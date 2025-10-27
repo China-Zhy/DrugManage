@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+/**
+ * @author ZhangHongYe
+ */
 @Service
 public class MenuServiceImpl implements MenuService {
 
@@ -160,4 +163,5 @@ public class MenuServiceImpl implements MenuService {
             throw new RuntimeException("Tips：角色菜单更新失败！事务回滚！");
         }
     }
+
 }

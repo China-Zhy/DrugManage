@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
+/**
+ * @author ZhangHongYe
+ */
 @Service
 public class BrowseServiceImpl implements BrowseService {
 
@@ -29,4 +32,5 @@ public class BrowseServiceImpl implements BrowseService {
         }
         return new PageInfo<>(browseMapper.selectBrowse(map));
     }
+
 }

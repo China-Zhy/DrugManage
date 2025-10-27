@@ -58,4 +58,10 @@
         delete from `medicine` where id = #{id}
     </delete>
 
+    <select id="lockMedicine" resultType="com.nxu.entity.Medicine">
+        select * from `medicine`
+        where id = #{id}
+        FOR UPDATE <!-- 行级锁，仅锁定当前id的行 -->
+    </select>
+
 </mapper>

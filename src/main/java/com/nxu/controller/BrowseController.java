@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 
+/**
+ * @author ZhangHongYe
+ */
 @Controller
 public class BrowseController {
 

@@ -3,11 +3,14 @@
 <mapper namespace="com.nxu.mapper.StockMapper">
 
     <insert id="insertStock">
-        insert into `stock` values(null, #{medicineId}, #{birthday}, #{price}, #{count})
+        insert into `stock` values(null, #{medicineId}, #{birthday}, #{price}, #{count}, #{version})
     </insert>
 
+    <!--乐观锁：适合高并发场景-->
+    <!--通过库存表增加version（版本号）字段，更新时校验版本号，若版本一致则更新（并自增版本），否则视为并发冲突，重试操作-->
     <update id="updateStock">
-        update `stock` set count = #{count} where id = #{id}
+        update `stock` set count = #{count}, version = version + 1
+        where id = #{id} and version = #{version}
     </update>
 
     <delete id="deleteStock">

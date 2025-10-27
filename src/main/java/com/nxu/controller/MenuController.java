@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
+/**
+ * @author ZhangHongYe
+ */
 @Controller
 public class MenuController {
 
@@ -50,4 +53,5 @@ public class MenuController {
     public Integer doSetMedicine(@RequestBody Menu menu) {
         return menuService.setMenu(menu);
     }
+
 }

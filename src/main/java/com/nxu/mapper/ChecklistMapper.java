@@ -4,6 +4,9 @@ import com.nxu.entity.Checklist;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+/**
+ * @author ZhangHongYe
+ */
 @Mapper
 public interface ChecklistMapper {
 

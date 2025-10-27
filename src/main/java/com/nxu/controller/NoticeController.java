@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
+/**
+ * @author ZhangHongYe
+ */
 @Controller
 public class NoticeController {
 
@@ -116,4 +119,5 @@ public class NoticeController {
             return "index";
         }
     }
+
 }

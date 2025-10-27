@@ -5,6 +5,9 @@ import com.nxu.entity.Browse;
 
 import java.util.HashMap;
 
+/**
+ * @author ZhangHongYe
+ */
 public interface BrowseService {
 
     /**
@@ -22,4 +25,5 @@ public interface BrowseService {
      * @return 浏览记录集合
      */
     PageInfo<Browse> selectBrowse(HashMap<String, Object> map);
+
 }

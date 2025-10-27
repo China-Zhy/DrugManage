@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+/**
+ * @author ZhangHongYe
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,4 +18,5 @@ public class Stock {                // 库存信息
     private LocalDate birthday;     // 有效日期
     private double price;           // 药品单价
     private int count;              // 库存数量
+    private int version;            // 库存版本
 }

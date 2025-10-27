@@ -16,6 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * @author ZhangHongYe
+ */
 @SpringBootTest
 @Slf4j
 public class SimpleTest {
@@ -100,17 +103,17 @@ public class SimpleTest {
     @Test
     void test6() {
         User user = new User();
-        user.setId(7);
+        user.setId(4);
         List<Record> records = new ArrayList<>();
 
-        for (int i = 1; i <= 30; i++) {
+        for (int i = 1; i <= 200; i++) {
             Record record = new Record();
             record.setWhat(i);
             record.setType(1);
-            record.setCount(50);
-            record.setPrice(20);
+            record.setCount(20);
+            record.setPrice(50);
             record.setBirthday(LocalDate.now());
-            record.setFrom(3);
+            record.setFrom(1);
             record.setOther("初始化入库");
             records.add(record);
         }
@@ -170,4 +173,5 @@ public class SimpleTest {
             System.out.println(pieCharts.toString());
         }
     }
+
 }

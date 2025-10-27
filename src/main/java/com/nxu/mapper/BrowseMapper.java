@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @Mapper
 public interface BrowseMapper {
 
@@ -18,4 +21,5 @@ public interface BrowseMapper {
      * @return 浏览记录集合
      */
     List<Browse> selectBrowse(HashMap<String, Object> map);
+
 }

@@ -4,6 +4,9 @@ import com.nxu.entity.PieCharts;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 public interface EchartsService {
 
     /**
@@ -19,4 +22,5 @@ public interface EchartsService {
      * @return 条形统计图
      */
     List<PieCharts> getTheNumberOfUserVisitsInThePastWeek();
+
 }

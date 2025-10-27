@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * @author ZhangHongYe
+ */
 @RestController
 @Tag(name = "Echarts的Controller", description = "调用Echarts的接口")
 public class EchartsController {
